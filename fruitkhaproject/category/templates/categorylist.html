@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+<!-- Mirrored from themes.pixelstrap.com/voxo/back-end/taxes.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jan 2024 18:53:37 GMT -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Voxo admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
+    <meta name="keywords"
+        content="admin template, Voxo admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="pixelstrap">
+    <link rel="icon" href="/static/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+    <title>Admin panel - Categories</title>
+
+    <!-- Google font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&amp;family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Fontawesome css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/font-awesome.css">
+
+    <!-- Linear Icon css -->
+    <link rel="stylesheet" href="/static/css/linearicon.css">
+
+    <!-- Themify icon css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/themify.css">
+
+    <!-- Feather icon css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/feather-icon.css">
+
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/animate.css">
+
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/bootstrap.css">
+
+    <!-- App css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+    <!-- Responsive css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/responsive.css">
+</head>
+
+<body>
+   <!-- tap on top start -->
+   <div class="tap-top">
+    <span class="lnr lnr-chevron-up"></span>
+</div>
+<!-- tap on tap end -->
+
+<!-- page-wrapper Start-->
+<div class="page-wrapper compact-wrapper dark-sidebar" id="pageWrapper">
+    <!-- Page Header Start-->
+    <div class="page-header">
+        <div class="header-wrapper row m-0">
+            <div class="header-logo-wrapper col-auto p-0">
+                <div class="logo-wrapper">
+                    <a href="index-2.html">
+                        <img class="img-fluid main-logo" src="/static/images/logo/logo.png" alt="logo">
+                        <img class="img-fluid white-logo" src="/static/images/logo/logo-white.png" alt="logo">
+                    </a>
+                </div>
+                <div class="toggle-sidebar">
+                    <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
+                </div>
+            </div>
+
+            <form class="form-inline search-full col" action="javascript:void(0)" method="get">
+                <div class="form-group w-100">
+                    <div class="Typeahead Typeahead--twitterUsers">
+                        <div class="u-posRelative">
+                            <input class="demo-input Typeahead-input form-control-plaintext w-100" type="text"
+                                placeholder="Search Voxo .." name="q" title="" autofocus>
+                            <i class="close-search" data-feather="x"></i>
+                            <div class="spinner-border Typeahead-spinner" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="Typeahead-menu"></div>
+                    </div>
+                </div>
+            </form>
+            <div class="nav-right col-4 pull-right right-header p-0">
+                <ul class="nav-menus">
+                    <li>
+                        <span class="header-search">
+                            <span class="lnr lnr-magnifier"></span>
+                        </span>
+                    </li>
+                    <li class="onhover-dropdown">
+                        <div class="notification-box">
+                            <span class="lnr "></span>
+                            
+                        </div>
+                        <ul class="notification-dropdown onhover-show-div">
+                           
+                           
+                           
+                           
+                           
+                           
+                        </ul>
+                    </li>
+
+                    <li>
+                        <div class="mode">
+                            <span class="lnr lnr-moon"></span>
+                        </div>
+                    </li>
+
+                    <li class="onhover-dropdown">
+                        <span class=""></span>
+                        <ul class="chat-dropdown onhover-show-div">
+                           
+                            
+                            
+                           
+                           
+                        </ul>
+                    </li>
+                    <li class="maximize">
+                        <a class="text-dark" href="javascript:void(0)!" onclick="javascript:toggleFullScreen()">
+                            <span class="lnr lnr-frame-expand"></span>
+                        </a>
+                    </li>
+                    <li class="profile-nav onhover-dropdown pe-0 me-0">
+                        <div class="media profile-media">
+                            <img class="user-profile rounded-circle" src="/static/images/users/4.jpg"
+                                alt="profile-picture">
+                            <div class="user-name-hide media-body">
+                                <span>Emay Walter</span>
+                                <p class="mb-0 font-roboto">Admin</i></p>
+                            </div>
+                        </div>
+                       
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header Ends-->
+
+    <!-- Page Body Start -->
+    <div class="page-body-wrapper">
+        <!-- Page Sidebar Start-->
+        
+    <div class="page-body-wrapper">
+        <!-- Page Sidebar Start-->
+        <div class="sidebar-wrapper">
+            <div>
+                <div class="logo-wrapper logo-wrapper-center">
+                    <h3 style = "color: white;">ADMIN PANEL</h3>
+                    <div class="back-btn">
+                        <i class="fa fa-angle-left"></i>
+                    </div>
+                    <div class="toggle-sidebar">
+                        <i class="status_toggle middle sidebar-toggle" data-feather="grid"></i>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-main">
+                    <div class="left-arrow" id="left-arrow">
+                        <i data-feather="arrow-left"></i>
+                    </div>
+
+                    <div id="sidebar-menu">
+                        <ul class="sidebar-links" id="simple-bar">
+                            <li class="back-btn"></li>
+                            <li class="sidebar-main-title sidebar-main-title-3">
+                               
+                            </li>
+                           <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'dashbord' %}">
+                                    <i data-feather="home"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title" href="{% url 'vusers' %}">
+                                    <i data-feather="users"></i>
+                                    <span>Customers</span>
+                                </a>
+                                
+                            </li>
+
+                           <br>
+
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                    <i data-feather="archive"></i>
+                                    <span>Orders</span>
+                                </a>
+                                
+                            </li>
+
+                            <br>
+
+                            <li class="sidebar-list">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="{% url 'productslist' %}">
+                                    <i data-feather="box"></i>
+                                    <span>Products</span>
+                                </a>
+                                
+                            </li>
+                            <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'category' %}">
+                                    <i data-feather="star"></i>
+                                    <span>Category</span>
+                                </a>
+                            </li>
+                            <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
+                                    <i data-feather="star"></i>
+                                    <span>Return request</span>
+                                </a>
+                            </li>
+
+                         <br>
+
+                           
+                            <li class="sidebar-list">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                    <i data-feather="tag"></i>
+                                    <span>Coupons</span>
+                                </a>
+                               
+                            </li>
+
+                            <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="invoice.html">
+                                    <i data-feather="archive"></i>
+                                    <span>banners</span>
+                                </a>
+                            </li>
+
+                          
+
+                            <br>
+
+                           
+
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'adminlogout' %}">
+                                    <i data-feather="log-in"></i>
+                                    <span>Log out</span>
+                                </a>
+                            </li>
+
+                           
+
+                           
+                        </ul>
+                    </div>
+                    <div class="right-arrow" id="right-arrow">
+                        <i data-feather="arrow-right"></i>
+                    </div>
+                </nav>
+            </div>
+        </div>
+            <!-- Texes Table Section Start -->
+            <div class="page-body">
+                <div class="title-header">
+                    <h5>Categories</h5>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <!-- Add Category Button Start -->
+                                <div class="card-header">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#addCategoryModal">Add Category</button>
+                                </div>
+                                <!-- Add Category Button End -->
+
+                                <!-- Table Start -->
+                                <div class="card-body">
+                                    <div class="table-responsive table-desi">
+                                        <table class="user-table trans-table texes-table table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>CATEGORY</th>
+                                                    <th>IMAGE</th>
+                                                    <th>OPTIONS</th>
+                                                </tr>
+                                            </thead>
+                                             
+                                            <tbody>
+                                                {% for category in categorys %}
+                                                <tr>
+                                                    <td>{{category.category_name}}</td>
+                                                    <td> 
+                                                        <span>
+                                                            {% if category.image %}
+                                                            <img src="{{category.image.url}}" alt="users" required>
+                                                             {% endif %}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li>
+                                                                <a href="javascript:void(0)-{{forloop.counter}}" data-bs-toggle="modal"
+                                                                    data-bs-target="#editCategoryModal-{{forloop.counter}}">
+                                                                    <span class="lnr lnr-pencil"></span>
+                                                                </a>
+                                                            </li>
+                                                            <ul>
+                                                                
+                                                                <li>
+                                                                   
+                                                                    {% if category.is_listed %}
+                                                                        <a href="{% url 'list' category.id %}" class="btn btn-danger">List</a>
+                                                                    {% else %}
+                                                                        <a href="{% url 'list' category.id %}" class="btn btn-danger" >UnList</a>
+                                                                    {% endif %}
+                                                                    
+                                                                    
+                                                                  
+                                                                </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                                <!-- More rows can be added similarly -->
+                                                {% endfor %}
+                                            </tbody>
+                                            
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Table End -->
+
+                                <!-- Pagination and Footer (unchanged code) -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Container-fluid Ends-->
+            </div>
+            <!-- Categories Table Section End -->
+        </div>
+        <!-- Page Body End -->
+    </div>
+    <!-- page-wrapper End -->
+
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Category Form -->
+                <form method='post' action ="{% url 'addcategory' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="categoryName" placeholder="Enter category name" name = "category_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Image</label>
+                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                    </div>
+                    <!-- Add more form fields as needed -->
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">ADD</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+{% for category in categorys %}
+<div class="modal fade" id="editCategoryModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="editCategoryModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Edit Category Form -->
+                <form method="post" action="{% url 'updatecategory' category.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="editedCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" value="{{category.category_name}}" name="category_name" required>
+                            
+                    </div>
+                    <div class="mb-3">
+                        <label for="editedCategoryName" class="form-label">Image</label>
+                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                    </div>
+                    <!-- Add more form fields as needed -->
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<!-- Delete Category Modal -->
+
+
+    <!-- Modal End -->
+
+    <!-- latest js -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap js -->
+    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+    <!-- feather icon js -->
+    <script src="/static/js/icons/feather-icon/feather.min.js"></script>
+    <script src="/static/js/icons/feather-icon/feather-icon.js"></script>
+
+    <!-- scrollbar simplebar js -->
+    <script src="/static/js/scrollbar/simplebar.js"></script>
+    <script src="/static/js/scrollbar/custom.js"></script>
+
+    <!-- customizer js -->
+    <script src="/static/js/customizer.js"></script>
+
+    <!-- Sidebar js -->
+    <script src="/static/js/config.js"></script>
+
+    <!-- Plugins js -->
+    <script src="/static/js/sidebar-menu.js"></script>
+    <script src="/static/js/notify/bootstrap-notify.min.js"></script>
+    <script src="/static/js/notify/index.js"></script>
+
+    <!-- all checkbox select js -->
+    <script src="/static/js/checkbox-all-check.js"></script>
+
+    <!-- Theme js -->
+    <script src="/static/js/script.js"></script>
+</body>
+
+
+<!-- Mirrored from themes.pixelstrap.com/voxo/back-end/taxes.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jan 2024 18:53:37 GMT -->
+</html>
