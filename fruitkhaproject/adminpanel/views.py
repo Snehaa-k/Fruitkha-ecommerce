@@ -6,7 +6,8 @@ from django.contrib import messages
 from home. models import Usermodelss
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-# from fruitkhaproject.adminpanel.models import adminmodels
+from products.models import Variant 
+# from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
 @never_cache

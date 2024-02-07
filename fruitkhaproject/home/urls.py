@@ -11,6 +11,8 @@ urlpatterns = [
      path('single/<str:id>',views.singleproduct,name='singleproduct'),
      path('logout/',views.userlogout,name='logout'),
      path('cart/',views.cart,name='cart'),
+     path('search/',views.searchh,name ='searchh'),
+
 
      # path('page/',views.shop_page,name ='page'),
 

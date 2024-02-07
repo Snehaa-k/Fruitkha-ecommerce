@@ -299,6 +299,8 @@
                                                     <th>IN STOCK</th>
                                                     <th>PUBLISH</th>
                                                     <th>OPTIONS</th>
+                                                    <th>VARIANT</th>
+                                                    <th>VARIANT DETAILS</th>
                                                 </tr>
                                             </thead>
                                              
@@ -325,9 +327,9 @@
                                                             <li>
                                                                
                                                                 {% if product.is_listed %}
-                                                                    <a href="{% url 'list' product.id %}" class="btn btn-danger">List</a>
+                                                                    <a href="{% url 'list1'  product.id %}" class="btn btn-danger">List</a>
                                                                 {% else %}
-                                                                    <a href="{% url 'list' product.id %}" class="btn btn-danger" >UnList</a>
+                                                                    <a href="{% url 'list1' product.id %}" class="btn btn-danger" >UnList</a>
                                                                 {% endif %}
                                                                 
                                                                 
@@ -347,6 +349,137 @@
                                                             </li>
                                                             
                                                         </ul>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#addVariantModal-{{forloop.counter}}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addVariantModal-{{forloop.counter}}">
+                                                            Add_Variant
+                                                          </a>
+                                                          {% comment %} ..........modal of variant............. {% endcomment %}
+                                                          <div class="modal fade" id="addVariantModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-sm">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="addVariantModalLabel">Add Variant</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <!-- Add Variant Form -->
+                                                                        <form method="post" action="{% url 'addvariant' product.id %}">
+                                                                            {% csrf_token %}
+                                                                            <div class="mb-3">
+                                                                                <label for="unit" class="form-label">Unit:</label>
+                                                                                <select class="form-control" id="unit" name="unit" required>
+                                                                                    <option value="500g">500 grams</option>
+                                                                                    <option value="1kg">1 kilogram</option>
+                                                                                    <option value="2kg">2 kilograms</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="quantity" class="form-label">Quantity:</label>
+                                                                                <input type="number" class="form-control" id="quantity" name="quantity" required>
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="price" class="form-label">Price:</label>
+                                                                                <input type="number" step="0.01" min="0.00" class="form-control" id="price" name="price" required>
+                                                                            </div>
+                                                                            {% if variant_exists %}
+                                                                            <div class="alert alert-danger" role="alert">
+                                                                                Variant already exists for this product. Please update existing variant.
+                                                                            </div>
+                                                                            {% endif %}
+                                                                            <!-- Add more form fields as needed -->
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                            <button type="submit" class="btn btn-primary">Add Variant</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                    {% comment %} /////................end variant modal ................./// {% endcomment %}
+                                                    <a href="" class="btn btn-primary" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal{{product.id}}">
+                                                        variant_report
+                                                    </a>
+                        
+                        
+                                                    <div class="modal fade " id="variantModal{{product.id}}" tabindex="-1" role="dialog" aria-labelledby="variantModalLabel{{product.id}}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-sm" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header bg-success">
+                                                                    <h5 class="modal-title bg-success" id="variantModalLabel{{product.id}}">Variant Report for {{product.pname}}</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body ">
+                                                                    <!-- Variant cards -->
+                                                                    <div class="row">
+                                                                    {% for j in variant %}
+                                                                    {% if j.products.id == product.id %}
+                                                                        <div class="col-12 mb-3">
+                                                                            <div class="card border-primary custom-card">
+                                                                                <div class="card-body">
+                                                                                    <h4>Qty : {{j.v_quantity}}</h4>
+                                                                                    <h4>Variant : {{j.unit}}</h4>
+                                                                                    <h4>Price : {{j.v_price}}</h4>
+                                                                                    
+                                                                                   
+                                                                                </div>
+                                                                                <a href="" class="btn "  type="button" data-toggle="modal" data-target="#editvariant{{j.id}}">
+                                                                                    Edit_variant
+                                                                                </a>
+                        
+                                                                                <div id="editvariant{{j.id}}" class="modal fade">
+                                                                                    <div class="modal-dialog modal-sm">
+                                                                                        <div class="modal-content">
+                                                                                            <form method='POST' action="{% url 'edit_variant_modal' j.id %}">
+                                                                                                {% csrf_token %}
+                                                                                                <div class="modal-header">	
+                                                                                                    {% if j.unit == '500g'%}
+                                                                                                    <h4 class="modal-title">Edit variant for 500g</h4>
+                                                                                                    {% elif j.unit == '1kg' %}
+                                                                                                    <h4 class="modal-title">Edit variant for 1kg</h4>
+                                                                                                    {% elif j.unit == '2kg' %}
+                                                                                                    <h4 class="modal-title">Edit variant for 2kg</h4>
+                                                                                                    {% endif %}					
+                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                                                                </div>
+                                                                                                <div class="modal-body modal-sm">					
+                                                                                                    
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Quantity</label>
+                                                                                                        <input type="number" min="0" class="form-control" value="{{j.v_quantity}}" name='quantity' required>
+                                                                                                    </div>
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Price</label>
+                                                                                                        <input type="number" min="0.00" class="form-control" value="{{j.v_price}}" name='price' required>
+                                                                                                    </div> 
+                                                                                                </div>
+                                                                                            
+                                                                                               <div class="modal-footer">
+                                                                                                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                                                                                    <button type="submit" class="btn btn-success" value="Add">submit</button>
+                                                                                                </div>
+                                                    
+                                                                                            </form>
+                                                                                        
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                        </div>
+                                                                        {% endif %}
+                                                                        {% endfor %}
+                                                                        
+                                                                    </div>
+                                                                
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     </td>
                                                 </tr>
                                                 <!-- More rows can be added similarly -->
@@ -388,10 +521,15 @@
                         <label for="categoryName" class="form-label">Product Name</label>
                         <input type="text" class="form-control"  placeholder="Enter product name" name = "pname" required>
                     </div>
+                    <label for="categoryName" class="form-label">Product Images</label>
                     <div class="mb-3">
 
-                        <label for="categoryName" class="form-label">Product Image</label>
-                        <input type="file" class="form-control"   accept="image/*"  name="images" multiple required>
+                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                        <br>
+                        <input type="file" class="form-control"   accept="image/*"  name="imagesa" required>
+                        <br>
+                        <input type="file" class="form-control"   accept="image/*"  name="imagesb" required>
+
                     </div>
                    
                     <div class="mb-3">
@@ -418,7 +556,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">In Stock</label>
-                        <input type="text" class="form-control" id="categoryName" placeholder="Enter the Stock" name = "instock" required>
+                        <input type="number" class="form-control" id="categoryName" placeholder="Enter the Stock" name = "instock" required>
                     
                         
                     </div>
@@ -456,13 +594,20 @@
                     <div class="mb-3">
                         {% if product.image %}
                         <div class="existing-image-container">
-                            <img src="{{ product.image.url }}" alt="Product Image" width="150" height="150">
-                            
+                            <img src="{{ product.image.url }}" alt="Product Image" width="120" height="120">
+                            <img src="{{ product.imagea.url }}" alt="Product Image" width="130" height="130">
+                           <img src="{{ product.imageb.url }}" alt="Product Image" width="130" height="130">   
                         </div>
                         {% endif %}
                         <br>
                        
+                        
                         <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                        <br>
+                        <input type="file" class="form-control"   accept="image/*"  name="imagesa" required>
+                        <br>
+                        <input type="file" class="form-control"   accept="image/*"  name="imagesb" required>
+
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Select Category</label>
@@ -504,6 +649,24 @@
 {% endfor %}
 <!-- Delete Category Modal -->
 
+
+  
+
+
+
+
+<!--  show  variant ...Iterate over variants and display a button for each variant to open its modal -->
+
+
+
+{% comment %} <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editVariantModal{{ variant.id }}">
+    Edit Variant {{ variant.id }}
+</button> {% endcomment %}
+{% comment %} {% endfor %} {% endcomment %}
+
+
+
+
     <!-- Modal End -->
 
     <!-- latest js -->
@@ -533,10 +696,22 @@
 
     <!-- all checkbox select js -->
     <script src="/static/js/checkbox-all-check.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
     <!-- Theme js -->
     <script src="/static/js/script.js"></script>
-   
+    
+
+    <script>
+        document.getElementById('addVariantBtn').addEventListener('click', function() {
+            $('#addVariantModal').modal('show');
+        });
+    </script>
     
 </body>
 

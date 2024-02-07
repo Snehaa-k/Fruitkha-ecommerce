@@ -7,7 +7,7 @@ urlpatterns = [
     path('vusers/',views.viewusers,name='vusers'),
     path('block/<str:id>',views.isblock,name='userblock'),
     path('logout/',views.adminlogout,name='adminlogout'),
-
+    
     
 
 

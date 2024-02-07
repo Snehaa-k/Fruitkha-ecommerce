@@ -139,5 +139,13 @@ def cart(request):
 #     return render(request, 'shop.html', {'products': products})
 
 
+def searchh(request):
+  if 'username' in request.session:
+    searchh = request.POST.get('S')
+    
+    prdts = Products.objects.filter(pname__icontains=searchh)
+    
+    return render(request,'shop.html',{'products':prdts})
+
 def about(request):
     return render(request,'about.html')
