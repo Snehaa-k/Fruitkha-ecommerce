@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.forms import ValidationError
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.utils.crypto import get_random_string
@@ -9,8 +9,10 @@ from django.core.mail import send_mail
 from . models import Usermodelss, generate_otp
 from django.views.decorators.cache import never_cache
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from products.models import Products
+from products.models import Products,Variant
 from category.models import Category
+from cart.models import CartItem
+from django.db.models import Func,F
 
 # Create your views here.
 
@@ -62,8 +64,13 @@ def usersignupa(request):
         if Pass1 != pass2:
             messages.error(request, 'Passwords do not match')
             return render(request, 'usersignuppage.html')
-        elif Usermodelss.objects.filter(email=email).exists():
-            messages.error(request, 'This Email address already exists')
+        
+        elif Usermodelss.objects.filter(username=username).exists():
+            messages.error(request,' username is already exists')
+            return render(request,'usersignuppage.html')
+        
+        elif Usermodelss.objects.filter(email=email).exists() :
+            messages.error(request, 'This Email or username address already exists')
             return render(request,'usersignuppage.html')
         else:
             myuser = Usermodelss(username=username,email=email,phonenumber=phoneno,password1=Pass1,password2=pass2)
@@ -97,7 +104,10 @@ def home(request):
 
 def singleproduct(request,id):
     prdts = Products.objects.get(id = id)
-    return render(request,'single-product.html',{'product':prdts})
+    print(prdts)
+    variant = Variant.objects.get(products_id = id)
+    
+    return render(request,'single-product.html',{'product':prdts,'variant':variant})
 
     
 
@@ -116,8 +126,7 @@ def userlogout(request):
     return redirect('userlog')
 
 
-def cart(request):
-    return render(request,'cart.html')
+
 
 # def Delete(request,id):
 #     prdts=Products.objects.filter(id=id).delete()
@@ -149,3 +158,73 @@ def searchh(request):
 
 def about(request):
     return render(request,'about.html')
+
+
+# cart section................
+
+def cart(request):
+    cartitem = CartItem.objects.all()
+    variant = Variant.objects.all()
+   
+    
+    
+    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant})
+
+
+def add_cart(request,id):
+    
+    variant = Variant.objects.get(id=id)
+    # user = request.id
+    # user_instance = get_object_or_404(Usermodelss, id=id)
+    # print(user_id)
+    user = request.session['username']
+    print(user)
+
+    if request.method == 'POST':
+        
+        user_instance = get_object_or_404(Usermodelss, username=user)
+        
+        
+        c_quantity = int(request.POST['quantity'])
+        
+       
+        cart_item, created = CartItem.objects.get_or_create(
+            
+            user_id=user_instance,
+            Variant_id = variant,
+            product_id=variant.products,
+            defaults={'c_quantity': 1}
+            
+
+        )
+
+        if c_quantity < 6:
+            
+        
+            if not created:
+                    
+                cart_item.c_quantity += int(c_quantity)
+                
+            else:
+                cart_item.c_quantity=1
+            
+            cart_item.save()
+            
+            return redirect('cart')
+        
+        else:
+            messages.error(request,"quantity is out of limit...")
+            return redirect('cart')
+    
+    return render(request,'cart.html')
+
+
+def delete_cart(request,id):
+    CartItem.objects.get(id=id).delete()
+    return redirect('cart')
+
+
+
+def userprofile(request):
+
+    return render(request,'userprofile.html')

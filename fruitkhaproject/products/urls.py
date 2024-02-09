@@ -8,7 +8,7 @@ urlpatterns = [
      path('edit/',views.editproducts,name='editproducts'),
      path('update/<str:id>',views.updateproduct,name='updateproducts'),
      path('add_variant/<str:id>',views.add_variant,name='addvariant'),
-     path('edit_variant_modal/<str:id>',views.edit_variant_modal,name='edit_variant_modal'),
+     path('edit_variant_modal/<str:product_id>/<str:variant_id>',views.edit_variant_modal,name='edit_variant_modal'),
 
      
 

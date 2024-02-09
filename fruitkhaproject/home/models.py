@@ -46,3 +46,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 # @receiver(post_save, sender=Usermodelss)
 # def save_user_profile(sender, instance, **kwargs):
 #     instance.userprofile.save()
+        

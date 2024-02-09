@@ -433,7 +433,7 @@
                                                                                 <div id="editvariant{{j.id}}" class="modal fade">
                                                                                     <div class="modal-dialog modal-sm">
                                                                                         <div class="modal-content">
-                                                                                            <form method='POST' action="{% url 'edit_variant_modal' j.id %}">
+                                                                                            <form method='POST' action="">
                                                                                                 {% csrf_token %}
                                                                                                 <div class="modal-header">	
                                                                                                     {% if j.unit == '500g'%}

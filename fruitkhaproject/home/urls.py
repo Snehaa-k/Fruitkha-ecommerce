@@ -11,7 +11,15 @@ urlpatterns = [
      path('single/<str:id>',views.singleproduct,name='singleproduct'),
      path('logout/',views.userlogout,name='logout'),
      path('cart/',views.cart,name='cart'),
+     path('addcart/<str:id>',views.add_cart,name='add_cart'),
+
      path('search/',views.searchh,name ='searchh'),
+     path('deletecart/<str:id>',views.delete_cart,name ='deletecart'),
+     path('userprofile/',views.userprofile,name ='userprofile'),
+
+
+
+
 
 
      # path('page/',views.shop_page,name ='page'),

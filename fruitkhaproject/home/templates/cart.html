@@ -66,16 +66,7 @@
 									</ul>
 								</li>
 								<li><a href="about.html">About</a></li>
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="404.html">404 page</a></li>
-										<li><a href="about.html">About</a></li>
-										<li><a href="cart.html">Cart</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="news.html">News</a></li>
-										<li><a href="shop.html">Shop</a></li>
-									</ul>
+								
 								</li>
 								<li><a href="news.html">News</a>
 									<ul class="sub-menu">
@@ -159,22 +150,28 @@
 									<th class="product-image">Product Image</th>
 									<th class="product-name">Name</th>
 									<th class="product-price">Price</th>
+									<th class="product-price">Unit</th>
 									<th class="product-quantity">Quantity</th>
 									<th class="product-total">Total</th>
 								</tr>
 							</thead>
 							<tbody>
+							{% for cart in cartitem %}
+							    
 								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="/static/img/products/product-img-1.jpg" alt=""></td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
+									<td class="product-remove"><a href="{% url 'deletecart' cart.id %}"><i class="far fa-window-close"></i></a></td>
+									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
+									<td class="product-name">{{cart.product_id.pname}}</td>
+									<td class="product-price">{{cart.Variant_id.v_price}}</td>
+									<td class="product-price">{{cart.Variant_id.unit}}</td>
+									<td class="product-quantity"><input type="number" placeholder="0" value="{{cart.c_quantity}}"></td>
+									
+									<td class="product-total">{{total}}</td>
 								</tr>
 								
 								
 							</tbody>
+							{% endfor %}
 						</table>
 					</div>
 				</div>

@@ -155,10 +155,25 @@
 						<p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}}</p>
 						<p>{{product.description}}</p>
 						<div class="single-product-form">
-							<form action="" method ="post">
-								<input type="number" placeholder="0">
-							</form>
-							<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+							<form action="{% url 'add_cart' variant.id %}" method="post"> 
+								{% csrf_token %}
+								<input type="number" placeholder="0" min="0" name="quantity" required>
+									
+									<!-- Variant selection dropdown menu -->
+
+                                 
+
+						        <select name="unit" class="custom-select" id="variant-select{{variant.id}}" required>
+									<option value="" disabled selected>Select a variant</option>
+									<option value="500g">500g</option>
+									<option value="1kg">1kg</option>
+									<option value="2kg">2kg</option>
+								</select>
+
+								<br>
+							
+							<button class="btn btn-dark btn-lg px-5" type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+						</form>
 							<p><strong>Categories: </strong>Fruits, Organic</p>
 						</div>
 						<h4>Share:</h4>
@@ -355,6 +370,24 @@
 		height: 100%;
 		width : 100%;
 	}
+
+	
+		.custom-select {
+		  color: #495057;
+		  background-color: transparent;
+		  border: 1px solid #ced4da;
+		  border-radius: 0;
+		  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+		  line-height: 1.5;
+		  width:160Px;
+		}
+	  
+		
+		.custom-select option {
+		  color: #495057;
+		  background-color: transparent;
+		}
+	  
 
 </style>
 </html>
