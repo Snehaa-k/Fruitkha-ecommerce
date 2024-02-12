@@ -6,25 +6,24 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-from . models import Usermodelss, generate_otp
+from . models import Usermodelss, generate_otp,Useraddress
 from django.views.decorators.cache import never_cache
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Products,Variant
 from category.models import Category
-from cart.models import CartItem
-from django.db.models import Func,F
+from cart.models import CartItem,order_details
 
 # Create your views here.
 
 @never_cache
 def userloginp(request):
-    if 'username' in request.session:
+    if 'email' in request.session:
         redirect('home')
     if request.method == 'POST':
-        username1 = request.POST['username']
+        email1 = request.POST['email']
         password1 = request.POST['password']
         try:
-          user = Usermodelss.objects.get(username=username1,password1=password1)
+          user = Usermodelss.objects.get(email=email1,password1=password1)
         except:
             user=None
         
@@ -34,7 +33,7 @@ def userloginp(request):
         
         if user is not None:
             if user.is_verified:
-                request.session['username']=username1
+                request.session['email']=email1
                 return render(request,'home.html')
             else:
                 generate_otp(user)
@@ -65,12 +64,10 @@ def usersignupa(request):
             messages.error(request, 'Passwords do not match')
             return render(request, 'usersignuppage.html')
         
-        elif Usermodelss.objects.filter(username=username).exists():
-            messages.error(request,' username is already exists')
-            return render(request,'usersignuppage.html')
+       
         
         elif Usermodelss.objects.filter(email=email).exists() :
-            messages.error(request, 'This Email or username address already exists')
+            messages.error(request, 'This Email  address already exists')
             return render(request,'usersignuppage.html')
         else:
             myuser = Usermodelss(username=username,email=email,phonenumber=phoneno,password1=Pass1,password2=pass2)
@@ -104,8 +101,8 @@ def home(request):
 
 def singleproduct(request,id):
     prdts = Products.objects.get(id = id)
-    print(prdts)
-    variant = Variant.objects.get(products_id = id)
+    # print(prdts)
+    variant = Variant.objects.filter(products_id = id)
     
     return render(request,'single-product.html',{'product':prdts,'variant':variant})
 
@@ -121,7 +118,7 @@ def shop(request):
 
 
 def userlogout(request):
-    if 'username' in request.session:
+    if 'email' in request.session:
         request.session.flush()
     return redirect('userlog')
 
@@ -149,7 +146,7 @@ def userlogout(request):
 
 
 def searchh(request):
-  if 'username' in request.session:
+  if 'email' in request.session:
     searchh = request.POST.get('S')
     
     prdts = Products.objects.filter(pname__icontains=searchh)
@@ -163,37 +160,59 @@ def about(request):
 # cart section................
 
 def cart(request):
-    cartitem = CartItem.objects.all()
+    email1 = request.session['email']
+    user = Usermodelss.objects.get(email=email1)
+    cartitem = CartItem.objects.filter(user_id=user)
     variant = Variant.objects.all()
-   
     
+    for item in cartitem:
+        item.total = item.c_quantity * item.Variant_id.v_price
     
-    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant})
+    subtotal = sum(item.total for item in cartitem)
+    final = subtotal + 45  
+    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
 
 
 def add_cart(request,id):
     
-    variant = Variant.objects.get(id=id)
+    # try:
+    print(id)
+    Product = Products.objects.get(id=id)
+    
+    # except Variant.DoesNotExist:
+    #     messages.error(request, "Variant does not exist.")
+    #     return redirect('cart')
     # user = request.id
     # user_instance = get_object_or_404(Usermodelss, id=id)
     # print(user_id)
-    user = request.session['username']
-    print(user)
+    user = request.session['email']
+    # print(user)
 
     if request.method == 'POST':
         
-        user_instance = get_object_or_404(Usermodelss, username=user)
+        user_instance = get_object_or_404(Usermodelss, email=user)
+       
+        var = request.POST['unit'] 
         
+
         
         c_quantity = int(request.POST['quantity'])
-        
+        print(var,c_quantity)  
+        try:   
+            var  = Variant.objects.get(products = Product,unit = var)
+        except Variant.DoesNotExist:
+            messages.error(request, "unit is does not exist.")
+            return redirect('shop')
+        print(var.id)
        
         cart_item, created = CartItem.objects.get_or_create(
             
             user_id=user_instance,
-            Variant_id = variant,
-            product_id=variant.products,
-            defaults={'c_quantity': 1}
+            Variant_id = var,
+            product_id=Product,
+            
+            defaults={'c_quantity': 1},
+
             
 
         )
@@ -204,10 +223,11 @@ def add_cart(request,id):
             if not created:
                     
                 cart_item.c_quantity += int(c_quantity)
+                cart_item.c_quantity * cart_item.Variant_id.v_price
                 
             else:
                 cart_item.c_quantity=1
-            
+                cart_item.total =  cart_item.c_quantity * cart_item.Variant_id.v_price
             cart_item.save()
             
             return redirect('cart')
@@ -225,6 +245,175 @@ def delete_cart(request,id):
 
 
 
-def userprofile(request):
 
-    return render(request,'userprofile.html')
+    
+   
+
+def userprofile(request):
+    if 'email' in request.session:
+        email1 = request.session["email"]
+        user = Usermodelss.objects.get(email=email1)
+        addres = Useraddress.objects.filter(user_id=user)
+
+   
+    
+    
+
+    return render(request,'userprofile.html',{'user':user,'addres':addres})
+
+
+
+
+
+
+def edituserprofile(request):
+    email1 = request.session["email"]
+    # print(email1)
+    user = Usermodelss.objects.get(email=email1)
+    # print(user.email)
+    if request.method == 'POST':
+
+        username1 = request.POST['username']    
+        phoneno = request.POST['phone']
+        
+        # print(username1)
+        if len(phoneno)!=10:
+            messages.error(request, 'Phone number must contains 10 digit')
+            return redirect('userprofile')
+        
+        user.username = username1
+        user.phonenumber = phoneno
+        user.save()
+        
+        
+        messages.success(request, 'Updated successfully')
+        return redirect('userprofile')
+    
+    return render(request,'userprofile.html',{'user':user})
+    
+
+
+def add_address(request):
+   
+    
+    if request.method == 'POST':
+        email1 = request.session["email"]
+        user= Usermodelss.objects.get(email=email1)
+        add = Useraddress.objects.filter(user_id = user.id).last()
+        name = request.POST["name"]
+        phonenumber=request.POST["phone"]
+        email2 = request.POST["email"]
+        country = request.POST["country"]
+        state = request.POST["state"]
+        address = request.POST["address"]
+        pin = request.POST["pin"]
+        post = request.POST["post"]
+        # print(name)
+
+        if len(phonenumber)==10:
+        
+            if len(pin)==6:
+            
+            
+                add_addres = Useraddress(
+                        user_id=user,
+                        Name = name,
+                        phone = phonenumber,
+                        email = email2,
+                        country = country,
+                        state = state,
+                        address = address,
+                        pin = pin,
+                        post = post,
+
+                    )
+                add_addres.save()
+                messages.success(request,"adress successfully added")
+                return redirect('userprofile')
+            else:
+                messages.error(request,"invalid pin number")
+                return redirect('userprofile')
+            
+        else:
+            # print(len(phonenumber))
+            messages.error(request,"invalid phone number")
+            return redirect('userprofile')
+
+    return render(request,"userprofile.html",{'last_addr':add})
+
+
+
+def delete_addres(request,id):
+    Useraddress.objects.get(id=id).delete()
+    return redirect('userprofile')
+
+
+# check out view....
+def checkout(request):
+    if 'email' in request.session:
+        email1 = request.session["email"]
+        user = Usermodelss.objects.get(email=email1)
+        cartitem = CartItem.objects.filter(user_id = user)
+        if cartitem.exists():
+
+            addres = Useraddress.objects.filter(user_id=user)
+        
+            variant = Variant.objects.all()
+            for item in cartitem:
+                item.total = item.c_quantity * item.Variant_id.v_price
+            subtotal = sum(item.total for item in cartitem)
+            final = subtotal + 45  
+            # print(final)
+        
+        
+
+            return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final})
+        else:
+            messages.error(request,"you can't checkout your cart is empty!...")
+            return redirect('shop')
+
+
+def place_order(request):
+    if request.method == 'POST':
+        email1 = request.session['email']
+        user = Usermodelss.objects.get(email=email1)
+        cartitem = CartItem.objects.filter(user_id=user)
+        addres = request.POST["selected_address_id"]
+        ad = Useraddress.objects.get(id=addres)
+        ad1 = ad.id
+        for i in cartitem:
+            p_order = order_details(
+                userid = user,
+                pay_method = "cod",
+                address = ad,
+                total_amount = i.total,
+                product_name = i.product_id,
+                variant_unit = i.Variant_id,
+
+
+
+            )
+            p_order.save()
+        cartitem.delete()
+
+        return redirect('orderplace')
+    else:
+        messages.error(request,"oops something error")
+        return redirect('checkout')
+
+    
+
+
+
+def orderplace(request):
+
+    return render(request,'orderplaced.html')
+
+def orderdetails(request):
+    if  'email' in request.session:
+        email1 = request.session["email"]
+        user = Usermodelss.objects.get(email=email1)
+        order = order_details.objects.filter(userid = user)
+        # print(order)
+
+    return render(request,'orderdetails.html',{'order':order})

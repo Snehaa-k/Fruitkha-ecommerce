@@ -68,7 +68,7 @@
 								
 								<li><a href="{% url 'about' %}">About</a></li>
 								
-								{% if 'username' in request.session %}
+								{% if 'email' in request.session %}
 								<li><a href="contact.html">Contact</a></li>
 								<li><a href="{% url 'shop' %}">Shop</a>
 
@@ -79,7 +79,7 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										{% if 'username' in request.session %}
+										{% if 'email' in request.session %}
 										<a class="shopping-cart" href="{% url 'userprofile' %}"><i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
 										<a class="shopping-cart" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>

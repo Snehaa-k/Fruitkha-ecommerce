@@ -111,7 +111,7 @@ def updateproduct(request,id):
 
 def add_variant(request,id):
     prdts = Products.objects.get(id=id)
-    print(id)
+    # print(id)
     if request.method == 'POST':
         unit = request.POST['unit']
         price = request.POST['price']
@@ -125,6 +125,7 @@ def add_variant(request,id):
 
             )
             variant.save()
+            messages.error(request, "variant added successfully")
             return redirect('productslist')
         else:
             messages.error(request, "the unit is already added so just update it")
@@ -135,18 +136,26 @@ def add_variant(request,id):
 
 
 def edit_variant_modal(request, id):
-    # product = Products.objects.get(id=product_id)
-    variant = Variant.objects.filter(id=id).first()
+    product = Products.objects.get(id=id)
+    variant = Variant.objects.filter(products=product).first()
+    
+    # print("haii")
     if request.method == 'POST':
         quantity = request.POST['quantity']
         price = request.POST['price']
-        if quantity and price is not None:
+        # print(quantity)
+        # print(price)
+        if quantity is not None and price is not None:
+           
             variant.v_quantity = quantity
             variant.v_price=price
             variant.save()
-            messages.success(request, "Quantity updated successfully")
+            messages.success(request, "Quantity and price updated successfully")
             return redirect('productslist')
         
         else:
-            messages.error(request, "Quantity is required")
+            messages.error(request, "Quantity  and price is required")
+            return redirect('productslist')
     return render(request,'veiwproducts.html',{'variant':variant})
+
+

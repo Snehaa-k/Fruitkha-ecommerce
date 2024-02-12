@@ -74,26 +74,24 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
+								<li class="current-list-item"><a href="{% url 'home'  %}">Home</a>
+									
 								</li>
-								<li><a href="about.html">About</a></li>
+								<li><a href="{% url 'about'  %}">About</a></li>
 								
 								{% comment %} <li><a href="news.html">News</a> {% endcomment %}
 									
 								</li>
 								<li><a href="contact.html">Contact</a></li>
-								<li><a href="shop.html">Shop</a>
+								<li><a href="{% url 'shop'  %}">Shop</a>
 									
 								</li>
 								<li>
 									<div class="header-icons">
-										<a href="contact.html">order details</a>
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a href="{% url 'orderdetails'  %}">order details</a>
+										<a class="shopping-cart" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="shopping-cart" href="#"><i class='fas fa-heart' style='font-size:17px;color:white;'></i></a>
+										<a class="shopping-cart" href="/logout/">logout</a>
 									</div>
 								</li>
 							</ul>
@@ -128,139 +126,244 @@
 	<div class="container rounded bg-white mt-100 mb-100">
 		<div class="row">
 			<div class="col-md-3 ">
-				<div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">Edogaru</span><span class="text-black-50">edogaru@mail.com.my</span><span> </span></div>
+				<div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">{{user.username}}</span><span class="text-black-50">{{user.email}}</span><span> </span></div>
 			</div>
 			<div class="col-md-5 ">
 				<div class="p-3 py-5">
 					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h4 class="text-center">Profile Settings</h4>
+						<h3 class="text-center">Profile Settings</h3>
+						{% if messages %}
+						<div class="alert alert-success mt-3">
+						{% for message in messages %}
+						{{ message }}
+						{% endfor %}
+						</div>
+						{% endif %}
 					</div>
-					
+					<br>
+					<br>
+                  
+					{% comment %} <form method="post" action="{% url 'edituserprofile' request.user.id %}"> {% endcomment %}
+					   
 						
-					
-						<div class="col-md-12"><label class="labels">First Name</label><input type="text" class="form-control" placeholder="enter Name" value=""></div>
-						<div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value=""></div>
-						<div class="col-md-12"><label class="labels">email</label><input type="text" class="form-control" placeholder="enter address line 1" value=""></div>
+						
+						
+
+						<div class="col-md-12 text-transparent"><h5>Name :{{ user.username }}</h5></div><br>
+						<div class="col-md-12 text-transparent"><h5>Mobile Number  : {{user.phonenumber}}</h5></div><br>
+						<div class="col-md-12 text-transparent "><h5>email : {{user.email}}</h5></div>
 						{% comment %} <div class="col-md-12"><label class="labels"></label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
 						<div class="col-md-12"><label class="labels"></label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
 						 {% endcomment %}
-					
+					    
 					<br>
 					
 					<div class="text-center">
-					<button class="btn btn-primary profile-button" type="button">Edit Profile</button>
-					<button class="btn btn-primary profile-button" type="button">change Password</button>
-                    <div>
-
-
-
-					{% comment %} address.............. {% endcomment %}
-					<div class="cart-section mt-150 mb-150">
-						<div class="container">
-							<div class="row">
-								<div class="col-lg-8 col-md-12">
-									<div class="cart-table-wrap">
-										<table class="cart-table">
-											<thead class="cart-table-head">
-												<tr class="table-head-row">
-													<th class="product-remove"></th>
-													<th class="product-image">Name</th>
-													<th class="product-name">Address</th>
-													<th class="product-price">State,country</th>
-													<th class="product-price">Post,pin</th>
-													<th class="product-quantity">Email ID</th>
-													<th class="product-total">Phone</th>
-													<th class="product-total"> </th>
-
-												</tr>
-											</thead>
-											<tbody>
-											
-												
-												<tr class="table-body-row">
-													<td class="product-remove"><a href=""><i class="far fa-window-close"></i></a></td>
-													<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
-													<td class="product-name">{{cart.product_id.pname}}</td>
-													<td class="product-price">{{cart.Variant_id.v_price}}</td>
-													<td class="product-price">{{cart.Variant_id.unit}}</td>
-													<td class="product-quantity">hhhhhhhhhmmm</td>
-													<td class="product-total">totaldddddddddddd</td>
-													<td class="product-total"><a href="javascript:void(0)" data-bs-toggle="modal"
+					
+                    <a class="btn btn-primary profile-button btn-sm"  href="javascript:void(0)" data-bs-toggle="modal"
 														data-bs-target="#editCategoryModal">
-														<span class="lnr lnr-pencil"></span>
-													</a></td>
+														<span class="lnr lnr-pencil"></span> Edit Profile 
+													</a>
 													<!-- Edit Category Modal -->
 													
-													<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
-														aria-hidden="true">
-														<div class="modal-dialog">
+													<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+														<div class="modal-dialog modal-sm">
 															<div class="modal-content">
 																<div class="modal-header">
-																	<h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+																	<h5 class="modal-title" id="editCategoryModalLabel">Edit Profile</h5>
 																	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 																</div>
 																<div class="modal-body">
 																	<!-- Edit Category Form -->
-																	<form method="post" action="" enctype="multipart/form-data">
+																	<form method="post" action="{% url 'edituserprofile'  %}" enctype="multipart/form-data">
 																		{% csrf_token %}
 																		<div class="mb-3">
-																			<label for="categoryName" class="form-label">Product Name</label>
-																			<input type="text" class="form-control" id="categoryName"  value="{{product.pname}}" name = "pname" required>
+																			<label for="categoryName" class="form-label">Name</label>
+																			<input type="text" class="form-control" id="categoryName" value="{{user.username}}" name="username" required>
 																		</div>
 																		<div class="mb-3">
-																			
-																			
-																			
-																			
 																		</div>
 																		<div class="mb-3">
-																			<label for="categoryName" class="form-label">Select Category</label>
-																			
-																		</div>
-																		<div class="mb-3">
-																			<label for="categoryName" class="form-label">Description</label>
-																			<input type="text" class="form-control" id="categoryName" value="{{product.description}}" name = "description" required>
-																		
-																			
-																		</div>
-																		<div class="mb-3">
-																			<label for="categoryName" class="form-label">Price</label>
-																			<input type="number"  step="0.01" min="0.00" class="form-control" id="categoryName"  value="{{product.price}}" name = "price" required>
-																		
-																			
-																		</div>
-
-																		<div class="mb-3">
-																			<label for="categoryName" class="form-label">In Stock</label>
-																			<input type="text" class="form-control" id="categoryName"  value="{{product.in_stock}}"  name = "instock" required>
-																		
-																			
+																			<label for="categoryName" class="form-label">Phone</label>
+																			<input type="text" class="form-control" id="categoryName" value="{{user.phonenumber}}" name="phone" required>
 																		</div>
 																		<!-- Add more form fields as needed -->
-
-																		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
 																		<button type="submit" class="btn btn-primary">Save changes</button>
+
 																	</form>
 																</div>
+																
 															</div>
 														</div>
 													</div>
-                                                     {% comment %} end edit {% endcomment %}
-												</tr>
-												
-												
-											</tbody>
+													
+					<button class="btn btn-primary profile-button btn-sm" type="button">change Password</button>
+					<br>
+					<br>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="address-section">
+										<!-- Add your address content here -->
 
+										
+                                    
+								<!-- cart -->
+								<div class="cart-section mt-150 mb-150">
+									<div class="container">
+										<h3> ADRESS </h3>
+										<div class="row">
+											<div class="col-lg-8 col-md-12">
+												<div class="cart-table-wrap">
+													<table class="cart-table">
+														<thead class="cart-table-head">
+															<tr class="table-head-row">
+																<th class="product-remove"></th>
+																<th class="product-image">Name</th>
+																<th class="product-name">Email</th>
+																<th class="product-total">phone</th>
+																<th class="product-price">State</th>
+																<th class="product-price">Country</th>
+																<th class="product-price">Address</th>
+																<th class="product-quantity">Pin</th>
+																<th class="product-total">Post</th>
+															
+																
+															</tr>
+														</thead>
+														{% for i in addres %}
+														<tbody>
+														
+															
+															<tr class="table-body-row">
+																<td class="product-remove"><a href="{% url 'delete_addres' i.id %}"><i class="far fa-window-close"></i></a></td>
+																<td class="product-image">{{i.Name}}</td>
+																<td class="product-name">{{i.email}}</td>
+																<td class="product-price">{{i.phone}}</td>
+																<td class="product-price">{{i.state}}</td>
+																<td class="product-quantity">{{i.country}}</td>
+																<td class="product-quantity">{{i.address}}</td>
+																<td class="product-quantity">{{i.pin}}</td>
+																<td class="product-total">{{i.post}}</td>
+															</tr>
+															
+														</tbody>
+														{%  endfor %}
+													</table>
+												</div>
+											</div>
 											
-										</table>
+											
+												</div>
+												<br>
+												
+												<div class="row">
+													<div class="col-lg-8 col-md-12">
+														<div class="card ">
+															<button type="button" class="btn btn-dark btn-sm align-center" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Adress</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+											
+										</div>
 									</div>
 								</div>
-				
+								<!-- end cart -->
+																
+
+
+								   
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                    
+					
+					{% comment %} </form> {% endcomment %}
+             {% comment %} address.............. {% endcomment %}
+
+{% comment %} modal.......................add addres {% endcomment %}
+
+			<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addCategoryModalLabel">Add Products</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<!-- Add Products Form -->
+						<form method='post' action ="{% url 'add_address' %}" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="mb-3">
+								
+								<label for="categoryName" class="form-label">Name</label>
+								<input type="text" class="form-control"  placeholder="Enter Your name" name = "name" required>
+							</div>
+							
+							<div class="mb-3">
+								
+								<label for="categoryName" class="form-label">PhoneNumber</label>
+								<input type="tel" class="form-control"  placeholder="Enter Your phonenumber" name = "phone" required>
+							</div>
+
+							<div class="mb-3">
+								<label for="categoryName" class="form-label">Email ID</label>
+								<input type="email" class="form-control"  placeholder="Enter email" name = "email" required>
+							
+								
+							</div>
+		
+							<div class="mb-3">
+								<label for="categoryName" class="form-label">country</label>
+								<input type="text" class="form-control"  placeholder="Enter coutry" name = "country" required>
+							
+								
+							</div>
+							<div class="mb-3">
+								<label for="categoryName" class="form-label">State</label>
+								<input type="text" class="form-control" id="categoryName" placeholder="Enter the State" name = "state" required>
+							
+								
+							</div>
+							<div class="mb-3">
+								<label for="categoryName" class="form-label">Address</label>
+								<input type="text" class="form-control" id="categoryName" placeholder="Enter the address" name = "address" required>
+							
+								
+							</div>
+							<div class="mb-3">
+								<label for="categoryName" class="form-label">Pin</label>
+								<input type="tel" class="form-control" min="0" max="6" id="categoryName" placeholder="Enter the pin" name = "pin" required>
+							
+								
+							</div>
+							<div class="mb-3">
+								<label for="categoryName" class="form-label">Post</label>
+								<input type="text" class="form-control" min="0" max="6" id="categoryName" placeholder="Enter the post" name = "post" required>
+							
+								
+							</div>
+		
+		
+		
+		
+							<!-- Add more form fields as needed -->
+		
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">ADD</button>
+						</form>
+					</div>
 				</div>
 			</div>
-			<br>
-			<button class="btn btn-primary profile-button align-center" type="button">Edit Profile</button>
-
+		</div>
+		{% comment %} end {% endcomment %}
 		{% comment %} <div class="col-md-4">
 				
 					
@@ -365,6 +468,7 @@
 	<script src="/static/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<!-- count down -->
 	<script src="/static/js/jquery.countdown.js"></script>
 	<!-- isotope -->
@@ -387,6 +491,7 @@
 	
 	body {
 		background: rgb(99, 39, 120)
+		
 	}
 	
 	.form-control:focus {

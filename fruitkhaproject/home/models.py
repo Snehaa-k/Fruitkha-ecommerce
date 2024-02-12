@@ -47,3 +47,23 @@ def create_user_profile(sender, instance, created, **kwargs):
 # def save_user_profile(sender, instance, **kwargs):
 #     instance.userprofile.save()
         
+
+
+
+class Useraddress(models.Model):
+      user_id = models.ForeignKey(Usermodelss,on_delete=models.CASCADE)
+      Name = models.CharField(max_length=225)
+      country = models.CharField(max_length=200)
+      state = models.CharField(max_length=200)
+      address = models.TextField()
+      pin = models.BigIntegerField()
+      post = models.CharField(max_length=200)
+      email = models.EmailField()
+      phone = models.BigIntegerField()
+      is_cancelled = models.BooleanField(default=False)
+      
+      def __str__(self):
+        return self.user.username
+
+
+

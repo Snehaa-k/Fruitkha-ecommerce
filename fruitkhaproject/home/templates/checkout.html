@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+
+	<!-- title -->
+	<title>Check Out</title>
+
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/static/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/static/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/static/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/static/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/static/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/static/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/static/css/responsive.css">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<div class="top-header-area" id="sticker">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 text-center">
+					<div class="main-menu-wrap">
+						<!-- logo -->
+						<div class="site-logo">
+							<a href="index.html">
+								<img src="/static/img/logo.png" alt="">
+							</a>
+						</div>
+						<!-- logo -->
+
+						<!-- menu start -->
+						<nav class="main-menu">
+							<ul>
+								<li class="current-list-item"><a href="{% url 'home'  %}">Home</a>
+									
+								</li>
+								<li><a href="{% url 'about'  %}">About</a></li>
+								
+								
+								<li>
+									<div class="header-icons">
+										<a class="shopping-cart" href="{% url 'userprofile' %}"><i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
+										<a class="shopping-cart" href="{% url 'cart'  %}"><i class="fas fa-shopping-cart"></i></a>
+										
+									</div>
+								</li>
+							</ul>
+						</nav>
+						
+						<!-- menu end -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end header -->
+
+	<!-- search area -->
+	
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Check Out Product</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+	
+	{% if messages %}
+	<div class="alert alert-success mt-3">
+	{% for message in messages %}
+	{{ message }}
+	{% endfor %}
+	</div>
+	{% endif %}
+
+	<!-- check out section -->
+	<div class="checkout-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="checkout-accordion-wrap">
+						<div class="accordion" id="accordionExample">
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingOne">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						         Cick Here To Add  Shipping Address
+						        </button>
+						      </h5>
+						    </div>
+
+						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="billing-address-form">
+						        	<form action="{% url 'add_address' %}" method="post">
+										{% csrf_token %}
+						        		<p><input type="text" placeholder="Name" name="name"></p>
+						        		<p><input type="email" placeholder="Email" name="email"></p>
+						        		<p><input type="textarea" placeholder="Address" name="address"></p>
+						        		<p><input type="tel" placeholder="Phone" name="phone"></p>
+										<p><input type="text" placeholder="State" name="state"></p>
+										<p><input type="text" placeholder="Country" name="country"></p>
+										<p><input type="tel" max="6" placeholder="Pin" name="pin"></p>
+										<p><input type="text"  placeholder="Post" name="post"></p>
+						        		<button type="submit" class="btn btn-primary">ADD</button>
+						        	</form>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingTwo">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+									Click Here To Choose Existing Address
+						        </button>
+						      </h5>
+						    </div>
+						    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="shipping-address-form">
+						        	<h3></h3>
+									    {% comment %} {% if addresses %} {% endcomment %}
+										{% for i in addres %}
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title">Address</h5>
+												<!-- Display Address Details -->
+												<p> {{i.Name}} </p>
+												<p> {{i.email}}</p>
+												<p> {{i.phone}}</p>
+												<p>{{i.address}} , {{i.state}},{{i.country}},{{i.pin}} ,{{i.post}}</p>
+												<!-- Choice Option -->
+											<form method="post" action="{% url 'place_order'  %}">
+												{% csrf_token  %}
+												<label class="form-check-label">
+													<input type="radio" class="form-check-input" name="selected_address_id" id="address{{ i.id }}" value="{{ i.id }}" {% if i.id == last_addr %} checked {% endif %} required>
+													<span class="checkmark"></span>
+												</label>
+											
+											</div>
+										    
+										</div>
+										 {% endfor %}
+										
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingThree">
+						      <h5 class="mb-0">
+						        
+						      </h5>
+						    </div>
+						    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="card-details">
+						        	<p>Your card details goes here.</p>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="order-details-wrap">
+						<table class="order-details">
+							<thead>
+								<tr>
+									<th>Your order Details</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody class="order-details-body">
+								<tr>
+									
+									<td>Product</td>
+									<td>Total</td>
+								</tr>
+								{% for cart in cartitem  %}
+								<tr>
+									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
+									
+									<td>₹{{cart.total}}</td>
+								</tr>
+								{% endfor  %}
+								
+							</tbody>
+							<tbody class="checkout-details">
+								
+								<tr>
+									<td>Shipping</td>
+									<td>₹45</td>
+								</tr>
+								<tr>
+									<td>Total</td>
+									<td>₹{{final}}</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- <a href="#" class="boxed-btn">Place Order</a> -->
+
+        <!--......................... <payment modal>............................. -->
+						<a href="" class="btn boxed-btn" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal">
+							Place Order
+						</a>
+
+
+						<div class="modal fade " id="variantModal" tabindex="-1" role="dialog" aria-labelledby="variantModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-sm" role="document">
+								<div class="modal-content">
+									<div class="modal-header bg-warning">
+										<h5 class="modal-title bg-warning" id="variantModalLabel">Select Your Payment Method</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body ">
+										<!-- Variant cards -->
+										<div class="row">
+										
+										
+											<div class="col-12 mb-3">
+												<div class="card border-primary custom-card" data-payment-method="phonepe">
+													<div class="card-body">
+														<h4><i class="fa fa-cc-paypal" ></i> PhonePe  </h4>
+														
+														<label class="form-check-label">
+															<input type="radio" class="" name="payment-method" value="phonepe">
+															<span class="tick-mark"></span>
+														</label>
+													   
+													</div>
+                                                </div>
+                                                <div class="card border-primary custom-card" data-payment-method="wallet">
+													<div class="card-body">
+														<h4><i class="fa fa-credit-card" style="font-size:26px"></i> WAllet  </h4>
+														<label class="form-check-label">
+															<input type="radio" class="" name="payment-method" value="phonepe">
+															<span class="tick-mark"></span>
+														</label>
+														
+													</div>
+                                                </div>
+												<div class="card border-primary custom-card" data-payment-method="cash">
+													<div class="card-body">
+														<h4><i class='fas fa-handshake' style='font-size:26px'></i> Cash on Delivery</h4>
+														<label class="form-check-label">
+															<input type="radio" class="" name="payment-method" value="cod">
+															<span class="tick-mark"></span>
+														</label>
+													   
+													</div>
+                                                </div>
+												<div class="card border-primary custom-card" data-payment-method="paypal">
+													<div class="card-body">
+														<h4>PayPal  </h4>
+														
+														<label class="form-check-label">
+															<input type="radio" class="" name="payment-method" value="phonepe">
+															<span class="tick-mark"></span>
+														</label>
+													</div>
+                                                </div>
+
+												<div class="modal-footer">
+													<button type="submit" class="btn boxed-btn">PAY</button>
+												</div>
+                                            </form>
+											</div>
+										</div>	
+                                    </div>
+								</div>	
+                            </div>
+						</div>
+		<!--............. <ending of variant modal>..................................................</ending>	 -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end check out section -->
+
+	<!-- logo carousel -->
+	<div class="logo-carousel-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="logo-carousel-inner">
+						<div class="single-logo-item">
+							<img src="/static/img/company-logos/1.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/static/img/company-logos/2.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/static/img/company-logos/3.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/static/img/company-logos/4.png" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="/static/img/company-logos/5.png" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end logo carousel -->
+
+	<!-- footer -->
+	<div class="footer-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box about-widget">
+						<h2 class="widget-title">About us</h2>
+						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box get-in-touch">
+						<h2 class="widget-title">Get in Touch</h2>
+						<ul>
+							<li>34/8, East Hukupara, Gifirtok, Sadan.</li>
+							<li>support@fruitkha.com</li>
+							<li>+00 111 222 3333</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box pages">
+						<h2 class="widget-title">Pages</h2>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="about.html">About</a></li>
+							<li><a href="services.html">Shop</a></li>
+							
+							<li><a href="contact.html">Contact</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box subscribe">
+						<h2 class="widget-title">Subscribe</h2>
+						<p>Subscribe to our mailing list to get the latest updates.</p>
+						<form action="index.html">
+							<input type="email" placeholder="Email">
+							<button type="submit"><i class="fas fa-paper-plane"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end footer -->
+	
+	<!-- copyright -->
+	<div class="copyright">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-12">
+					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>,  All Rights Reserved.<br>
+						Distributed By - <a href="https://themewagon.com/">Themewagon</a>
+					</p>
+				</div>
+				<div class="col-lg-6 text-right col-md-12">
+					<div class="social-icons">
+						<ul>
+							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end copyright -->
+	
+	<!-- jquery -->
+	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/static/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/static/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/static/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/static/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/static/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="/static/js/jquery.meanmenu.min.js"></script>
+
+	
+
+	<!-- sticker js -->
+	<script src="/static/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="/static/js/main.js"></script>
+
+	<script>
+		document.getElementById('addVariantBtn').addEventListener('click', function() {
+			$('#addVariantModal').modal('show');
+		});
+	
+	
+		
+		
+		
+	</script>
+	
+
+</body>
+<style>
+	/* Add your custom styles here */
+	.card {
+		margin-bottom: 20px;
+	}
+	.form-check-label {
+		cursor: pointer;
+	}
+	.form-check-input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.form-check-input:checked ~ .checkmark:after {
+		display: block;
+	}
+	.form-check-label .checkmark {
+		position: absolute;
+		top: 22px;
+		left: 599px;
+		height: 20px;
+		width: 20px;
+		background-color: #fff;
+		border: 1px solid #aaa;
+		border-radius: 50%;
+	}
+	.form-check-label .checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+	.form-check-input:checked ~ .checkmark {
+		background-color: #000;
+	}
+	.form-check-input:checked ~ .checkmark:after {
+		display: block;
+	}
+	.form-check-label .checkmark:after {
+		top: 50%;
+		left: 50%;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #fff;
+		transform: translate(-50%, -50%);
+	}
+
+	.custom-card.active {
+		border-color: red; 
+	}
+
+
+
+
+	
+</style>
+
+
+</html>

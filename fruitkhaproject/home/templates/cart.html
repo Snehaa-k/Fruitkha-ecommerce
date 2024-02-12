@@ -10,7 +10,7 @@
 	<title>Cart</title>
 
 	<!-- favicon -->
-	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="/static/img/favicon.png">
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -59,33 +59,19 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
+								<li class="current-list-item"><a href="{% url 'home'  %}">Home</a>
+									
 								</li>
-								<li><a href="about.html">About</a></li>
+								<li><a href="{% url 'about'  %}">About</a></li>
 								
 								</li>
-								<li><a href="news.html">News</a>
-									<ul class="sub-menu">
-										<li><a href="news.html">News</a></li>
-										<li><a href="single-news.html">Single News</a></li>
-									</ul>
-								</li>
+								
 								<li><a href="contact.html">Contact</a></li>
-								<li><a href="shop.html">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="shop.html">Shop</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="single-product.html">Single Product</a></li>
-										<li><a href="cart.html">Cart</a></li>
-									</ul>
-								</li>
+								
 								<li>
 									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="shopping-cart" href="{% url 'userprofile' %}"><i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
+										<a class="shopping-cart" href="{% url 'cart'  %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 									</div>
 								</li>
@@ -162,11 +148,11 @@
 									<td class="product-remove"><a href="{% url 'deletecart' cart.id %}"><i class="far fa-window-close"></i></a></td>
 									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
 									<td class="product-name">{{cart.product_id.pname}}</td>
-									<td class="product-price">{{cart.Variant_id.v_price}}</td>
+									<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
 									<td class="product-price">{{cart.Variant_id.unit}}</td>
 									<td class="product-quantity"><input type="number" placeholder="0" value="{{cart.c_quantity}}"></td>
 									
-									<td class="product-total">{{total}}</td>
+									<td class="product-total">₹{{cart.total}}</td>
 								</tr>
 								
 								
@@ -188,21 +174,21 @@
 							<tbody>
 								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
-									<td>$500</td>
+									<td>₹{{subtotal}}</td>
 								</tr>
 								<tr class="total-data">
 									<td><strong>Shipping: </strong></td>
-									<td>$45</td>
+									<td>₹45</td>
 								</tr>
 								<tr class="total-data">
 									<td><strong>Total: </strong></td>
-									<td>$545</td>
+									<td>₹{{final}}</td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="cart-buttons">
-							<a href="cart.html" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
+							<a href="{% url 'shop'   %}" class="boxed-btn">continue Shopping</a>
+							<a href="{% url 'checkout'  %}" class="boxed-btn black">Check Out</a>
 						</div>
 					</div>
 

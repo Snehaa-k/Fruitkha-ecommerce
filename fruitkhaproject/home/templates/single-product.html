@@ -59,25 +59,22 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
+								<li class="current-list-item"><a href="{% url 'home'  %}">Home</a>
+									
 								</li>
-								<li><a href="about.html">About</a></li>
+								<li><a href="{% url 'about'  %}">About</a></li>
 								
 								
 								<li>
 									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+										<a class="shopping-cart" href="{% url 'userprofile' %}"><i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
+										<a class="shopping-cart" href="{% url 'cart'  %}"><i class="fas fa-shopping-cart"></i></a>
+										
 									</div>
 								</li>
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-						<div class="mobile-menu"></div>
+						
 						<!-- menu end -->
 					</div>
 				</div>
@@ -155,7 +152,7 @@
 						<p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}}</p>
 						<p>{{product.description}}</p>
 						<div class="single-product-form">
-							<form action="{% url 'add_cart' variant.id %}" method="post"> 
+							<form action="{% url 'add_cart' product.id %}" method="post"> 
 								{% csrf_token %}
 								<input type="number" placeholder="0" min="0" name="quantity" required>
 									
@@ -163,7 +160,7 @@
 
                                  
 
-						        <select name="unit" class="custom-select" id="variant-select{{variant.id}}" required>
+						        <select name="unit" class="custom-select" id="" required>
 									<option value="" disabled selected>Select a variant</option>
 									<option value="500g">500g</option>
 									<option value="1kg">1kg</option>

@@ -284,6 +284,13 @@
                                         data-bs-target="#addCategoryModal">Add Products</button>
                                 </div>
                                 <!-- Add Category Button End -->
+                                {% if messages %}
+                                <div class="alert alert-success mt-3">
+                                {% for message in messages %}
+                                {{ message }}
+                                {% endfor %}
+                                </div>
+                                {% endif %}
 
                                 <!-- Table Start -->
                                 <div class="card-body">
@@ -375,7 +382,7 @@
                                                                                 </select>
                                                                             </div>
                                                                             <div class="mb-3">
-                                                                                <label for="quantity" class="form-label">Quantity:</label>
+                                                                                <label for="quantity" class="form-label">Quantity:(pack)</label>
                                                                                 <input type="number" class="form-control" id="quantity" name="quantity" required>
                                                                             </div>
                                                                             <div class="mb-3">
@@ -420,7 +427,7 @@
                                                                         <div class="col-12 mb-3">
                                                                             <div class="card border-primary custom-card">
                                                                                 <div class="card-body">
-                                                                                    <h4>Qty : {{j.v_quantity}}</h4>
+                                                                                    <h4>Qty(pack) : {{j.v_quantity}}</h4>
                                                                                     <h4>Variant : {{j.unit}}</h4>
                                                                                     <h4>Price : {{j.v_price}}</h4>
                                                                                     
@@ -433,9 +440,9 @@
                                                                                 <div id="editvariant{{j.id}}" class="modal fade">
                                                                                     <div class="modal-dialog modal-sm">
                                                                                         <div class="modal-content">
-                                                                                            <form method='POST' action="">
+                                                                                            <form method='POST' action="{% url 'edit_variant_modal' product.id %}">
                                                                                                 {% csrf_token %}
-                                                                                                <div class="modal-header">	
+                                                                                                {% comment %} <div class="modal-header">	
                                                                                                     {% if j.unit == '500g'%}
                                                                                                     <h4 class="modal-title">Edit variant for 500g</h4>
                                                                                                     {% elif j.unit == '1kg' %}
@@ -444,11 +451,11 @@
                                                                                                     <h4 class="modal-title">Edit variant for 2kg</h4>
                                                                                                     {% endif %}					
                                                                                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                                                                </div>
+                                                                                                </div> {% endcomment %}
                                                                                                 <div class="modal-body modal-sm">					
                                                                                                     
                                                                                                     <div class="form-group">
-                                                                                                        <label>Quantity</label>
+                                                                                                        <label>Quantity(pack)</label>
                                                                                                         <input type="number" min="0" class="form-control" value="{{j.v_quantity}}" name='quantity' required>
                                                                                                     </div>
                                                                                                     <div class="form-group">

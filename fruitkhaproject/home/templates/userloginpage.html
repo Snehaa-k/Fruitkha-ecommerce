@@ -119,11 +119,11 @@
 										 
 							  
 											 <h2 class="text-color">LOGIN</h2>
-											<p class="text-dark-50 mb-5">Please enter your username and password!</p>
+											<p class="text-dark-50 mb-5">Please enter your Email and password!</p>
 										<form class="mb-4" method="post" action="{%url 'userlog'%}"> 
 											{% csrf_token %}
 											<div class="form  mb-4 form bg-transparent">
-											  <input type="text" placeholder=" Enter UserName" id="typeusernameX" class="form-control form-control-lg border-light bg-transparent text-white" name="username" required="">
+											  <input type="email" placeholder=" Enter Email" id="typeusernameX" class="form-control form-control-lg border-light bg-transparent text-white" name="email" required="">
 											 
 											</div>
 							  
