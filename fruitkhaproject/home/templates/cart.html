@@ -123,6 +123,14 @@
 	</div>
 	<!-- end breadcrumb section -->
 
+	                            {% if messages %}
+								<div class="alert alert-success mt-3">
+								{% for message in messages %}
+								{{ message }}
+								{% endfor %}
+								</div>
+								{% endif %}
+
 	<!-- cart -->
 	<div class="cart-section mt-150 mb-150">
 		<div class="container">
@@ -150,7 +158,7 @@
 									<td class="product-name">{{cart.product_id.pname}}</td>
 									<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
 									<td class="product-price">{{cart.Variant_id.unit}}</td>
-									<td class="product-quantity"><input type="number" placeholder="0" value="{{cart.c_quantity}}"></td>
+									<td class="product-quantity"><input type="number" placeholder="0" value="{{cart.c_quantity}}" id="quantity-input"></td>
 									
 									<td class="product-total">₹{{cart.total}}</td>
 								</tr>
@@ -188,7 +196,7 @@
 						</table>
 						<div class="cart-buttons">
 							<a href="{% url 'shop'   %}" class="boxed-btn">continue Shopping</a>
-							<a href="{% url 'checkout'  %}" class="boxed-btn black">Check Out</a>
+							<a href="{% url 'proceedtocheckout'  %}" class="boxed-btn black">Check Out</a>
 						</div>
 					</div>
 
@@ -320,6 +328,40 @@
 	<script src="/static/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="/static/js/main.js"></script>
+
+	{% comment %} <script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const quantityInput = document.getElementById("quantity-input");
+			quantityInput.addEventListener("change", function() {
+				const quantity = this.value;
+				const cartId = {{ cart.id }};  // Assuming you're passing cart ID to the template
+				updateCartQuantity(cartId, quantity);
+			});
+		});
+	
+		function updateCartQuantity(cartId, quantity) {
+			fetch(`/update_cart_quantity/${cartId}/`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'X-CSRFToken': '{{ csrf_token }}',  // Assuming you're using CSRF protection
+				},
+				body: 'quantity=' + encodeURIComponent(quantity),
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					console.log('Quantity updated successfully');
+					// Optionally, update the UI to reflect the updated quantity
+				} else {
+					console.error('Failed to update quantity:', data.error);
+				}
+			})
+			.catch(error => {
+				console.error('Error updating quantity:', error);
+			});
+		}
+	</script> {% endcomment %}
 
 </body>
 </html>

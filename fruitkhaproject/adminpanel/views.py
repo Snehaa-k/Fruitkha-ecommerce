@@ -56,3 +56,13 @@ def adminlogout(request):
         request.session.flush()
     return redirect('admnlogin')
 
+
+def order_details_admin(request):
+    return render(request,'orderadmin.html')
+
+
+def order_moredetails(request):
+    return render(request,'order-detail.html')
+
+def coupon_list(request):
+    return render(request,'coupenlist.html')

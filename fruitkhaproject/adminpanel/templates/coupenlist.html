@@ -229,7 +229,7 @@
 
                            
                             <li class="sidebar-list">
-                                <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="#">
                                     <i data-feather="tag"></i>
                                     <span>Coupons</span>
                                 </a>
@@ -271,7 +271,7 @@
             <!-- Texes Table Section Start -->
             <div class="page-body">
                 <div class="title-header">
-                    <h5>Categories</h5>
+                    <h5>Coupen</h5>
                 </div>
 
                 <div class="container-fluid">
@@ -281,7 +281,7 @@
                                 <!-- Add Category Button Start -->
                                 <div class="card-header">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#addCategoryModal">Add Category</button>
+                                        data-bs-target="#addCategoryModal">Add Coupen</button>
                                 </div>
                                 <!-- Add Category Button End -->
 
@@ -291,23 +291,31 @@
                                         <table class="user-table trans-table texes-table table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th>CATEGORY</th>
-                                                    <th>IMAGE</th>
-                                                    <th>OPTIONS</th>
+                                                    <th>id</th>
+                                                    <th>Coupon Name</th>
+                                                    <th>Coupon Price</th>
+                                                    <th>Coupon Code</th>
+                                                    <th>Valid</th>
+                                                    <th>Expired</th>
+                                                    <th></th>
+                                                    
+                            
                                                 </tr>
                                             </thead>
                                              
                                             <tbody>
-                                                {% for category in categorys %}
+                                              
                                                 <tr>
-                                                    <td>{{category.category_name}}</td>
-                                                    <td> 
-                                                        <span>
-                                                            {% if category.image %}
-                                                            <img src="{{category.image.url}}" alt="users" required>
-                                                             {% endif %}
-                                                        </span>
-                                                    </td>
+                                                    <td>hhhh</td>
+                                                    <td> lmknk</td>
+                                                    
+                                                    <td>hhhh</td>
+                                                    <td>hhhh</td>
+                                                    <td>hhhh</td>
+                                                    <td>hhhh</td>
+
+
+
                                                     <td>
                                                         <ul>
                                                             <li>
@@ -320,11 +328,9 @@
                                                                 
                                                                 <li>
                                                                    
-                                                                    {% if category.is_listed %}
-                                                                        <a href="{% url 'list' category.id %}" class="btn btn-danger">List</a>
-                                                                    {% else %}
-                                                                        <a href="{% url 'list' category.id %}" class="btn btn-danger" >UnList</a>
-                                                                    {% endif %}
+                                                                    
+                                                                        <button type="submit" class="btn btn-color-dark">Delete<button>
+                                                                    
                                                                     
                                                                     
                                                                   
@@ -335,7 +341,7 @@
                                                     </td>
                                                 </tr>
                                                 <!-- More rows can be added similarly -->
-                                                {% endfor %}
+                                               
                                             </tbody>
                                             
                                         </table>

@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.forms import ValidationError
@@ -11,8 +13,8 @@ from django.views.decorators.cache import never_cache
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Products,Variant
 from category.models import Category
-from cart.models import CartItem,order_details
-
+from cart.models import CartItem, Orderdetails,Orderditem, Proceedtocheck
+from django.db.models import Sum
 # Create your views here.
 
 @never_cache
@@ -176,7 +178,7 @@ def cart(request):
 def add_cart(request,id):
     
     # try:
-    print(id)
+   
     Product = Products.objects.get(id=id)
     
     # except Variant.DoesNotExist:
@@ -195,47 +197,27 @@ def add_cart(request,id):
         var = request.POST['unit'] 
         
 
-        
-        c_quantity = int(request.POST['quantity'])
-        print(var,c_quantity)  
-        try:   
-            var  = Variant.objects.get(products = Product,unit = var)
-        except Variant.DoesNotExist:
-            messages.error(request, "unit is does not exist.")
-            return redirect('shop')
-        print(var.id)
-       
-        cart_item, created = CartItem.objects.get_or_create(
-            
-            user_id=user_instance,
-            Variant_id = var,
-            product_id=Product,
-            
-            defaults={'c_quantity': 1},
-
-            
-
-        )
-
-        if c_quantity < 6:
-            
-        
-            if not created:
-                    
-                cart_item.c_quantity += int(c_quantity)
-                cart_item.c_quantity * cart_item.Variant_id.v_price
-                
-            else:
-                cart_item.c_quantity=1
-                cart_item.total =  cart_item.c_quantity * cart_item.Variant_id.v_price
-            cart_item.save()
-            
-            return redirect('cart')
-        
-        else:
-            messages.error(request,"quantity is out of limit...")
-            return redirect('cart')
+        obj = Variant.objects.get(products = Product,unit = var)
+        cartitem = CartItem.objects.all()
+        for item in cartitem:
+            item.total = item.c_quantity * item.Variant_id.v_price
     
+        subtotal = sum(item.total for item in cartitem)
+
+        quantity1 = int(request.POST['quantity'])
+        print(var,quantity1)  
+        if  int(quantity1) <= obj.v_quantity: 
+            if quantity1 < 6:
+                cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total= subtotal)
+                cart_item.save()
+                messages.success(request,"Your Cart is Added successfully..!")
+                return redirect('cart')
+            else:
+                messages.error(request,"quantity is out of limit...")
+                return redirect('singleproduct',Product.id)
+        else:
+            messages.error(request,"story out of stock")
+            return redirect('singleproduct',Product.id)
     return render(request,'cart.html')
 
 
@@ -373,47 +355,232 @@ def checkout(request):
             return redirect('shop')
 
 
+#proceedtocheckout
+def proceedtocheckout(request):
+    email1 = request.session['email']
+    user = Usermodelss.objects.get(email = email1)
+    userid = user.id
+    orderdate = timezone.now().date()
+    cart_details = (
+        CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
+    )
+    try:
+        no = cart.objects.filter(user_id=user).count()
+    except:
+        no = 0
+    stotal = CartItem.objects.filter(user_id = userid).aggregate(sum=Sum('total'))
+    subtotal = stotal["sum"]
+    addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
+    if cart_details.exists():
+        Proceedtocheck.objects.create(
+                user_id=user,
+                order_date=orderdate,
+                total_amount=subtotal,
+                discount_amount=subtotal,
+            )
+        try:
+            checkoutdetails = proceedtocheckout.objects.get(user_id=user)
+        except:
+            Proceedtocheck.objects.filter(user_id=user).delete()
+            Proceedtocheck.objects.create(
+                user_id=user,
+                order_date=orderdate,
+                total_amount=subtotal,
+                discount_amount=subtotal,
+            )
+            checkoutdetails = Proceedtocheck.objects.get(user_id=user)
+            context = {
+                "details": checkoutdetails,
+                "cart_details": cart_details,
+                "total1": subtotal,
+                "addresses": addres,
+                "user": user,
+                "no": no,
+            }
+            return redirect('checkout')
+        return render(request,'checkout.html',context)
+    else:
+        messages.error(request,"Your cart is empty please add some product..!")
+        return redirect('shop')
+
+
+    
+
+
+
+
+
+
+
+
+
+
+# #place an order section...............
 def place_order(request):
     if request.method == 'POST':
         email1 = request.session['email']
         user = Usermodelss.objects.get(email=email1)
-        cartitem = CartItem.objects.filter(user_id=user)
+        
+        userid = user.id
+        checkout = Proceedtocheck.objects.get(user_id=user)
+        orderdate = timezone.now().date() 
         addres = request.POST["selected_address_id"]
         ad = Useraddress.objects.get(id=addres)
         ad1 = ad.id
-        for i in cartitem:
-            p_order = order_details(
-                userid = user,
-                pay_method = "cod",
-                address = ad,
-                total_amount = i.total,
-                product_name = i.product_id,
-                variant_unit = i.Variant_id,
-
+        if addres != None:
+            order = Orderdetails(
+                custom_id = user,
+                orders_date=orderdate,
+                addr = ad,
+                paymt_method = "cod",
+                total_amounts = checkout.total_amount,
 
 
             )
-            p_order.save()
-        cartitem.delete()
+            order.save()
+            caritem = CartItem.objects.filter(user_id=userid)
+            for i in caritem:
+                items = Orderditem(
+                    order_id = order,
+                    product_n=i.product_id,
+                    quantity=i.c_quantity,
+                    total_amount=i.total,
+                    status="ordered",
+                    order_number=order.custom_id.id,
+                    address_id=ad,
+                    ex_deliverey=orderdate + timedelta(days=7),
+                    unit = i.Variant_id,
 
-        return redirect('orderplace')
-    else:
-        messages.error(request,"oops something error")
+
+                )
+                items.save()
+                items.unit.v_quantity = items.unit.v_quantity - items.quantity
+                items.unit.save()
+                i.delete()
+            checkout.delete()
+            return redirect('orderplace')
+        messages.error(request,"add some address..!")
         return redirect('checkout')
+    return render(request,'orderplaced.html',{'orderid':order})
+
+
+
+        
 
     
 
 
 
 def orderplace(request):
-
+    
     return render(request,'orderplaced.html')
 
 def orderdetails(request):
     if  'email' in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
-        order = order_details.objects.filter(userid = user)
+        # order = order_details.objects.filter(userid = user)
         # print(order)
 
-    return render(request,'orderdetails.html',{'order':order})
+    return render(request,'orderdetails.html',)
+
+
+
+
+
+# change password section..........
+def changepassword(request):
+    email1 = request.session['email']
+    user = Usermodelss.objects.get(email = email1)
+    if request.method == 'POST':
+        new_pass = request.POST['newPassword']
+        new_pass1 = request.POST['confirmPassword']
+        user.password1 = new_pass
+        if new_pass == new_pass1:
+            user.save()
+            return redirect('userlog')
+        else:
+            messages.error(request,"password does not match")
+            return redirect('changepassword')
+
+
+
+    return render(request,'changepassword.html')
+
+
+#password confirmation...........
+def old_pass_confirm(request):
+    email1 = request.session['email']
+    user = Usermodelss.objects.get(email = email1)
+    # print(oldpass)
+    if request.method == "POST":
+        oldpass = user.password1
+        entered_p = request.POST['confirmPassword']
+        # print("hai",entered_p)
+        if entered_p != str(oldpass):
+           messages.error(request," Invalid Password ")
+           return redirect('old_pass_confirm')
+        else:
+            return redirect("changepassword")
+    return render(request,'paaswordentering.html')
+
+
+
+
+
+def add_addr_checkout(request):
+    if request.method == 'POST':
+        email1 = request.session["email"]
+        user= Usermodelss.objects.get(email=email1)
+        add = Useraddress.objects.filter(user_id = user.id).last()
+        name = request.POST["name"]
+        phonenumber=request.POST["phone"]
+        email2 = request.POST["email"]
+        country = request.POST["country"]
+        state = request.POST["state"]
+        address = request.POST["address"]
+        pin = request.POST["pin"]
+        post = request.POST["post"]
+        # print(name)
+
+        if len(phonenumber)==10:
+        
+            if len(pin)==6:
+            
+            
+                add_addres = Useraddress(
+                        user_id=user,
+                        Name = name,
+                        phone = phonenumber,
+                        email = email2,
+                        country = country,
+                        state = state,
+                        address = address,
+                        pin = pin,
+                        post = post,
+
+                    )
+                add_addres.save()
+                messages.success(request,"adress successfully added")
+                return redirect('checkout')
+            else:
+                messages.error(request,"invalid pin number")
+                return redirect('checkout')
+            
+        else:
+            # print(len(phonenumber))
+            messages.error(request,"invalid phone number")
+            return redirect('checkout')
+
+    return render(request,"checkout.html",{'last_addr':add})
+
+
+
+
+
+
+
+
+
+def contact(request):
+    return render(request,'contact.html')

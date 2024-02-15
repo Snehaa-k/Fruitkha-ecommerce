@@ -132,7 +132,7 @@
 						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
 						      <div class="card-body">
 						        <div class="billing-address-form">
-						        	<form action="{% url 'add_address' %}" method="post">
+						        	<form action="{% url 'add_addr_checkout' %}" method="post">
 										{% csrf_token %}
 						        		<p><input type="text" placeholder="Name" name="name"></p>
 						        		<p><input type="email" placeholder="Email" name="email"></p>
@@ -171,7 +171,7 @@
 												<p> {{i.phone}}</p>
 												<p>{{i.address}} , {{i.state}},{{i.country}},{{i.pin}} ,{{i.post}}</p>
 												<!-- Choice Option -->
-											<form method="post" action="{% url 'place_order'  %}">
+											<form method="post" action="{% url 'place_order' %}">
 												{% csrf_token  %}
 												<label class="form-check-label">
 													<input type="radio" class="form-check-input" name="selected_address_id" id="address{{ i.id }}" value="{{ i.id }}" {% if i.id == last_addr %} checked {% endif %} required>
@@ -245,7 +245,7 @@
 						<!-- <a href="#" class="boxed-btn">Place Order</a> -->
 
         <!--......................... <payment modal>............................. -->
-						<a href="" class="btn boxed-btn" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal">
+						<a href="" class="btn boxed-btn" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal" onclick="checkAddressAndOpenModal()">
 							Place Order
 						</a>
 
@@ -260,6 +260,7 @@
 										</button>
 									</div>
 									<div class="modal-body ">
+									<form id="payment-form" method="post">
 										<!-- Variant cards -->
 										<div class="row">
 										
@@ -306,10 +307,19 @@
 														</label>
 													</div>
                                                 </div>
+												
+													{% if messages %}
+													<div class="alert alert-success mt-3">
+													{% for message in messages %}
+													{{ message }}
+													{% endfor %}
+													</div>
+													{% endif %}
 
 												<div class="modal-footer">
-													<button type="submit" class="btn boxed-btn">PAY</button>
+													<button  type = "submit" class="bordered-btn">PAY</button>
 												</div>
+											</form>
                                             </form>
 											</div>
 										</div>	
@@ -453,7 +463,19 @@
 		document.getElementById('addVariantBtn').addEventListener('click', function() {
 			$('#addVariantModal').modal('show');
 		});
-	
+	 
+
+
+		
+			function checkAddressAndOpenModal() {
+				var selectedAddressId = document.getElementById('selected-address-id').value;
+				if (!selectedAddressId) {
+					alert('Please select an address before placing the order.');
+				} else {
+					$('#variantModal').modal('show');
+				}
+			}
+		
 	
 		
 		

@@ -149,7 +149,7 @@
 				<div class="col-md-7">
 					<div class="single-product-content">
 						<h3>{{product.pname}}</h3>
-						<p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}}</p>
+						<p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}} </p>
 						<p>{{product.description}}</p>
 						<div class="single-product-form">
 							<form action="{% url 'add_cart' product.id %}" method="post"> 
@@ -160,16 +160,23 @@
 
                                  
 
-						        <select name="unit" class="custom-select" id="" required>
-									<option value="" disabled selected>Select a variant</option>
-									<option value="500g">500g</option>
-									<option value="1kg">1kg</option>
-									<option value="2kg">2kg</option>
-								</select>
-
+									<select name="unit" class="custom-select" id="unit-select" required>
+										<option value="" disabled selected>Select a variant</option>
+										{% for variant in variant %}
+											<option value="{{ variant.unit}}">{{ variant.unit }}</option>
+										{% endfor %}
+									</select>
+									
 								<br>
+								{% if messages %}
+								<div class="alert alert-success mt-3">
+								{% for message in messages %}
+								{{ message }}
+								{% endfor %}
+								</div>
+								{% endif %}
 							
-							<button class="btn btn-dark btn-lg px-5" type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+							<button class="btn btn-dark btn-lg px-5" type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>   <a class="shopping-wish" href="#"><i class='far fa-heart' style='font-size:36px;color:black;'></i></a>
 						</form>
 							<p><strong>Categories: </strong>Fruits, Organic</p>
 						</div>
@@ -357,7 +364,26 @@
 	<script src="/static/js/main.js"></script>
 
 
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const unitSelect = document.getElementById("unit-select");
+			unitSelect.addEventListener("change", function() {
+				const selectedVariant = this.value;
+				// Do something with the selected variant
+				console.log(selectedVariant);
+			});
+		});
+	</script>
+
+
 </body>
+
+
+
+
+
+
+
 <style>
 	.carousel-inner {
 		height: 300px; 
@@ -384,6 +410,13 @@
 		  color: #495057;
 		  background-color: transparent;
 		}
+
+		.shopping-wish {
+			position: absolute;
+			top: 66%;
+			left:40%
+		}
+		
 	  
 
 </style>

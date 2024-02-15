@@ -16,12 +16,42 @@ class CartItem(models.Model):
     
     
 
-class order_details(models.Model):
-    userid = models.ForeignKey(Usermodelss,on_delete=models.CASCADE)
-    product_name=models.ForeignKey(Products,on_delete=models.CASCADE) 
-    variant_unit=models.ForeignKey(Variant,on_delete=models.CASCADE)
-    address = models.ForeignKey(Useraddress,on_delete=models.CASCADE)
-    pay_method = models.CharField(max_length=50)
+class Orderdetails(models.Model):
+    custom_id = models.ForeignKey(Usermodelss,on_delete=models.CASCADE)
+    product = models.ForeignKey(Products,on_delete=models.CASCADE,null = True) 
+    variant_units = models.ForeignKey(Variant,on_delete=models.CASCADE,null = True)
+    addr = models.ForeignKey(Useraddress,on_delete=models.CASCADE)
+    paymt_method = models.CharField(max_length=50)
+    total_amounts = models.BigIntegerField(default=0)
+    orders_date = models.DateField()
+
+class Orderditem(models.Model):
+    order_id = models.ForeignKey(Orderdetails,on_delete = models.CASCADE)
+    user_id = models.ForeignKey(Usermodelss,on_delete = models.CASCADE,null=True)
+    address_id = models.ForeignKey(Useraddress,on_delete = models.CASCADE,null = True)
+    unit = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True)
+    product_n = models.ForeignKey(Products,on_delete = models.CASCADE)
+    ex_deliverey = models.DateField()
+    status = models.CharField(max_length = 50)
+    quantity = models.IntegerField()
+    order_number = models.IntegerField()
+    total_amount = models.IntegerField()
+
+class Coupon(models.Model):
+    cop_name = models.CharField(max_length=50)
+    cop_price = models.BigIntegerField()
+    code = models.CharField(max_length=50)
+    from_date = models.DateField()
+    to_date = models.DateField()
+    is_listed = models.BooleanField(default=True)
+
+class Proceedtocheck(models.Model):
+    user_id = models.ForeignKey(Usermodelss,on_delete = models.CASCADE)
+    order_date = models.DateField()
     total_amount = models.BigIntegerField(default=0)
-    is_cancel = models.BooleanField(default=False)
+    applyed_coupen = models.ForeignKey(Coupon,on_delete=models.CASCADE,null = True)
+    discount_amount = models.BigIntegerField(null = True)
+    is_coupenapplyed = models.BooleanField(default=False)
+
+
      

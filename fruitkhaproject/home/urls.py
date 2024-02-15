@@ -18,11 +18,21 @@ urlpatterns = [
      path('userprofile/',views.userprofile,name ='userprofile'),
      path('edituserprofile/',views.edituserprofile ,name ='edituserprofile'),
      path('add_address/',views.add_address ,name ='add_address'),
+     path('add_addr_checkout/',views.add_addr_checkout ,name ='add_addr_checkout'),
+
      path('delete_addres/<str:id>',views.delete_addres ,name ='delete_addres'),
      path('checkout/',views.checkout ,name ='checkout'),
      path('order/',views.orderplace ,name ='orderplace'),
      path('place_order/',views.place_order ,name ='place_order'),
      path('order_details/',views.orderdetails ,name ='orderdetails'),
+     path('contact/',views.contact ,name ='contact'),
+     path('changepassword/',views.changepassword ,name ='changepassword'),
+     path('old_pass_confirm/',views.old_pass_confirm ,name ='old_pass_confirm'),
+     path('proceedtocheckout/',views.proceedtocheckout ,name ='proceedtocheckout'),
+
+
+
+
 
 
 

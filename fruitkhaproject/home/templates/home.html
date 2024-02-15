@@ -69,7 +69,7 @@
 								<li><a href="{% url 'about' %}">About</a></li>
 								
 								{% if 'email' in request.session %}
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="{% url 'contact'  %}">Contact</a></li>
 								<li><a href="{% url 'shop' %}">Shop</a>
 
 								{% else %}

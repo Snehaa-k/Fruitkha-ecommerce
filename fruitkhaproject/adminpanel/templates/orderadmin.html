@@ -194,7 +194,7 @@
                            <br>
 
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title" href="{%  url 'order_details_admin'  %}">
+                                <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                     <i data-feather="archive"></i>
                                     <span>Orders</span>
                                 </a>
@@ -268,158 +268,114 @@
                 </nav>
             </div>
         </div>
-            <!-- Texes Table Section Start -->
-            <div class="page-body">
+              <!-- Order section Start -->
+              <div class="page-body">
                 <div class="title-header">
-                    <h5>Categories</h5>
+                    <h5>Order List</h5>
                 </div>
 
+                <!-- Table Start -->
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
-                                <!-- Add Category Button Start -->
-                                <div class="card-header">
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#addCategoryModal">Add Category</button>
-                                </div>
-                                <!-- Add Category Button End -->
-
-                                <!-- Table Start -->
                                 <div class="card-body">
-                                    <div class="table-responsive table-desi">
-                                        <table class="user-table trans-table texes-table table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>CATEGORY</th>
-                                                    <th>IMAGE</th>
-                                                    <th>OPTIONS</th>
-                                                </tr>
-                                            </thead>
-                                             
-                                            <tbody>
-                                                {% for category in categorys %}
-                                                <tr>
-                                                    <td>{{category.category_name}}</td>
-                                                    <td> 
-                                                        <span>
-                                                            {% if category.image %}
-                                                            <img src="{{category.image.url}}" alt="users" required>
-                                                             {% endif %}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <ul>
+                                    <div>
+                                        <div class="table-responsive table-desi">
+                                            <table class="table table-striped all-package">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order Id</th>
+                                                        <th>Address</th>
+                                                        <th>Date</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Coupon</th>
+                                                        <th>Amount</th>
+                                                        <th>Discount</th>
+                                                        
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            id
+                                                        </td>
+
+                                                        <td>+ 406-4883635</td>
+
+                                                        <td>Jul 20, 2021</td>
+
+                                                        <td>Paypal</td>
+
+                                                        <td class="order-success">
+                                                            <span>Success</span>
+                                                        </td>
+
+                                                        <td>$15</td>
+                                                        <td>$15</td>
+
+                                                        <td>
                                                             <li>
-                                                                <a href="javascript:void(0)-{{forloop.counter}}" data-bs-toggle="modal"
-                                                                    data-bs-target="#editCategoryModal-{{forloop.counter}}">
-                                                                    <span class="lnr lnr-pencil"></span>
+                                                                <a href="{% url 'more'  %}">
+                                                                    <span class="lnr lnr-eye"></span>
                                                                 </a>
                                                             </li>
-                                                            <ul>
-                                                                
-                                                                <li>
-                                                                   
-                                                                    {% if category.is_listed %}
-                                                                        <a href="{% url 'list' category.id %}" class="btn btn-danger">List</a>
-                                                                    {% else %}
-                                                                        <a href="{% url 'list' category.id %}" class="btn btn-danger" >UnList</a>
-                                                                    {% endif %}
-                                                                    
-                                                                    
-                                                                  
-                                                                </ul>
-                                                                </li>
-                                                            </ul>
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                                <!-- More rows can be added similarly -->
-                                                {% endfor %}
-                                            </tbody>
-                                            
-                                        </table>
+                                                        </td>
+                                                    </tr>
+
+                                                   
+
+                                                    
+
+                                                   
+
+                                                    
+                                                  
+
+                                                   
+
+                                                    
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- Table End -->
 
-                                <!-- Pagination and Footer (unchanged code) -->
+                                <!-- Pagination Box Start -->
+                                <div class=" pagination-box">
+                                    <nav class="ms-auto me-auto " aria-label="...">
+                                        <ul class="pagination pagination-primary">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="javascript:void(0)">Previous</a>
+                                            </li>
+
+                                            <li class="page-item active">
+                                                <a class="page-link" href="javascript:void(0)">1</a>
+                                            </li>
+
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:void(0)">2</a>
+                                            </li>
+
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:void(0)">3</a>
+                                            </li>
+
+                                            <li class="page-item">
+                                                <a class="page-link" href="javascript:void(0)">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <!-- Pagination Box End -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Container-fluid Ends-->
-            </div>
-            <!-- Categories Table Section End -->
-        </div>
-        <!-- Page Body End -->
-    </div>
-    <!-- page-wrapper End -->
-
-    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Add Category Form -->
-                <form method='post' action ="{% url 'addcategory' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="categoryName" placeholder="Enter category name" name = "category_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Image</label>
-                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
-                    </div>
-                    <!-- Add more form fields as needed -->
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">ADD</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Category Modal -->
-{% for category in categorys %}
-<div class="modal fade" id="editCategoryModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="editCategoryModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Edit Category Form -->
-                <form method="post" action="{% url 'updatecategory' category.id %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="editedCategoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" value="{{category.category_name}}" name="category_name" required>
-                            
-                    </div>
-                    <div class="mb-3">
-                        <label for="editedCategoryName" class="form-label">Image</label>
-                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
-                    </div>
-                    <!-- Add more form fields as needed -->
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-<!-- Delete Category Modal -->
+                <!-- Table End -->
 
 
     <!-- Modal End -->

@@ -7,6 +7,12 @@ urlpatterns = [
     path('vusers/',views.viewusers,name='vusers'),
     path('block/<str:id>',views.isblock,name='userblock'),
     path('logout/',views.adminlogout,name='adminlogout'),
+    path('orderadmin/',views.order_details_admin,name='order_details_admin'),
+    path('more/',views.order_moredetails,name='more'),
+    path('coupen/',views.coupon_list,name='coupon_list'),
+
+
+
     
     
 
