@@ -8,6 +8,7 @@
 
 	<!-- title -->
 	<title>Single Product</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
@@ -154,12 +155,12 @@
 						<div class="single-product-form">
 							<form action="{% url 'add_cart' product.id %}" method="post"> 
 								{% csrf_token %}
-								<input type="number" placeholder="0" min="0" name="quantity" required>
+								<input type="number" placeholder="0" min="0" name="quantity" id ="quantity" required>
 									
 									<!-- Variant selection dropdown menu -->
 
                                  
-
+                                    
 									<select name="unit" class="custom-select" id="unit-select" required>
 										<option value="" disabled selected>Select a variant</option>
 										{% for variant in variant %}
@@ -176,8 +177,111 @@
 								</div>
 								{% endif %}
 							
-							<button class="btn btn-dark btn-lg px-5" type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>   <a class="shopping-wish" href="#"><i class='far fa-heart' style='font-size:36px;color:black;'></i></a>
+							<button  id ="add-to-cart-btn"    class="btn btn-dark btn-lg px-5"   type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>   
+							<button id="openWishlistModalBtn"  class="btn btn-dark btn-lg px-5" type="button"><i class='fas fa-heart' style='font-size:17px;color:white'>
+								Add to Wishlist</i>
+							</button>
 						</form>
+
+						<!-- Button to trigger the modal -->
+					
+
+					<!-- Modal for the "Add to Wishlist" button -->
+					<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="wishlistModalLabel">Add to Wishlist</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form action="{% url 'addwishlist' product.id %}" method="post"> 
+										{% csrf_token %}
+										
+											
+											<!-- Variant selection dropdown menu -->
+		
+										 
+											
+											<select name="unit" class="custom-select" id="unit-select" required>
+												<option value="" disabled selected>Select a variant</option>
+												{% for variant in variant %}
+													<option value="{{ variant.unit}}">{{ variant.unit }}</option>
+												{% endfor %}
+											</select>
+
+								</div>
+								<div class="modal-footer">
+									<!-- Add to Wishlist button -->
+									<button type="submit" id="add-to-wishlist-btn" class="btn btn-primary">Add to Wishlist</button>
+
+                                     <!-- Include Sweet Alert library -->
+									
+
+									
+
+									
+
+                               
+								</form>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+						<script>
+							// Add event listener to open the modal when the button is clicked
+							document.getElementById('openWishlistModalBtn').addEventListener('click', function() {
+								$('#wishlistModal').modal('show'); // Show the modal
+							});
+						</script>
+
+                        
+
+
+						<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+						<p>
+							
+						<!-- Include custom JavaScript code -->
+						<script>
+							document.getElementById("add-to-cart-btn").addEventListener("click", function() {
+								var quantity = document.getElementById("quantity").value;
+								var variant = document.getElementById("unit-select").value;
+						
+								if (!quantity || !variant) {
+									// Show SweetAlert message if quantity or variant is not selected
+									Swal.fire({
+										icon: 'error',
+										title: 'Oops...',
+										text: 'Please select quantity and variant'
+									});
+									return;
+								}
+						
+								// Perform AJAX request to add item to cart
+								var xhr = new XMLHttpRequest();
+								xhr.open("GET", "{% url 'add_cart' product.id %}?quantity=" + quantity + "&variant=" + variant, true);
+								xhr.onload = function() {
+									if (xhr.status != 200) {
+										// Show SweetAlert error message if something goes wrong
+										Swal.fire({
+											icon: 'error',
+											title: 'Oops...',
+											text: 'Something went wrong!'
+										});
+									}
+								};
+								xhr.send();
+							});
+            
+
+						</script>
+						
+
+						
 							<p><strong>Categories: </strong>Fruits, Organic</p>
 						</div>
 						<h4>Share:</h4>
@@ -344,6 +448,10 @@
 	
 	<!-- jquery -->
 	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	<!-- Bootstrap CSS -->
+
+<!-- Bootstrap JavaScript (make sure it's included after the jQuery library if you're using jQuery) -->
+
 	<!-- bootstrap -->
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	<!-- count down -->
@@ -359,8 +467,11 @@
 	<!-- mean menu -->
 	<script src="/static/js/jquery.meanmenu.min.js"></script>
 	<!-- sticker js -->
+
 	<script src="/static/js/sticker.js"></script>
 	<!-- main js -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
 	<script src="/static/js/main.js"></script>
 
 
@@ -413,8 +524,8 @@
 
 		.shopping-wish {
 			position: absolute;
-			top: 66%;
-			left:40%
+			top: 61%;
+			left:39%
 		}
 		
 	  

@@ -4,6 +4,8 @@ from django.dispatch import receiver
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+from products.models import Products, Variant
 # from django.contrib.auth.models import User
 
 # Create your models here.
@@ -65,5 +67,10 @@ class Useraddress(models.Model):
       def __str__(self):
         return self.user.username
 
+
+class Wishlist(models.Model):
+     user_id = models.ForeignKey(Usermodelss,on_delete = models.CASCADE)
+     product_id = models.ForeignKey(Products,on_delete = models.CASCADE)
+     vaiant_id = models.ForeignKey(Variant,on_delete = models.CASCADE, null = True )
 
 

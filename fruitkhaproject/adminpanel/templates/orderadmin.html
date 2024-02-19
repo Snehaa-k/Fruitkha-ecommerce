@@ -298,22 +298,27 @@
                                                 </thead>
 
                                                 <tbody>
+                                                    {% for i in order %}
                                                     <tr>
                                                         <td>
-                                                            id
+                                                           {{ i.id}}
                                                         </td>
 
-                                                        <td>+ 406-4883635</td>
+                                                        <td>{{i.address_id.Name}},
+                                                            {{i.address_id.email}},{{i.address_id.phone}},
+                                                            {{i.address_id.address}},{{i.address_id.state}},{{i.address_id.state}},{{i.address_id.country}},{{i.address_id.post}},{{i.address_id.pin}}
 
-                                                        <td>Jul 20, 2021</td>
+                                                        </td>
 
-                                                        <td>Paypal</td>
+                                                        <td>{{i.order_id.orders_date}}</td>
+
+                                                        <td>{{i.order_id.paymt_method}}</td>
 
                                                         <td class="order-success">
                                                             <span>Success</span>
                                                         </td>
 
-                                                        <td>$15</td>
+                                                        <td>{{i.total_amount}}</td>
                                                         <td>$15</td>
 
                                                         <td>
@@ -336,7 +341,7 @@
 
                                                    
 
-                                                    
+                                                {% endfor  %}  
                                                     
                                                 </tbody>
                                             </table>

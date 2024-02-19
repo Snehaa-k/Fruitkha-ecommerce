@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +7,10 @@
 	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
-	<title>Shop</title>
+	<title>Fruitkha - Slider Version</title>
 
 	<!-- favicon -->
-	<link rel="shortcut icon" type="image/png" href="/static/img/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -25,7 +23,7 @@
 	<!-- magnific popup -->
 	<link rel="stylesheet" href="/static/css/magnific-popup.css">
 	<!-- animate css -->
-	<link rel="stylesheet" href="static/css/animate.css">
+	<link rel="stylesheet" href="/static/css/animate.css">
 	<!-- mean menu css -->
 	<link rel="stylesheet" href="/static/css/meanmenu.min.css">
 	<!-- main style -->
@@ -61,23 +59,21 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="{% url 'home' %}">Home</a>
+								<li class="current-list-item"><a href="{% url 'home'%}">Home</a>
 									
 								</li>
-								<li><a href="{% url 'about' %}">About</a></li>
 								
-								
-								<li><a href="contact.html">Contact</a></li>
-								<li><a href="#">Shop</a>
 									
-								</li>
+								
+								
+								<li><a href="{% url 'shop'  %}">Shop</a>
+								
 								<li>
 									<div class="header-icons">
+										<a class="shopping-cart" href="{% url 'userprofile' %}"><i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
+
+										<a class="shopping-cart" href="{%  url 'cart'   %}"><i class="fas fa-shopping-cart"></i></a>
 										
-										<a class="shopping-cart" href="{% url 'userprofile' %}">	<i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
-										<a class="shopping-cart" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-										<i class='fas fa-heart' style='font-size:17px;color:white'></i>
 									</div>
 								</li>
 							</ul>
@@ -91,20 +87,17 @@
 		</div>
 	</div>
 	<!-- end header -->
-
+	
 	<!-- search area -->
-	<form action="{% url 'searchh' %}" method="POST">
-	{%	csrf_token%}
 	<div class="search-area">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					
 					<div class="search-bar">
 						<div class="search-bar-tablecell">
 							<h3>Search For:</h3>
-							<input type="search" placeholder="Keywords" name="S" >
+							<input type="text" placeholder="Keywords">
 							<button type="submit">Search <i class="fas fa-search"></i></button>
 						</div>
 					</div>
@@ -112,118 +105,85 @@
 			</div>
 		</div>
 	</div>
-    </form>
-	<!-- end search arewa -->
-	
-	<!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
-						<h1>Shop</h1>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% if messages %}
-	<div class="alert alert-success mt-3">
-	{% for message in messages %}
-	{{ message }}
-	{% endfor %}
-	</div>
-	{% endif %}
-
-
-	<!-- end breadcrumb section -->
-
-	<!-- products -->
-	
-	<div class="product-section mt-150 mb-150">
-		<div class="container">
+	<!-- profile section -->
+	<div class="container rounded bg-white mt-100 mb-100">
+		<div class="row">
 			
-			<div class="row">
-                <div class="col-md-12">
-                    <div class="product-filters">
-						
-                        <ul>
+			<div class="col-md-5  mx-auto">
+				<div class="p-3 py-5">
+					<h3 class="text-center mb-4">WishList</h3>
+
+					{% if messages %}
+					<div class="alert alert-success mt-3">
+					{% for message in messages %}
+					{{ message }}
+					{% endfor %}
+					</div>
+					{% endif %}
+				<!-- order details card...........................................	 -->
+				<div class="col-lg-8 col-md-12  mx-auto">
+					<div class="cart-table-wrap">
+						<table class="cart-table">
+							<thead class="cart-table-head">
+								<tr class="table-head-row">
+									
+									<th class="product-image">Product Image</th>
+									<th class="product-name">Name</th>
+									<th class="product-price">Price</th>
+									<th class="product-price">Unit</th>
+									<th class="product-remove"></th>
+									<th class="product-remove"></th>
+									
+								</tr>
+							</thead>
+							<tbody>
 							
-                            <li class="active" data-filter="*">All</li>
-							{% for category in categorys%}
-                            <li data-filter=".{{ category.category_name }}">{{category.category_name}}</li>
-							{% endfor %}
-                        </ul>
-						
-                    </div>
-                </div>
-            </div>
-			
-		   
-			<div class="row product-lists" >
-			{% for product in products %}
-			<div class="col-lg-4 col-md-6 mb-4 text-center {{ product.category.category_name }}">
-				<div class="single-product-item">
-					<div class="product-image">
-						<a href="{% url 'singleproduct' product.id %}"><img src="{{product.image.url}}" alt="" class="img-fluid aspect-ratio-1x1"></a>
+							{% for wish in wish %} 
+								<tr class="table-body-row">
+									
+									<td class="product-image"><img src="{{wish.product_id.image.url}}" alt=""></td>
+									<td class="product-name">{{wish.product_id.pname}}</td>
+									<td class="product-price">{{wish.vaiant_id.v_price}}</td>
+									<td class="product-price">{{wish.vaiant_id.unit}}</td>
+									<td>
+										
+										<form method = "post" action="{% url 'add_cart' wish.product_id.id %}">
+											{% csrf_token  %}
+											
+											<input type="hidden" name="unit" value="{{wish.vaiant_id.unit}}">
+
+									    <button type="submit"  class="btn btn-warning btn-sm"><i class="fas fa-shopping-cart"></i>Add</button>
+										</form>
+									</td>
+
+									<td class="product-remove"><a href="{% url 'deletewishlist' wish.id %}"><i class="far fa-window-close"></i></a></td>
+									
+								</tr>
+								
+							{% endfor %} 	
+							</tbody>
+							
+						</table>
 					</div>
-					<h3>{{product.pname}}</h3>
-					<p class="product-price"><span>Per Kg</span>RS {{product.price}}  
-					</p>
-					  
+				</div>
+
+					 
+					<!-- .........................end of card............................. -->
+					
 				</div>
 			</div>
-			{% endfor %}
-		</div>
-			
+			<div class="col-md-4">
 				
 			</div>
-
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<div class="pagination-wrap">
-						<ul>
-							<li><a href="#">Prev</a></li>
-							<li><a href="#">1</a></li>
-							<li><a class="active" href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">Next</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
-	<!-- end products -->
-
-	<!-- logo carousel -->
-	<div class="logo-carousel-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="logo-carousel-inner">
-						<div class="single-logo-item">
-							<img src="/static/img/company-logos/1.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/static/img/company-logos/2.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/static/img/company-logos/3.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/static/img/company-logos/4.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/static/img/company-logos/5.png" alt="">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
-	<!-- end logo carousel -->
+	</div>
+	
+
+	
+<!-- end profile -->
+	
 
 	<!-- footer -->
 	<div class="footer-area">
@@ -247,7 +207,14 @@
 				</div>
 				<div class="col-lg-3 col-md-6">
 					<div class="footer-box pages">
-						
+						<h2 class="widget-title">Pages</h2>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="about.html">About</a></li>
+							<li><a href="services.html">Shop</a></li>
+							<li><a href="news.html">News</a></li>
+							<li><a href="contact.html">Contact</a></li>
+						</ul>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6">
@@ -310,20 +277,76 @@
 	<script src="/static/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="/static/js/main.js"></script>
+	<style>
+	
+	
+	body {
+		background: rgb(99, 39, 120)
+	}
+	
+	.form-control:focus {
+		box-shadow: none;
+		border-color: #BA68C8
+	}
+	
+	.profile-button {
+		background: rgb(99, 39, 120);
+		box-shadow: none;
+		border: none
+	}
+	
+	.profile-button:hover {
+		background: #682773
+	}
+	
+	.profile-button:focus {
+		background: #682773;
+		box-shadow: none
+	}
+	
+	.profile-button:active {
+		background: #682773;
+		box-shadow: none
+	}
+	
+	.back:hover {
+		color: #682773;
+		cursor: pointer
+	}
+	
+	.labels {
+		font-size: 11px
+	}
+	
+	.add-experience:hover {
+		background: #BA68C8;
+		color: #fff;
+		cursor: pointer;
+		border: solid 1px #BA68C8
+	}
 
-</body>
-<style>
-    .single-product-item {
-        height: 100%; 
-    }
-	.product-image img {
-        width: 300px; 
-        height: 300px; 
+    .custom-card-width {
+    width: 1160px;
+}
 
+.card-body{
+	width: 200%;
+}
+.cancel-order-button {
+    position: absolute;
+    left: 600px;
+    top: 50px; /* Adjust top position if needed */
+}
+.cart-table-wrap {
+    width: 190%; /* Set the width to 100% or any desired value */
+   
+}
 
- 
+.cart-table {
+    width: 190%; /* Set the width to 100% or any desired value */
+    /* Add other styling as needed */
+}
 
-    }
 </style>
-
+</body>
 </html>

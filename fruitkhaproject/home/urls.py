@@ -29,6 +29,14 @@ urlpatterns = [
      path('changepassword/',views.changepassword ,name ='changepassword'),
      path('old_pass_confirm/',views.old_pass_confirm ,name ='old_pass_confirm'),
      path('proceedtocheckout/',views.proceedtocheckout ,name ='proceedtocheckout'),
+     path('wishlist/',views.wishlist ,name ='wishlist'),
+     path('addwishlist/<str:id>',views.add_wishlist ,name ='addwishlist'),
+     path('deletewishlist/<str:id>',views.deletewishlist ,name ='deletewishlist'),
+     path('pay_razorpay/',views.pay_razorpay ,name ='pay_razorpay'),
+
+
+
+
 
 
 

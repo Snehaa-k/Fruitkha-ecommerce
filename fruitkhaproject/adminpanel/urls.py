@@ -10,6 +10,16 @@ urlpatterns = [
     path('orderadmin/',views.order_details_admin,name='order_details_admin'),
     path('more/',views.order_moredetails,name='more'),
     path('coupen/',views.coupon_list,name='coupon_list'),
+    path('addcoupen/',views.addcoupen,name='addcoupen'),
+    path('editcoupen/<str:id>',views.editcoupen,name='editcoupen'),
+    path('delete_coupon/<str:id>',views.delete_coupon,name='delete_coupon'),
+    path('list_coupen/<str:id>',views.list_coupen,name='list_coupen'),
+    path('un_list_coupen/<str:id>',views.un_list_coupen,name='un_list_coupen'),
+  
+
+
+
+
 
 
 

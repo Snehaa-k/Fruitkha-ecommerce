@@ -8,13 +8,16 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-from . models import Usermodelss, generate_otp,Useraddress
+from . models import Usermodelss, generate_otp,Useraddress,Wishlist
 from django.views.decorators.cache import never_cache
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Products,Variant
 from category.models import Category
 from cart.models import CartItem, Orderdetails,Orderditem, Proceedtocheck
 from django.db.models import Sum
+import razorpay
+from django.http import JsonResponse
+from django.urls import reverse
 # Create your views here.
 
 @never_cache
@@ -114,7 +117,7 @@ def singleproduct(request,id):
 def shop(request):
     
     categry = Category.objects.filter(is_listed = True)
-    prodts = Products.objects.filter(category__in = categry ,is_listed = True)
+    prodts = Products.objects.filter(category__in = categry ,is_listed = True,variant__isnull=False).distinct()
    
     return render(request,'shop.html',{'products':prodts,'categorys':categry})
 
@@ -175,6 +178,48 @@ def cart(request):
     return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
 
 
+# wishlist...............
+
+def add_wishlist(request,id):
+    if request.method == 'POST':
+        product = Products.objects.get(id=id)
+        user = request.session['email']
+        obj = Usermodelss.objects.get(email = user)
+        var = request.POST['unit'] 
+        variant = Variant.objects.get(products = product,unit = var)
+        if Wishlist.objects.filter(user_id=obj, product_id=product, vaiant_id=variant).exists():
+            messages.error(request, "Product is already in the wishlist!")
+            return redirect('singleproduct',product.id)
+        wish = Wishlist.objects.create(user_id=obj, product_id=product, vaiant_id=variant)
+        wish.save()
+        messages.success(request, "Product is added to wishlist")
+        return redirect('singleproduct',product.id)
+
+ # show whishlistt.......................
+def wishlist(request):
+    email1 = request.session['email']
+    user = Usermodelss.objects.get(email=email1)
+    
+    wish = Wishlist.objects.filter(user_id = user)
+    
+    
+    return render(request,'wishlist.html',{'wish':wish})
+   
+    
+def deletewishlist(request,id):
+    Wishlist.objects.get(id=id).delete()
+    return redirect('wishlist')
+
+
+
+
+
+
+
+
+
+
+
 def add_cart(request,id):
     
     # try:
@@ -196,19 +241,25 @@ def add_cart(request,id):
        
         var = request.POST['unit'] 
         
-
+        
         obj = Variant.objects.get(products = Product,unit = var)
+
         cartitem = CartItem.objects.all()
+        
+
+        quantity1 = int(request.POST.get('quantity',1))
+
         for item in cartitem:
             item.total = item.c_quantity * item.Variant_id.v_price
     
         subtotal = sum(item.total for item in cartitem)
-
-        quantity1 = int(request.POST['quantity'])
+        print(subtotal)
+        final = subtotal + 45  
+        print(final)
         print(var,quantity1)  
         if  int(quantity1) <= obj.v_quantity: 
             if quantity1 < 6:
-                cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total= subtotal)
+                cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total=final)
                 cart_item.save()
                 messages.success(request,"Your Cart is Added successfully..!")
                 return redirect('cart')
@@ -370,6 +421,7 @@ def proceedtocheckout(request):
         no = 0
     stotal = CartItem.objects.filter(user_id = userid).aggregate(sum=Sum('total'))
     subtotal = stotal["sum"]
+    print(subtotal)
     addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
     if cart_details.exists():
         Proceedtocheck.objects.create(
@@ -415,7 +467,7 @@ def proceedtocheckout(request):
 
 
 
-# #place an order section...............
+# #place an order section. with cod..............
 def place_order(request):
     if request.method == 'POST':
         email1 = request.session['email']
@@ -465,7 +517,57 @@ def place_order(request):
 
 
 
-        
+
+
+# place an order with razorpay..
+def pay_razorpay(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated and 'email' in request.session:
+            email = request.session['email']
+            try:
+                user = Usermodelss.objects.get(email=email)
+                checkout = Proceedtocheck.objects.get(user=user)
+                orderdate = timezone.now().date() 
+                address_id = request.POST.get("selected_address_id")
+                address = Useraddress.objects.get(id=address_id)
+
+                if address:
+                    order = Orderdetails.objects.create(
+                        custom_id=user,
+                        orders_date=orderdate,
+                        addr=address,
+                        paymt_method="razor_pay",
+                        total_amounts=checkout.total_amount
+                    )
+                    
+                    cart_items = CartItem.objects.filter(user=user)
+                    for cart_item in cart_items:
+                        Orderditem.objects.create(
+                            order_id=order,
+                            product_n=cart_item.product_id,
+                            quantity=cart_item.c_quantity,
+                            total_amount=cart_item.total,
+                            status="ordered",
+                            order_number=order.custom_id.id,
+                            address_id=address,
+                            ex_deliverey=orderdate + timedelta(days=7),
+                            unit=cart_item.Variant_id,
+                        )
+                        cart_item.Variant_id.v_quantity -= cart_item.c_quantity
+                        cart_item.Variant_id.save()
+                        cart_item.delete()
+                    
+                    checkout.delete()
+                    return JsonResponse({"success": True, "redirect_url": reverse("orderplace")})
+                
+                messages.error(request, "Please select an address.")
+                return redirect('checkout')
+            except Usermodelss.DoesNotExist:
+                messages.error(request, "User not found.")
+        else:
+            messages.error(request, "User not authenticated.")
+    return render(request, 'orderplaced.html')
+            
 
     
 
@@ -573,6 +675,8 @@ def add_addr_checkout(request):
             return redirect('checkout')
 
     return render(request,"checkout.html",{'last_addr':add})
+
+
 
 
 

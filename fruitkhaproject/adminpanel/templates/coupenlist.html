@@ -298,21 +298,24 @@
                                                     <th>Valid</th>
                                                     <th>Expired</th>
                                                     <th></th>
+                                                    <th></th>
+
                                                     
                             
                                                 </tr>
                                             </thead>
                                              
                                             <tbody>
-                                              
+                                                {% for i in coup %} 
                                                 <tr>
-                                                    <td>hhhh</td>
-                                                    <td> lmknk</td>
+                                                    <td>{{i.id}}</td>
+                                                    <td>{{i.cop_name}}</td>
+                                                    <td>{{i.cop_price}}</td>
                                                     
-                                                    <td>hhhh</td>
-                                                    <td>hhhh</td>
-                                                    <td>hhhh</td>
-                                                    <td>hhhh</td>
+                                                    <td>{{i.code}}</td>
+                                                    <td>{{i.from_date}}</td>
+                                                    <td>{{i.to_date}}</td>
+                                                    
 
 
 
@@ -327,21 +330,36 @@
                                                             <ul>
                                                                 
                                                                 <li>
-                                                                   
+                                                                <form method="post" action="{% url 'delete_coupon' i.id %}" >
+                                                                    {% csrf_token  %}
                                                                     
-                                                                        <button type="submit" class="btn btn-color-dark">Delete<button>
-                                                                    
-                                                                    
-                                                                    
-                                                                  
+                                                                    <button type="submit" class="btn btn-dark" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+
+                                                                 </form>
+                                                                </li>     
+                                                                
                                                                 </ul>
-                                                                </li>
+                                                                
+                                                                
+                                                            
+                                                               
+
+                                                               
+
                                                             </ul>
                                                         </ul>
                                                     </td>
+                                                    <td>
+                                                        {% if not i.is_listed %}
+                                                        <a href="{% url 'list_coupen'  i.id %}" class="btn btn-danger">List</a>
+                                                        {% else %}
+                                                            <a href="{% url 'un_list_coupen' i.id %}" class="btn btn-danger" >UnList</a>
+                                                        {% endif %}
+                                                        
+                                                    </td>
                                                 </tr>
                                                 <!-- More rows can be added similarly -->
-                                               
+                                               {% endfor  %}
                                             </tbody>
                                             
                                         </table>
@@ -371,17 +389,30 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Add Category Form -->
-                <form method='post' action ="{% url 'addcategory' %}" enctype="multipart/form-data">
+                <!-- Add Coupen-->
+                <form method='post' action ="{% url 'addcoupen' %}">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="categoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="categoryName" placeholder="Enter category name" name = "category_name" required>
+                        <label for="categoryName" class="form-label">Coupen Name</label>
+                        <input type="text" class="form-control" id="categoryName" placeholder="Enter Coupen name" name = "cname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="categoryName" class="form-label">Image</label>
-                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                        <label for="categoryName" class="form-label">Price</label>
+                        <input type="number" step="0.01" min="0.00" class="form-control" id="categoryName" placeholder="Enter the price" name = "cprice" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Code</label>
+                        <input type="text"  class="form-control" id="categoryName" placeholder="Enter the code" name = "code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Valid</label>
+                        <input type="date" id="Valid" class="form-control" id="categoryName" placeholder="Enter the date" name = "ctodate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Expired</label>
+                        <input type="date" id="Expired" class="form-control" id="categoryName" placeholder="Enter the date" name = "cfromdate" required>
+                    </div>
+                   
                     <!-- Add more form fields as needed -->
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -393,7 +424,7 @@
 </div>
 
 <!-- Edit Category Modal -->
-{% for category in categorys %}
+{% for i in coup   %}
 <div class="modal fade" id="editCategoryModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="editCategoryModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -404,16 +435,27 @@
             </div>
             <div class="modal-body">
                 <!-- Edit Category Form -->
-                <form method="post" action="{% url 'updatecategory' category.id %}" enctype="multipart/form-data">
+                <form method="post" action="{% url 'editcoupen' i.id  %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="editedCategoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" value="{{category.category_name}}" name="category_name" required>
-                            
+                        <label for="categoryName" class="form-label">Coupen Name</label>
+                        <input type="text" class="form-control" id="categoryName" placeholder="Enter Coupen name" value={{i.cop_name}} name = "cname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editedCategoryName" class="form-label">Image</label>
-                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                        <label for="categoryName" class="form-label">Price</label>
+                        <input type="number" step="0.01" min="0.00" class="form-control" id="categoryName" placeholder="Enter the price" value="{{i.cop_price}}" name = "cprice" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Code</label>
+                        <input type="text"  class="form-control" id="categoryName" placeholder="Enter the code" value="{{i.code}}"  name = "code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Valid</label>
+                        <input type="date" id="Valid" class="form-control" id="categoryName" placeholder="Enter the date"  value="{{i.from_date}}"  name = "cfromdate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Expired</label>
+                        <input type="date" id="Expired" class="form-control" id="categoryName" placeholder="Enter the date" value="{{i.to_date}}" name = "ctodate" required>
                     </div>
                     <!-- Add more form fields as needed -->
 
@@ -424,7 +466,7 @@
         </div>
     </div>
 </div>
-{% endfor %}
+{%  endfor  %}
 <!-- Delete Category Modal -->
 
 

@@ -3,10 +3,12 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+from cart.models import Coupon
 from home. models import Usermodelss
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from products.models import Variant 
+from cart.models import Orderditem
 # from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
@@ -58,11 +60,87 @@ def adminlogout(request):
 
 
 def order_details_admin(request):
-    return render(request,'orderadmin.html')
+    order = Orderditem.objects.all()
+    return render(request,'orderadmin.html',{'order':order})
 
 
 def order_moredetails(request):
     return render(request,'order-detail.html')
 
 def coupon_list(request):
+    coup = Coupon.objects.all()
+    return render(request,'coupenlist.html',{'coup':coup})
+
+# add coupen
+def addcoupen(request):
+    if request.method == 'POST':
+        coupenname = request.POST['cname']
+        coupenprice = request.POST['cprice']
+        coupencode = request.POST['code']
+        coupenvalid = request.POST['ctodate']
+        coupenex = request.POST['cfromdate']
+        if Coupon.objects.filter(code = coupencode).exists():
+            messages.success(request, "the coupen code is already exists")
+            return redirect("coupon_list")
+        else:
+            cou = Coupon(
+                cop_name = coupenname,
+                cop_price = coupenprice,
+                code = coupencode,
+                from_date = coupenvalid,
+                to_date = coupenex,
+
+            )
+            cou.save()
+            messages.success(request, "your coupen added successfully")
+            return redirect('coupon_list')
+          
     return render(request,'coupenlist.html')
+
+# edit coupen....
+
+def editcoupen(request,id):
+    coup = Coupon.objects.get(id=id)
+    if request.method == 'POST':
+        coupenname = request.POST['cname']
+        coupenprice = request.POST['cprice']
+        coupencode = request.POST['code']
+        coupenvalid = request.POST['ctodate']
+        coupenex = request.POST['cfromdate']
+        
+        if Coupon.objects.exclude(id=id).filter(code=coupencode).exists():
+            messages.success(request, "the coupen code is already exists")
+            return redirect("coupon_list")
+        else:
+            coup.cop_name = coupenname
+            coup.cop_price = coupenprice
+            coup.code = coupencode
+            coup.from_date = coupenvalid
+            coup.to_date = coupenex
+            coup.save()
+            
+            messages.success(request, "your coupen added successfully")
+            return redirect("coupon_list")
+    return render(request,'coupenlist.html',{'coup':coup})
+
+
+def delete_coupon(request, id):
+    if request.method == 'POST':
+        Coupon.objects.get(id=id).delete()
+        messages.error(request, "coupon deleted succesfully")
+        return redirect("coupon_list")
+
+# list coupen
+def list_coupen(request, id):
+    obj = Coupon.objects.get(id=id)
+    obj.is_listed = True
+    obj.save()
+    return redirect("coupon_list")
+
+
+# unlist coupen
+def un_list_coupen(request, id):
+    obj = Coupon.objects.get(id=id)
+    obj.is_listed = False
+    obj.save()
+    return redirect("coupon_list")

@@ -151,3 +151,9 @@ EMAIL_USE_TLS = True  # Set it to False if your email server doesn't support TLS
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+RAZORPAY_TEST_KEY_ID = "rzp_test_AVHKHq0sb9ZGpV"
+RAZORPAY_KEY_SECRET = "KmAzziYZNjmKIcegr6HpWdaW"
+

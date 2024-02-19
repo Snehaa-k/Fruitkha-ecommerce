@@ -54,4 +54,3 @@ class Proceedtocheck(models.Model):
     is_coupenapplyed = models.BooleanField(default=False)
 
 
-     

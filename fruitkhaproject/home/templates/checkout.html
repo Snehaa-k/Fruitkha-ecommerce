@@ -244,83 +244,143 @@
 						</table>
 						<!-- <a href="#" class="boxed-btn">Place Order</a> -->
 
-        <!--......................... <payment modal>............................. -->
-						<a href="" class="btn boxed-btn" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal" onclick="checkAddressAndOpenModal()">
-							Place Order
-						</a>
-
-
-						<div class="modal fade " id="variantModal" tabindex="-1" role="dialog" aria-labelledby="variantModalLabel" aria-hidden="true">
-							<div class="modal-dialog modal-sm" role="document">
-								<div class="modal-content">
-									<div class="modal-header bg-warning">
-										<h5 class="modal-title bg-warning" id="variantModalLabel">Select Your Payment Method</h5>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-									</div>
-									<div class="modal-body ">
-									<form id="payment-form" method="post">
-										<!-- Variant cards -->
-										<div class="row">
+        <!--......................... <payment selection>............................. -->
+						
+						<div class="card-body">
+							<div class="shipping-address-form">
+								<h4>Select Your payment Option</h4>
+								
+									<div class="card">
 										
-										
-											<div class="col-12 mb-3">
-												<div class="card border-primary custom-card" data-payment-method="phonepe">
-													<div class="card-body">
-														<h4><i class="fa fa-cc-paypal" ></i> PhonePe  </h4>
-														
-														<label class="form-check-label">
-															<input type="radio" class="" name="payment-method" value="phonepe">
-															<span class="tick-mark"></span>
-														</label>
-													   
-													</div>
-                                                </div>
-                                                <div class="card border-primary custom-card" data-payment-method="wallet">
-													<div class="card-body">
-														<h4><i class="fa fa-credit-card" style="font-size:26px"></i> WAllet  </h4>
-														<label class="form-check-label">
-															<input type="radio" class="" name="payment-method" value="phonepe">
-															<span class="tick-mark"></span>
-														</label>
-														
-													</div>
-                                                </div>
-												<div class="card border-primary custom-card" data-payment-method="cash">
-													<div class="card-body">
-														<h4><i class='fas fa-handshake' style='font-size:26px'></i> Cash on Delivery</h4>
-														<label class="form-check-label">
-															<input type="radio" class="" name="payment-method" value="cod">
-															<span class="tick-mark"></span>
-														</label>
-													   
-													</div>
-                                                </div>
-												<div class="card border-primary custom-card" data-payment-method="paypal">
-													<div class="card-body">
-														<h4>PayPal  </h4>
-														
-														<label class="form-check-label">
-															<input type="radio" class="" name="payment-method" value="phonepe">
-															<span class="tick-mark"></span>
-														</label>
-													</div>
-                                                </div>
+										<div class="card-body ">
+											
+											<button id="cash-on-delivery-btn" class="btn btn-outline-dark" style="width:290px;" type="submit" >
+												<i class='fas fa-hand-holding-usd' style="font-size:24px;color:black;"></i> CASH
+											</button>
+											<!-- sweet alert buttton......................................... -->
+											<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+											<script>
+												// JavaScript code
+												document.getElementById("cash-on-delivery-btn").addEventListener("click", function() {
+													// Check if any address is selected
+													if (!document.querySelector('input[name="selected_address_id"]:checked')) {
+														// If no address is selected, show Sweet Alert
+														swal("Error", "Please choose an address or Add an address", "error");
+														return; // Prevent further execution
+													}
+											
+													// If an address is selected, proceed with cash on delivery action
+													// You can put your code for cash on delivery action here
+												});
+											</script>
+
+										</form> 
+
+											<!-- sweet alert buttton......................................... -->
+											<br>
+											<br>
+											<a href="" class="btn btn-outline-dark" style="width:290px;" type="submit" >
+												<i class='fas fa-wallet' style='font-size:20px; color:black;'></i>    WALLET
+											</a>
+											<br>
+											<br>
+											<input type="hidden" id="razorpayTotal1" value="1000">
+
+											<button class="btn btn-outline-dark" style="width:290px;"  id="rzp-button1">
 												
-													{% if messages %}
-													<div class="alert alert-success mt-3">
-													{% for message in messages %}
-													{{ message }}
-													{% endfor %}
-													</div>
-													{% endif %}
+												RAZORPAY
+											</button>
+														<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+														<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+														<script>
+															// Wait for the DOM to be fully loaded before executing the JavaScript code
+															document.addEventListener('DOMContentLoaded', function () {
+																// Get the button element
+																var button = document.getElementById('rzp-button1');
+														
+																// Check if the button element exists
+																if (button) {
+																	// Add click event listener to the button
+																	button.addEventListener('click', function (e) {
+																		// Get the total value
+																		var totalElement = document.getElementById('razorpayTotal1');
+																		if (totalElement) {
+																			var total = totalElement.value;
+																			console.log(total);
+														
+																			var options = {
+																				"key": "rzp_test_AVHKHq0sb9ZGpV",
+																				"amount": total * 100,
+																				"currency": "INR",
+																				"name": "Fruitkha",
+																				"description": "Thank you for your purchase...",
+																				"image": "https://example.com/your_logo",
+																				"handler": function (response) {
+																					alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+														
+																					var selectedAddressId = document.querySelector('input.adddd:checked').value;
+																					console.log(selectedAddressId);
+														
+																					if (selectedAddressId) {
+																						// Send the selected address ID to the server
+																						$.ajax({
+																							type: 'POST',
+																							url: '/pay_razorpay/',
+																							data: {
+																								'selected_address_id': selectedAddressId,
+																								csrfmiddlewaretoken: '{{ csrf_token }}'
+																							},
+																							success: function (data) {
+																								console.log('Address ID sent to server');
+																								if (data.success) {
+																									window.location.href = data.redirect_url;
+																								} else {
+																									console.log('Failed to process order');
+																								}
+																							},
+																							error: function (xhr, errmsg, err) {
+																								console.log('Error sending address ID:', errmsg);
+																							}
+																						});
+																					} else {
+																						console.log('No address selected.');
+																					}
+																				},
+																				"prefill": {
+																					"name": "{{user.username}}",
+																					"email": "{{user.email}}",
+																					"contact": "{{user.phonenumber}}"
+																				},
+																				"theme": {
+																					"color": "#3399cc"
+																				}
+																			};
+														
+																			var rzp1 = new Razorpay(options);
+																			rzp1.open();
+														
+																			e.preventDefault();
+																		} else {
+																			console.log('Total element not found.');
+																		}
+																	});
+																} else {
+																	console.log('Button element not found.');
+																}
+															});
+														</script>
+										
+											
+										
+										</div>
+										
+									</div>
+									
+								
 
-												<div class="modal-footer">
-													<button  type = "submit" class="bordered-btn">PAY</button>
-												</div>
-											</form>
-                                            </form>
+						
+                                           
 											</div>
 										</div>	
                                     </div>
