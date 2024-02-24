@@ -32,34 +32,44 @@ urlpatterns = [
      path('wishlist/',views.wishlist ,name ='wishlist'),
      path('addwishlist/<str:id>',views.add_wishlist ,name ='addwishlist'),
      path('deletewishlist/<str:id>',views.deletewishlist ,name ='deletewishlist'),
-     path('pay_razorpay/',views.pay_razorpay ,name ='pay_razorpay'),
+     path('pay_razorpay/',views.pay_razorpay1 ,name ='pay_razorpay'),
+     path('moredetails/<str:id>',views.moredetails ,name ='moredetails'),
+     # path('cancelorder/<int:id>',views.cancelorder ,name ='cancelorder'),
+     path("cancel/<str:id>",views.cancelorder1,name="cancel"),
+     path("pay_wallet/",views.pay_wallet,name="pay_wallet"),
+     path("coupenapply/",views.coupenapply,name="coupenapply"),
 
 
-
-
-
-
-
-
-
-
-
-     
-
-
-
-     
-
-
-
-
-
-
-
-
-     # path('page/',views.shop_page,name ='page'),
-
-
+    
 
 
 ]
+
+
+
+
+
+
+
+
+
+
+     
+
+
+
+     
+
+
+
+
+
+
+
+
+    
+
+
+
+
+

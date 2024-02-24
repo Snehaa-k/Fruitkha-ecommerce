@@ -105,14 +105,7 @@
 	</div>
 	<!-- end breadcrumb section -->
 	
-	{% if messages %}
-	<div class="alert alert-success mt-3">
-	{% for message in messages %}
-	{{ message }}
-	{% endfor %}
-	</div>
-	{% endif %}
-
+	
 	<!-- check out section -->
 	<div class="checkout-section mt-150 mb-150">
 		<div class="container">
@@ -123,6 +116,14 @@
 						  <div class="card single-accordion">
 						    <div class="card-header" id="headingOne">
 						      <h5 class="mb-0">
+								{% if messages %}
+								<div class="alert alert-success mt-3">
+								{% for message in messages %}
+								{{ message }}
+								{% endfor %}
+								</div>
+								{% endif %}
+
 						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 						         Cick Here To Add  Shipping Address
 						        </button>
@@ -171,10 +172,10 @@
 												<p> {{i.phone}}</p>
 												<p>{{i.address}} , {{i.state}},{{i.country}},{{i.pin}} ,{{i.post}}</p>
 												<!-- Choice Option -->
-											<form method="post" action="{% url 'place_order' %}">
+	                    <form method="post" action="{% url 'place_order' %}">
 												{% csrf_token  %}
 												<label class="form-check-label">
-													<input type="radio" class="form-check-input" name="selected_address_id" id="address{{ i.id }}" value="{{ i.id }}" {% if i.id == last_addr %} checked {% endif %} required>
+													<input type="radio" class="form-check-input selected_address_id" name="selected_address_id" id="address{{ i.id }}" value="{{ i.id }}"  required>
 													<span class="checkmark"></span>
 												</label>
 											
@@ -236,15 +237,34 @@
 									<td>Shipping</td>
 									<td>₹45</td>
 								</tr>
+
 								<tr>
+									{% if pro.iscoupenapplyed  %}
+									<td><h5 class="text-success">Coupen applyed..</h5>
+										Discount amount:</td>
+									<td>₹{{final}}</td>
+									
+									
+									{%  else  %}
 									<td>Total</td>
 									<td>₹{{final}}</td>
+									
+									{% endif  %}
 								</tr>
 							</tbody>
 						</table>
 						<!-- <a href="#" class="boxed-btn">Place Order</a> -->
 
         <!--......................... <payment selection>............................. -->
+						{% comment %} <div class="coupon-section">
+							<h3>Apply Coupon</h3>
+							<div class="coupon-form-wrap">
+								<form action="index.html">
+									<p><input type="text" placeholder="Coupon"></p>
+									<p><input type="submit" value="Apply"></p>
+								</form>
+							</div>
+						</div> {% endcomment %}
 						
 						<div class="card-body">
 							<div class="shipping-address-form">
@@ -255,8 +275,11 @@
 										<div class="card-body ">
 											
 											<button id="cash-on-delivery-btn" class="btn btn-outline-dark" style="width:290px;" type="submit" >
-												<i class='fas fa-hand-holding-usd' style="font-size:24px;color:black;"></i> CASH
+												 CASH
 											</button>
+											<input type="hidden" id="razorpayTotal1"  value="{{final}}">
+
+                    </form>
 											<!-- sweet alert buttton......................................... -->
 											<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -275,35 +298,111 @@
 												});
 											</script>
 
-										</form> 
+										     
 
-											<!-- sweet alert buttton......................................... -->
+											<!--end sweet alert buttton......................................... -->
 											<br>
 											<br>
-											<a href="" class="btn btn-outline-dark" style="width:290px;" type="submit" >
+											<!--................... pay using wallet.................... -->
+
+
+
+
+										 
+											<a href="{% url 'pay_wallet'  %}" class="btn btn-outline-dark" style="width:290px;" id="wallet-button1"type="button" >
 												<i class='fas fa-wallet' style='font-size:20px; color:black;'></i>    WALLET
 											</a>
-											<br>
-											<br>
-											<input type="hidden" id="razorpayTotal1" value="1000">
 
-											<button class="btn btn-outline-dark" style="width:290px;"  id="rzp-button1">
+                                            <!-- pay using wallet  -->
+						
+											<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+													
+												<script>
+													$(document).ready(function() {
+													$('#wallet-button1').click(function() {
+														var selectedAddressId = $('input.selected_address_id:checked').val();
+														var total = $('#razorpayTotal1').val();
+														console.log(total)
+
+														// Pass the selected address ID to the Django view using AJAX only if it's available
+														if (selectedAddressId) {
+															
+															$.ajax({
+																type: 'POST',
+																url: '/pay_wallet/', // Replace with your Django view URL
+																data: {
+																	'selected_address_id': selectedAddressId,
+																	'total2': total,
+																	csrfmiddlewaretoken: '{{ csrf_token }}' // Ensure you have the CSRF token
+																},
+																success: function(data) {
+																	// Handle success response if needed
+																	console.log('Address ID sent to server');
+																	if (data.success) {
+																		window.location.href = data.redirect_url; // Redirect to the 'thanks' page
+																	} else {
+																		console.log('Failed to process order');
+																	}
+																},
+																error: function(xhr, errmsg, err) {
+																	// Handle error if needed
+																	console.log('Error sending address ID:', errmsg);
+																}
+															});
+														} else {
+															console.log('No address selected.');
+														}
+													});
+												});
+												</script>
+
+                                              
+
+
+									
+											<br>
+											<br>
+											
+                                           <button class="btn btn-outline-dark" style="width:290px;"  id="rzp-button1">
 												
 												RAZORPAY
 											</button>
+
 														<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 														<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+														<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 														<script>
-															// Wait for the DOM to be fully loaded before executing the JavaScript code
+
+
+                                                             
+
+
+															
 															document.addEventListener('DOMContentLoaded', function () {
-																// Get the button element
+																
 																var button = document.getElementById('rzp-button1');
 														
-																// Check if the button element exists
+																
 																if (button) {
-																	// Add click event listener to the button
+																	
 																	button.addEventListener('click', function (e) {
-																		// Get the total value
+
+																		var selectedAddressId = document.querySelector('input.selected_address_id:checked');
+																		if (!selectedAddressId) {
+																			// If no address is selected, show SweetAlert
+																			Swal.fire({
+																				icon: 'error',
+																				title: 'Oops...',
+																				text: 'Please select an address before proceeding!',
+																				showConfirmButton: false,
+																				timer: 2000
+																			});
+																			return; // Stop further execution
+																		}
+
+
+																		
+																		
 																		var totalElement = document.getElementById('razorpayTotal1');
 																		if (totalElement) {
 																			var total = totalElement.value;
@@ -319,10 +418,12 @@
 																				"handler": function (response) {
 																					alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
 														
-																					var selectedAddressId = document.querySelector('input.adddd:checked').value;
+																					var selectedAddressId = document.querySelector('input.selected_address_id:checked').value;
 																					console.log(selectedAddressId);
+																					console.log("dfasdfasdfwf");
 														
 																					if (selectedAddressId) {
+																						console.log("haloooo");
 																						// Send the selected address ID to the server
 																						$.ajax({
 																							type: 'POST',
@@ -344,6 +445,10 @@
 																							}
 																						});
 																					} else {
+																						
+               
+                                                                                           
+
 																						console.log('No address selected.');
 																					}
 																				},
@@ -370,6 +475,10 @@
 																}
 															});
 														</script>
+
+
+
+                                        <!-- pay using wallet.................... -->
 										
 											
 										
@@ -382,6 +491,59 @@
 						
                                            
 											</div>
+											<div class="coupon-section">
+												<h3>Apply Coupon</h3>
+												<div class="coupon-form-wrap">
+													<form id="coupon-form" method = "post">
+														{% csrf_token %}
+
+														<p><input type="text" placeholder="Coupon " name="coupon_code"></p>
+														<p><input type="submit" value="Apply"></p>
+													</form>
+												</div>
+												<div id="coupon-message"></div>
+											</div> 
+
+											<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+											<script>
+												$(document).ready(function() {
+													$('#coupon-form').submit(function(event) {
+														event.preventDefault();  // Prevent form submission
+														applyCoupon();
+													});
+												});
+											
+												function applyCoupon() {
+													var couponCode = $('#coupon-form input[name="coupon_code"]').val();
+											
+													$.ajax({
+														type: "POST",
+														url: "{% url 'coupenapply' %}",  // Assuming 'coupenapply' is your view name
+														data: {
+															csrfmiddlewaretoken: '{{ csrf_token }}',
+															'coupon_code': couponCode
+														},
+														success: function(response) {
+															if (response.success) {
+																window.location.reload();
+																$('#coupon-message').text(response.message);
+																
+															} else {
+																window.location.reload();
+																$('#coupon-message').text(response.message);
+																
+															}
+														},
+														error: function(xhr, errmsg, err) {
+															console.log(xhr.status + ": " + xhr.responseText);
+														}
+													});
+												}
+											</script>
+
+
+
+
 										</div>	
                                     </div>
 								</div>	

@@ -291,7 +291,7 @@
                                                         <th>Payment Method</th>
                                                         <th>Coupon</th>
                                                         <th>Amount</th>
-                                                        <th>Discount</th>
+                                                        <th>Discount amount</th>
                                                         
                                                         <th></th>
                                                     </tr>
@@ -304,26 +304,27 @@
                                                            {{ i.id}}
                                                         </td>
 
-                                                        <td>{{i.address_id.Name}},
-                                                            {{i.address_id.email}},{{i.address_id.phone}},
-                                                            {{i.address_id.address}},{{i.address_id.state}},{{i.address_id.state}},{{i.address_id.country}},{{i.address_id.post}},{{i.address_id.pin}}
+                                                        <td>
+                                                            {{i.addr.Name}},<br>
+                                                            {{i.addr.email}},{{i.addr.phone}},
+                                                            {{i.addr.address}},{{i.addr.state}},{{i.addr.state}},{{i.addr.country}},{{i.addr.post}},{{i.addr.pin}}
 
                                                         </td>
 
-                                                        <td>{{i.order_id.orders_date}}</td>
+                                                        <td>{{i.orders_date}}</td>
 
-                                                        <td>{{i.order_id.paymt_method}}</td>
+                                                        <td>{{i.paymt_method}}</td>
 
                                                         <td class="order-success">
-                                                            <span>Success</span>
+                                                            <span>{{i.coupen_code.code}}</span>
                                                         </td>
 
-                                                        <td>{{i.total_amount}}</td>
-                                                        <td>$15</td>
+                                                        <td>₹{{i.total_amounts}}</td>
+                                                        <td>₹{{i.discount_amount}}</td>
 
                                                         <td>
                                                             <li>
-                                                                <a href="{% url 'more'  %}">
+                                                                <a href="{% url 'order_moredetails' i.id %}">
                                                                     <span class="lnr lnr-eye"></span>
                                                                 </a>
                                                             </li>

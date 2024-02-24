@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -8,14 +8,14 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-from . models import Usermodelss, generate_otp,Useraddress,Wishlist
+from . models import Usermodelss, Walletuser, generate_otp,Useraddress,Wishlist
 from django.views.decorators.cache import never_cache
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Products,Variant
 from category.models import Category
-from cart.models import CartItem, Orderdetails,Orderditem, Proceedtocheck
+from cart.models import CartItem, Coupon, Orderdetails,Orderditem, Proceedtocheck
 from django.db.models import Sum
-import razorpay
+
 from django.http import JsonResponse
 from django.urls import reverse
 # Create your views here.
@@ -76,7 +76,10 @@ def usersignupa(request):
             return render(request,'usersignuppage.html')
         else:
             myuser = Usermodelss(username=username,email=email,phonenumber=phoneno,password1=Pass1,password2=pass2)
+            
             myuser.save()
+            wallet = Walletuser(userid = myuser ,amountt = 0 )
+            wallet.save()
             return redirect('otpver',myuser.id)
     return render(request,'usersignuppage.html')
     # return render(request,'usersignuppage.html')
@@ -175,6 +178,7 @@ def cart(request):
     
     subtotal = sum(item.total for item in cartitem)
     final = subtotal + 45  
+    print(final,"haiii")
     return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
 
 
@@ -248,18 +252,20 @@ def add_cart(request,id):
         
 
         quantity1 = int(request.POST.get('quantity',1))
-
+      
         for item in cartitem:
-            item.total = item.c_quantity * item.Variant_id.v_price
-    
-        subtotal = sum(item.total for item in cartitem)
-        print(subtotal)
-        final = subtotal + 45  
-        print(final)
+            item.total = item.c_quantity * item.Variant_id.v_price 
+            item.save() 
+        
+
+         
+       
+        
         print(var,quantity1)  
         if  int(quantity1) <= obj.v_quantity: 
             if quantity1 < 6:
-                cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total=final)
+                subtotal = int(quantity1) * obj.v_price
+                cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total=subtotal)
                 cart_item.save()
                 messages.success(request,"Your Cart is Added successfully..!")
                 return redirect('cart')
@@ -287,12 +293,16 @@ def userprofile(request):
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         addres = Useraddress.objects.filter(user_id=user)
+        wallet = Walletuser.objects.get(userid=user)
+        wallet_amount = wallet.amountt
+        
+
 
    
     
     
 
-    return render(request,'userprofile.html',{'user':user,'addres':addres})
+    return render(request,'userprofile.html',{'user':user,'addres':addres,'wallet_amount':wallet_amount})
 
 
 
@@ -387,23 +397,30 @@ def checkout(request):
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         cartitem = CartItem.objects.filter(user_id = user)
+       
         if cartitem.exists():
 
             addres = Useraddress.objects.filter(user_id=user)
         
             variant = Variant.objects.all()
-            for item in cartitem:
-                item.total = item.c_quantity * item.Variant_id.v_price
-            subtotal = sum(item.total for item in cartitem)
-            final = subtotal + 45  
-            # print(final)
-        
-        
+            pro = Proceedtocheck.objects.get(user_id = user)
+            
+            if pro.is_coupenapplyed:
+                
+                final = pro.discount_amount
 
-            return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final})
+            else:    
+                for item in cartitem:
+                    item.total = item.c_quantity * item.Variant_id.v_price
+                subtotal = sum(item.total for item in cartitem)
+                final = subtotal + 45  
+           
+            return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final,'pro':pro})
         else:
             messages.error(request,"you can't checkout your cart is empty!...")
             return redirect('shop')
+        
+
 
 
 #proceedtocheckout
@@ -419,8 +436,10 @@ def proceedtocheckout(request):
         no = cart.objects.filter(user_id=user).count()
     except:
         no = 0
-    stotal = CartItem.objects.filter(user_id = userid).aggregate(sum=Sum('total'))
-    subtotal = stotal["sum"]
+    for item in cart_details:
+        item.total = item.c_quantity * item.Variant_id.v_price
+        final= sum(item.total for item in cart_details)
+    subtotal = final + 45  
     print(subtotal)
     addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
     if cart_details.exists():
@@ -472,7 +491,7 @@ def place_order(request):
     if request.method == 'POST':
         email1 = request.session['email']
         user = Usermodelss.objects.get(email=email1)
-        
+        print("haii")
         userid = user.id
         checkout = Proceedtocheck.objects.get(user_id=user)
         orderdate = timezone.now().date() 
@@ -486,9 +505,13 @@ def place_order(request):
                 addr = ad,
                 paymt_method = "cod",
                 total_amounts = checkout.total_amount,
-
-
+                discount_amount = checkout.discount_amount,
+                coupen_code = checkout.applyed_coupen,
             )
+            if checkout.is_coupenapplyed:
+                order.coupen_apply = True
+            else:
+                order.coupen_apply=False
             order.save()
             caritem = CartItem.objects.filter(user_id=userid)
             for i in caritem:
@@ -497,7 +520,7 @@ def place_order(request):
                     product_n=i.product_id,
                     quantity=i.c_quantity,
                     total_amount=i.total,
-                    status="ordered",
+                    status="pending",
                     order_number=order.custom_id.id,
                     address_id=ad,
                     ex_deliverey=orderdate + timedelta(days=7),
@@ -519,61 +542,138 @@ def place_order(request):
 
 
 
-# place an order with razorpay..
-def pay_razorpay(request):
-    if request.method == 'POST':
-        if request.user.is_authenticated and 'email' in request.session:
-            email = request.session['email']
-            try:
-                user = Usermodelss.objects.get(email=email)
-                checkout = Proceedtocheck.objects.get(user=user)
-                orderdate = timezone.now().date() 
-                address_id = request.POST.get("selected_address_id")
-                address = Useraddress.objects.get(id=address_id)
 
-                if address:
-                    order = Orderdetails.objects.create(
-                        custom_id=user,
-                        orders_date=orderdate,
-                        addr=address,
-                        paymt_method="razor_pay",
-                        total_amounts=checkout.total_amount
+
+
+# place an order with razorpay..
+def pay_razorpay1(request):
+    
+    if request.method == 'POST':
+        
+        email1 = request.session['email']
+        user = Usermodelss.objects.get(email=email1)
+        checkout = Proceedtocheck.objects.get(user_id=user)
+       
+        orderdate = timezone.now().date() 
+        address_id = request.POST.get("selected_address_id")
+        address = Useraddress.objects.get(id=address_id)
+        amount = checkout.total_amount
+        
+        order = Orderdetails.objects.create(
+                custom_id=user,
+                orders_date=orderdate,
+                addr=address,
+                paymt_method="razor_pay",
+                total_amounts=checkout.total_amount,
+                discount_amount = checkout.discount_amount,
+                coupen_code = checkout.applyed_coupen,
+                
                     )
                     
-                    cart_items = CartItem.objects.filter(user=user)
-                    for cart_item in cart_items:
-                        Orderditem.objects.create(
-                            order_id=order,
-                            product_n=cart_item.product_id,
-                            quantity=cart_item.c_quantity,
-                            total_amount=cart_item.total,
-                            status="ordered",
-                            order_number=order.custom_id.id,
-                            address_id=address,
-                            ex_deliverey=orderdate + timedelta(days=7),
-                            unit=cart_item.Variant_id,
-                        )
-                        cart_item.Variant_id.v_quantity -= cart_item.c_quantity
-                        cart_item.Variant_id.save()
-                        cart_item.delete()
-                    
-                    checkout.delete()
-                    return JsonResponse({"success": True, "redirect_url": reverse("orderplace")})
-                
-                messages.error(request, "Please select an address.")
-                return redirect('checkout')
-            except Usermodelss.DoesNotExist:
-                messages.error(request, "User not found.")
-        else:
-            messages.error(request, "User not authenticated.")
-    return render(request, 'orderplaced.html')
-            
+        cart_items = CartItem.objects.filter(user_id=user)
+        
+        for cart_item in cart_items:
+            Orderditem.objects.create(
+                    order_id=order,
+                    product_n=cart_item.product_id,
+                    quantity=cart_item.c_quantity,
+                    total_amount=cart_item.total,
+                    status="pending",
+                    order_number=order.custom_id.id,
+                    address_id=address,
+                    ex_deliverey=orderdate + timedelta(days=7),
+                    unit=cart_item.Variant_id,
+                        ).save()
+            cart_item.Variant_id.v_quantity -= cart_item.c_quantity
+            cart_item.Variant_id.save()
+            cart_item.delete()
+        checkout.delete()   
+        return JsonResponse({"success": True,"amount":amount, "redirect_url": reverse("orderplace")})
 
+                    
+                
+            
+                
+        
+    return JsonResponse({"success": False, "redirect_url": "checkout"})
+        
+    
+            
+# place an order with Wallet....
+def pay_wallet(request):
+
+    
+        if request.method == 'POST':
+            
+            email1 = request.session['email']
+            user = Usermodelss.objects.get(email=email1)
+            checkout = Proceedtocheck.objects.get(user_id=user)
+            
+            orderdate = timezone.now().date() 
+            address_id = request.POST.get("selected_address_id")
+            total = float(request.POST.get("total2"))
+            # for item in checkout:
+            #     item.total = item.c_quantity * item.Variant_id.v_price
+            #     final= sum(item.total for item in checkout)
+            # total = final + 45  
+            
+            
+            wallet = Walletuser.objects.get(userid=user.id)
+            wallet_amt=wallet.amountt
+            try:
+                if total <= wallet_amt:
+                    address = Useraddress.objects.get(id=address_id)
+                    order = Orderdetails.objects.create(
+                            custom_id=user,
+                            orders_date=orderdate,
+                            addr=address,
+                            paymt_method="wallet",
+                            total_amounts=checkout.total_amount,
+                            discount_amount = checkout.discount_amount,
+                            coupen_code = checkout.applyed_coupen,
+                                )
+                                
+                    cart_items = CartItem.objects.filter(user_id=user)
+                    
+                    for cart_item in cart_items:
+                            Orderditem.objects.create(
+                                order_id=order,
+                                product_n=cart_item.product_id,
+                                quantity=cart_item.c_quantity,
+                                total_amount=cart_item.total,
+                                status="pending",
+                                order_number=order.custom_id.id,
+                                address_id=address,
+                                ex_deliverey=orderdate + timedelta(days=7),
+                                unit=cart_item.Variant_id,
+                                    )
+                            cart_item.Variant_id.v_quantity -= cart_item.c_quantity
+                            cart_item.Variant_id.save()
+                            cart_item.delete()
+                                
+                    checkout.delete()
+                    wallet.amountt = wallet.amountt - total
+                    wallet.save()
+                    return JsonResponse({"success": True, "redirect_url": reverse("orderplace")})
+                    
+                else:
+                    return JsonResponse({"success": True, "redirect_url": reverse("checkout")})
+                    
+            except:                    
+                return JsonResponse({"success": True, "redirect_url": reverse("checkout")})
+    
+    
+    
+    
+
+
+    
     
 
 
 
 def orderplace(request):
+    
     
     return render(request,'orderplaced.html')
 
@@ -581,14 +681,106 @@ def orderdetails(request):
     if  'email' in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
-        # order = order_details.objects.filter(userid = user)
+        userid = user.id
+        # ord = Orderdetails.objects.filter(custom_id = userid)
+        
+        order1 = Orderdetails.objects.filter(custom_id=user).order_by("-id")
+                
+        # print(order.total_amount)
         # print(order)
 
-    return render(request,'orderdetails.html',)
+    return render(request,'orderdetails.html',{'order':order1})
+
+
+
+def moredetails(request,id):
+    if  'email' in request.session:
+        email1 = request.session["email"]
+        Usermodelss.objects.get(email=email1)
+        
+        orderi = Orderditem.objects.filter(order_id = id)
+        
+        
+    return render(request,'moredetails.html',{'order':orderi})
+
+
+# cancelling the order......
+def cancelorder1(request,id):
+    print(id)
+    if  'email' in request.session:
+        email1 = request.session["email"]
+        user =  Usermodelss.objects.get(email=email1)
+        usr = user.id
+        print(usr)
+        orderi = Orderditem.objects.get(id=id)
+        
+        variant = Variant.objects.get(products = orderi.product_n ,unit = orderi.unit.unit)
+        print(variant.products)
+        
+        variant.v_quantity = variant.v_quantity + orderi.quantity
+        variant.save()
+        return_amount = orderi.order_id.total_amounts - variant.v_price
+        print(return_amount)
+        orderi.status = "cancelled"
+        orderi.save()
+        if orderi.order_id.paymt_method == "razor_pay" or orderi.order_id.paymt_method == "wallet":
+            wallet1 = Walletuser.objects.get(userid = user.id )
+            print(type(wallet1.amountt))
+
+            
+            wallet1.amountt=wallet1.amountt + return_amount
+            wallet1.save()
+
+            
+        messages.success(request,"order cancelled successfully")
+        return redirect('orderdetails')
+
+
+# apply a coupen....
+def coupenapply(request):
+    if request.method == "POST":
+        email1 = request.session['email']
+        user = Usermodelss.objects.get(email=email1)
+        
+        appcoup = request.POST.get('coupon_code')
+        pro = Proceedtocheck.objects.get(user_id = user)
+        
+        try:
+            coupen = Coupon.objects.get(code = appcoup)
+            if coupen.to_date < date.today():
+                return JsonResponse({'success': False, 'message': 'Coupon has expired'})
+            if Orderdetails.objects.filter(custom_id = user , coupen_code = coupen ).exists():
+                return JsonResponse({'success': False, 'message': 'Coupon already applied'})
+            if coupen.is_listed:
+                pro.discount_amount = pro.total_amount - coupen.cop_price
+                pro.applyed_coupen = coupen
+                pro.is_coupenapplyed= True
+                pro.save()
+            
+                JsonResponse({'success': False, 'message': 'Coupon applied succesfully'}) 
+                return redirect('checkout')
+            else:
+                JsonResponse({'success': False, 'message': "you can't apply this coupon"}) 
+
+           
+        except Coupon.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Coupon Doesnot Exists'})
+    return render(request,'checkout.html')
+
+        
+            
 
 
 
 
+
+
+
+
+    
+   
+
+   
 
 # change password section..........
 def changepassword(request):
@@ -625,6 +817,10 @@ def old_pass_confirm(request):
         else:
             return redirect("changepassword")
     return render(request,'paaswordentering.html')
+
+
+# cancel the order..............
+
 
 
 

@@ -115,20 +115,28 @@
 					 <div class="card-body">
 						        <div class="shipping-address-form">
 						        	<h3></h3>
-									{% for i in order  %}
+									{% for i in order%}
 										<div class="card">
 											
 											<div class="card-body">
-												<h3>{{i.product_name.pname}}</h3>
-												<img src="{{i.product_name.image.url}}" alt="" style="width: 50px; height: auto;">
+												<h3>Order id:#{{i.id}}</h3>
+												<p>Name: {{i.addr.Name}}</p>
 												<!-- Display Address Details -->
-												
-												<p> Unit(pack) : {{i.variant_unit.unit}}</p>
-												
-												<p>Total : ₹{{i.total_amount}}</p>
+											    <p>Total : ₹{{i.total_amounts}}</p>
+												<p>{{i.addr.address}},{{i.addr.state}},{{i.addr.country}},
+													{{i.order_id.addr.pin}},{{i.addr.post}},</p>
+										
+												<p class="text-danger"><b>Ordered Date:  {{i.orders_date}}</b></p>
 												<!-- Choice Option -->
+											           
+													
+												
+												
 											
-												<button class="btn btn-danger cancel-order-button">Cancel Order</button>
+												<br>
+											
+												<a  href="{% url 'moredetails' i.id %}" class="btn btn-danger text-white ">more details</a>
+</span>											
 											
 											</div>
 										    

@@ -1,6 +1,7 @@
 from django.db import models
 from products.models import Variant,Products
 from home.models import Usermodelss,Useraddress
+
 # Create your models 
 
 class CartItem(models.Model):
@@ -12,7 +13,15 @@ class CartItem(models.Model):
     
     
     def __str__(self) -> str:
-        return f"{self.product_id.name}"
+        return f"{self.product_id.pname}"
+    
+class Coupon(models.Model):
+    cop_name = models.CharField(max_length=50)
+    cop_price = models.BigIntegerField()
+    code = models.CharField(max_length=50)
+    from_date = models.DateField()
+    to_date = models.DateField()
+    is_listed = models.BooleanField(default=True)    
     
     
 
@@ -24,6 +33,9 @@ class Orderdetails(models.Model):
     paymt_method = models.CharField(max_length=50)
     total_amounts = models.BigIntegerField(default=0)
     orders_date = models.DateField()
+    coupen_code = models.ForeignKey(Coupon,on_delete=models.CASCADE,null = True)
+    coupen_apply = models.BooleanField(default = False,null = True)
+    discount_amount = models.BigIntegerField(default=0,null = True)
 
 class Orderditem(models.Model):
     order_id = models.ForeignKey(Orderdetails,on_delete = models.CASCADE)
@@ -37,13 +49,7 @@ class Orderditem(models.Model):
     order_number = models.IntegerField()
     total_amount = models.IntegerField()
 
-class Coupon(models.Model):
-    cop_name = models.CharField(max_length=50)
-    cop_price = models.BigIntegerField()
-    code = models.CharField(max_length=50)
-    from_date = models.DateField()
-    to_date = models.DateField()
-    is_listed = models.BooleanField(default=True)
+
 
 class Proceedtocheck(models.Model):
     user_id = models.ForeignKey(Usermodelss,on_delete = models.CASCADE)

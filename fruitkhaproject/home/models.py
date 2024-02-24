@@ -74,3 +74,6 @@ class Wishlist(models.Model):
      vaiant_id = models.ForeignKey(Variant,on_delete = models.CASCADE, null = True )
 
 
+class Walletuser(models.Model):
+     userid = models.ForeignKey(Usermodelss,on_delete = models.CASCADE)
+     amountt = models.IntegerField(default=0)

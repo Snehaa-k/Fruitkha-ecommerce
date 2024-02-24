@@ -3,7 +3,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from cart.models import Coupon
+from cart.models import Coupon, Orderdetails
 from home. models import Usermodelss
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -60,12 +60,22 @@ def adminlogout(request):
 
 
 def order_details_admin(request):
-    order = Orderditem.objects.all()
+    order = Orderdetails.objects.all()
     return render(request,'orderadmin.html',{'order':order})
 
 
-def order_moredetails(request):
-    return render(request,'order-detail.html')
+def order_moredetails(request,id):
+    
+    orders = Orderdetails.objects.get(id = id)
+    orderi = Orderditem.objects.filter(order_id = orders)
+    
+    subtotal = float(orders.total_amounts)
+    
+    
+        
+        
+    return render(request,'order-detail.html',{'order':orderi,'subtotal':subtotal})
+    
 
 def coupon_list(request):
     coup = Coupon.objects.all()
@@ -97,8 +107,8 @@ def addcoupen(request):
           
     return render(request,'coupenlist.html')
 
-# edit coupen....
 
+# edit coupen....
 def editcoupen(request,id):
     coup = Coupon.objects.get(id=id)
     if request.method == 'POST':
@@ -144,3 +154,15 @@ def un_list_coupen(request, id):
     obj.is_listed = False
     obj.save()
     return redirect("coupon_list")
+
+def editstatus(request,id):
+    stus = Orderditem.objects.get(id = id)
+    if request.method == 'POST':
+        status = request.POST['status']
+        stus.status = status
+        stus.save()
+        messages.success(request, "your status  is added successfully")
+        return redirect("order_details_admin")
+
+
+    return render(request,'order-detail.html')

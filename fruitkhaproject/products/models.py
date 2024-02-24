@@ -33,6 +33,6 @@ class Variant(models.Model):
 
 
     def __str__(self):
-        return f"{self.product.name} - {self.get_unit_display()}"
+        return f"{self.products.pname} - {self.get_unit_display()}"
 
     
