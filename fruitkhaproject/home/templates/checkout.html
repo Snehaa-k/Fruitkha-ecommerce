@@ -104,7 +104,14 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
-	
+	                            {% if messages %}
+								<div class="alert alert-success mt-3">
+								{% for message in messages %}
+								{{ message }}
+								{% endfor %}
+								</div>
+								{% endif %}
+
 	
 	<!-- check out section -->
 	<div class="checkout-section mt-150 mb-150">
@@ -116,14 +123,7 @@
 						  <div class="card single-accordion">
 						    <div class="card-header" id="headingOne">
 						      <h5 class="mb-0">
-								{% if messages %}
-								<div class="alert alert-success mt-3">
-								{% for message in messages %}
-								{{ message }}
-								{% endfor %}
-								</div>
-								{% endif %}
-
+								
 						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 						         Cick Here To Add  Shipping Address
 						        </button>
@@ -239,7 +239,7 @@
 								</tr>
 
 								<tr>
-									{% if pro.iscoupenapplyed  %}
+									{% if pro.is_coupenapplyed  %}
 									<td><h5 class="text-success">Coupen applyed..</h5>
 										Discount amount:</td>
 									<td>₹{{final}}</td>
@@ -274,29 +274,31 @@
 										
 										<div class="card-body ">
 											
-											<button id="cash-on-delivery-btn" class="btn btn-outline-dark" style="width:290px;" type="submit" >
+											<button id="cash-on-delivery-btn" class="btn btn-outline-dark" style="width:290px;" type="submit" onclick="alert('confirm your payment!')" >
 												 CASH
 											</button>
 											<input type="hidden" id="razorpayTotal1"  value="{{final}}">
 
                     </form>
 											<!-- sweet alert buttton......................................... -->
-											<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-											<script>
-												// JavaScript code
-												document.getElementById("cash-on-delivery-btn").addEventListener("click", function() {
-													// Check if any address is selected
-													if (!document.querySelector('input[name="selected_address_id"]:checked')) {
-														// If no address is selected, show Sweet Alert
-														swal("Error", "Please choose an address or Add an address", "error");
-														return; // Prevent further execution
-													}
-											
-													// If an address is selected, proceed with cash on delivery action
-													// You can put your code for cash on delivery action here
+											<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+												<script>
+												document.addEventListener("DOMContentLoaded", function() {
+													document.getElementById("cash-on-delivery-btn").addEventListener("click", function() {
+														// Check if any address is selected
+														if (!document.querySelector('input[name="selected_address_id"]:checked')) {
+															// If no address is selected, show SweetAlert
+															Swal.fire({
+																icon: 'error',
+																title: 'Error',
+																text: 'Please choose an address or add an address',
+															});
+															return; 
+														}
+													});
 												});
-											</script>
+												</script>
+
 
 										     
 
@@ -309,7 +311,7 @@
 
 
 										 
-											<a href="{% url 'pay_wallet'  %}" class="btn btn-outline-dark" style="width:290px;" id="wallet-button1"type="button" >
+											<a href="{% url 'pay_wallet'  %}" class="btn btn-outline-dark" style="width:290px;" id="wallet-button1"type="button" onclick="return confirm('confirm Your payment')" >
 												<i class='fas fa-wallet' style='font-size:20px; color:black;'></i>    WALLET
 											</a>
 
@@ -317,44 +319,62 @@
 						
 											<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 													
-												<script>
-													$(document).ready(function() {
+											<script>
+												$(document).ready(function() {
 													$('#wallet-button1').click(function() {
 														var selectedAddressId = $('input.selected_address_id:checked').val();
 														var total = $('#razorpayTotal1').val();
 														console.log(total)
-
-														// Pass the selected address ID to the Django view using AJAX only if it's available
-														if (selectedAddressId) {
-															
-															$.ajax({
-																type: 'POST',
-																url: '/pay_wallet/', // Replace with your Django view URL
-																data: {
-																	'selected_address_id': selectedAddressId,
-																	'total2': total,
-																	csrfmiddlewaretoken: '{{ csrf_token }}' // Ensure you have the CSRF token
-																},
-																success: function(data) {
-																	// Handle success response if needed
-																	console.log('Address ID sent to server');
-																	if (data.success) {
-																		window.location.href = data.redirect_url; // Redirect to the 'thanks' page
-																	} else {
-																		console.log('Failed to process order');
-																	}
-																},
-																error: function(xhr, errmsg, err) {
-																	// Handle error if needed
-																	console.log('Error sending address ID:', errmsg);
-																}
+														// var walletBalance = parseFloat('{{ wallet_balance }}');
+											
+														// Check if any address is selected
+														if (!selectedAddressId) {
+															// If no address is selected, show SweetAlert
+															Swal.fire({
+																icon: 'error',
+																title: 'Error',
+																text: 'Please choose an address',
 															});
-														} else {
-															console.log('No address selected.');
+															return;
 														}
+
+
+														// if (walletBalance < total) {
+																
+														// 		Swal.fire({
+														// 			icon: 'error',
+														// 			title: 'Error',
+														// 			text: 'Insufficient wallet balance',
+														// 		});
+														// 		return;
+														// 	}
+											
+														// Pass the selected address ID to the Django view using AJAX only if it's available
+														$.ajax({
+															type: 'POST',
+															url: '/pay_wallet/', // Replace with your Django view URL
+															data: {
+																'selected_address_id': selectedAddressId,
+																'total2': total,
+																csrfmiddlewaretoken: '{{ csrf_token }}' // Ensure you have the CSRF token
+															},
+															success: function(data) {
+																// Handle success response if needed
+																console.log('Address ID sent to server');
+																if (data.success) {
+																	window.location.href = data.redirect_url; // Redirect to the 'thanks' page
+																} else {
+																	console.log('Failed to process order');
+																}
+															},
+															error: function(xhr, errmsg, err) {
+																// Handle error if needed
+																console.log('Error sending address ID:', errmsg);
+															}
+														});
 													});
 												});
-												</script>
+											</script>
 
                                               
 

@@ -194,7 +194,7 @@
                            <br>
 
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                <a class="sidebar-link sidebar-title" href="{% url 'order_details_admin' %}">
                                     <i data-feather="archive"></i>
                                     <span>Orders</span>
                                 </a>
@@ -229,7 +229,7 @@
 
                            
                             <li class="sidebar-list">
-                                <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="{% url 'coupon_list'  %}">
                                     <i data-feather="tag"></i>
                                     <span>Coupons</span>
                                 </a>
@@ -238,12 +238,17 @@
 
                             <br>
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title link-nav" href="invoice.html">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'productoffer'  %}">
                                     <i data-feather="archive"></i>
-                                    <span>banners</span>
+                                    <span>Productoffer</span>
                                 </a>
                             </li>
-
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'categoryoffer'  %}">
+                                    <i data-feather="archive"></i>
+                                    <span>Categoryoffer</span>
+                                </a>
+                            </li>
                           
 
                             <br>
@@ -283,6 +288,13 @@
                         </ul>
                     </div>
                 </div> {% endcomment %}
+                {% if messages %}
+                <div class="alert alert-success mt-3">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+                </div>
+                {% endif %}
 
                 <!-- tracking table start -->
                 <div class="container-fluid">

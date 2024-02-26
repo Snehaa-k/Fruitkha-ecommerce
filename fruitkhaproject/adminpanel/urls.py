@@ -16,6 +16,28 @@ urlpatterns = [
     path('list_coupen/<str:id>',views.list_coupen,name='list_coupen'),
     path('un_list_coupen/<str:id>',views.un_list_coupen,name='un_list_coupen'),
     path('editstatus/<str:id>',views.editstatus,name='editstatus'),
+    path('productoffer/',views.productoffer,name='productoffer'),
+    path('addproductoffer/',views.addproductoffer,name='addproductoffer'),
+    path('listed/<str:id>',views.list_poffer,name='listed'),
+    path('unlisted/<str:id>',views.ulist_poffer,name='unlisted'),
+    path('editoffer/<str:id>',views.editproductoffer,name='editproductoffer'),
+    path('categoryoffer/',views.categoryoffer,name='categoryoffer'),
+    path('addcategoryoffer/',views.addcategoryoffer,name='addcategoryoffer'),
+    path('editcategoryoffer/<str:id>',views.editcategoryoffer,name='editcategoryoffer'),
+    path('list_coffer/<str:id>',views.list_coffer,name='list_coffer'),
+    path('ulist_coffer/<str:id>',views.ulist_coffer,name='ulist_coffer'),
+    path('error/',views.error404,name='error404'),
+
+
+
+
+
+
+
+
+
+
+
 
   
 

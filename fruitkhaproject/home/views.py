@@ -18,6 +18,7 @@ from django.db.models import Sum
 
 from django.http import JsonResponse
 from django.urls import reverse
+from products.models import Productoffer,Categoryoffer
 # Create your views here.
 
 @never_cache
@@ -121,8 +122,9 @@ def shop(request):
     
     categry = Category.objects.filter(is_listed = True)
     prodts = Products.objects.filter(category__in = categry ,is_listed = True,variant__isnull=False).distinct()
+    poffer = Productoffer.objects.filter(is_listed = True)
    
-    return render(request,'shop.html',{'products':prodts,'categorys':categry})
+    return render(request,'shop.html',{'products':prodts,'categorys':categry,'poffer':poffer})
 
 
 def userlogout(request):
@@ -601,21 +603,18 @@ def pay_razorpay1(request):
             
 # place an order with Wallet....
 def pay_wallet(request):
-
-    
+        email1 = request.session['email']
+        user = Usermodelss.objects.get(email=email1)
         if request.method == 'POST':
             
-            email1 = request.session['email']
-            user = Usermodelss.objects.get(email=email1)
+            # email1 = request.session['email']
+            # user = Usermodelss.objects.get(email=email1)
             checkout = Proceedtocheck.objects.get(user_id=user)
             
             orderdate = timezone.now().date() 
             address_id = request.POST.get("selected_address_id")
             total = float(request.POST.get("total2"))
-            # for item in checkout:
-            #     item.total = item.c_quantity * item.Variant_id.v_price
-            #     final= sum(item.total for item in checkout)
-            # total = final + 45  
+           
             
             
             wallet = Walletuser.objects.get(userid=user.id)
@@ -657,10 +656,14 @@ def pay_wallet(request):
                     return JsonResponse({"success": True, "redirect_url": reverse("orderplace")})
                     
                 else:
-                    return JsonResponse({"success": True, "redirect_url": reverse("checkout")})
+                    JsonResponse({"success": True, "redirect_url": reverse("checkout")})
                     
             except:                    
                 return JsonResponse({"success": True, "redirect_url": reverse("checkout")})
+        
+        wallet_balance = Walletuser.objects.get(userid=user.id).amountt
+        messages.error(request,"Your Wallet has not enough balance")
+        return redirect(f"{reverse('checkout')}?wallet_balance={wallet_balance}")
     
     
     
@@ -753,6 +756,12 @@ def coupenapply(request):
                 return JsonResponse({'success': False, 'message': 'Coupon already applied'})
             if coupen.is_listed:
                 pro.discount_amount = pro.total_amount - coupen.cop_price
+                if pro.discount_amount < 0:
+                    pro.discount_amount = 0
+                    pro.applyed_coupen = coupen
+                    pro.is_coupenapplyed = True
+                    pro.save()
+
                 pro.applyed_coupen = coupen
                 pro.is_coupenapplyed= True
                 pro.save()
@@ -876,7 +885,12 @@ def add_addr_checkout(request):
 
 
 
+# def productofferpage(request):
 
+#     product = Products.objects.filter(id = id)
+#     off = Productoffer.objects.filter()
+
+#     return render(request,'shop.html')
 
 
 

@@ -238,13 +238,18 @@
 
                             <br>
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title link-nav" href="invoice.html">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'productoffer' %}">
                                     <i data-feather="archive"></i>
-                                    <span>banners</span>
+                                    <span>Productoffer</span>
                                 </a>
                             </li>
-
-                          
+                            <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'categoryoffer' %}">
+                                    <i data-feather="archive"></i>
+                                    <span>Categoryoffer</span>
+                                </a>
+                            </li>
 
                             <br>
 
@@ -268,6 +273,13 @@
                 </nav>
             </div>
         </div>
+        {% if messages %}
+        <div class="alert alert-success mt-3">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+        </div>
+        {% endif %}
             <!-- Texes Table Section Start -->
             <div class="page-body">
                 <div class="title-header">
@@ -450,11 +462,11 @@
                         <input type="text"  class="form-control" id="categoryName" placeholder="Enter the code" value="{{i.code}}"  name = "code" required>
                     </div>
                     <div class="mb-3">
-                        <label for="categoryName" class="form-label">Valid</label>
+                        <label for="categoryName" class="form-label">Expired</label>
                         <input type="date" id="Valid" class="form-control" id="categoryName" placeholder="Enter the date"  value="{{i.from_date}}"  name = "cfromdate" required>
                     </div>
                     <div class="mb-3">
-                        <label for="categoryName" class="form-label">Expired</label>
+                        <label for="categoryName" class="form-label">Valid</label>
                         <input type="date" id="Expired" class="form-control" id="categoryName" placeholder="Enter the date" value="{{i.to_date}}" name = "ctodate" required>
                     </div>
                     <!-- Add more form fields as needed -->

@@ -169,7 +169,21 @@
 						<a href="{% url 'singleproduct' product.id %}"><img src="{{product.image.url}}" alt="" class="img-fluid aspect-ratio-1x1"></a>
 					</div>
 					<h3>{{product.pname}}</h3>
-					<p class="product-price"><span>Per Kg</span>RS {{product.price}}  
+				{% if product.offer.exists %}
+                    {% for offer in product.offer.all %}
+                    {% if offer.is_listed %}
+                        <p><span>Per Kg</span>
+							<del class="strike">Rs :{{ product.price }}</del></p>
+                        <p class="product text-danger"><h3>{{ offer.percentage }}% off</h3></p>
+					{%else%}
+					<p class="product-price"><span>Per Kg</span> Rs{{ product.price }}</p>
+                    {% endif %}
+					
+					    
+                    {% endfor %}
+                {% else %}
+                     <p class="product-price"><span>Per Kg</span> Rs{{ product.price }}</p>
+                {% endif %}
 					</p>
 					  
 				</div>
@@ -317,8 +331,8 @@
         height: 100%; 
     }
 	.product-image img {
-        width: 300px; 
-        height: 300px; 
+        width: 260px; 
+        height: 260px; 
 
 
  

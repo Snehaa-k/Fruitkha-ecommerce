@@ -14,7 +14,8 @@ def productslist(request):
 
 
 def addproducts(request):
-    
+    if 'email' in request.session:
+        return redirect('error404')
 
     if request.method == 'POST':
         product_name = request.POST['pname']
@@ -24,7 +25,7 @@ def addproducts(request):
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
         price = request.POST['price']
-        instock = request.POST['instock']
+        # instock = request.POST['instock']
        
     
         category_instance, created = Category.objects.get_or_create(category_name = category_name)
@@ -36,7 +37,7 @@ def addproducts(request):
             category = category_instance,
             description = description,
             price = price ,
-            in_stock = instock,
+            # in_stock = instock,
             imagea = imagea,
             imageb = imageb,
             
@@ -69,6 +70,8 @@ def editproducts(request):
 
 
 def updateproduct(request,id):
+    if 'email' in request.session:
+        return redirect('error404')
     if request.method == 'POST':
         product_name = request.POST['pname']
         image = request.FILES.get('images')
@@ -77,7 +80,7 @@ def updateproduct(request,id):
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
         price = request.POST['price']
-        instock = request.POST['instock']
+        # instock = request.POST['instock']
         category_instance, created = Category.objects.get_or_create(category_name = category_name)
        
         # delete_image = request.POST.get('delete_image')
@@ -96,7 +99,7 @@ def updateproduct(request,id):
         category = category_instance,
         description = description,
         price = price,
-        in_stock = instock,
+        # in_stock = instock,
         imagea = imagea,
         imageb = imageb,
 
@@ -110,6 +113,8 @@ def updateproduct(request,id):
 # variant section........................
 
 def add_variant(request,id):
+    if 'email' in request.session:
+        return redirect('error404')
     prdts = Products.objects.get(id=id)
     # print(id)
     if request.method == 'POST':
@@ -136,6 +141,8 @@ def add_variant(request,id):
 
 
 def edit_variant_modal(request, id):
+    if 'email' in request.session:
+        return redirect('error404')
     product = Products.objects.get(id=id)
     variant = Variant.objects.filter(products=product).first()
     

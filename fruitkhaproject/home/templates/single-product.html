@@ -150,7 +150,19 @@
 				<div class="col-md-7">
 					<div class="single-product-content">
 						<h3>{{product.pname}}</h3>
+						{% if product.offer.exists %}
+						{% for offer in product.offer.all %}
+						{% if offer.is_listed %}
+						<p><span>Per Kg</span>
+							<del class="strike">Rs :{{ product.price }}</del></p>
+                        <p class="product text-danger"><h3>{{ offer.percentage }}% off</h3></p>
+						{% else %}
 						<p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}} </p>
+						{% endif %}
+						{% endfor  %}
+						{% else  %}
+                        <p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}} </p>
+						{% endif  %}
 						<p>{{product.description}}</p>
 						<div class="single-product-form">
 							<form action="{% url 'add_cart' product.id %}" method="post"> 

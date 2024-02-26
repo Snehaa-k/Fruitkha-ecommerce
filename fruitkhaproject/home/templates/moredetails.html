@@ -139,7 +139,7 @@
 												{% else %}
 
 
-												<a href="/cancel/{{i.id}}"   class="btn btn-dark text-white ">Cancel Order</a> 
+												<a href="/cancel/{{i.id}}"   class="btn btn-dark text-white "   onclick="return confirm('Are you sure You want to Cancel the order?')">Cancel Order</a> 
                                                 {% endif %}
 											
 											</div>

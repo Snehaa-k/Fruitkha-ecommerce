@@ -303,7 +303,7 @@
                                                     <th>CATEGORY</th>
                                                     <th>DESCRIPTION</th>
                                                     <th>PRCE</th>
-                                                    <th>IN STOCK</th>
+                                                    {% comment %} <th>IN STOCK</th> {% endcomment %}
                                                     <th>PUBLISH</th>
                                                     <th>OPTIONS</th>
                                                     <th>VARIANT</th>
@@ -326,7 +326,7 @@
                                                    
                                                     <td>{{product.description}}</td>
                                                     <td>{{product.price}}</td>
-                                                    <td>{{product.in_stock}}</td>
+                                                    {% comment %} <td>{{product.in_stock}}</td> {% endcomment %}
 
                                                     <td>
                                                         <ul>
@@ -561,12 +561,12 @@
                     
                         
                     </div>
-                    <div class="mb-3">
+                    {% comment %} <div class="mb-3">
                         <label for="categoryName" class="form-label">In Stock</label>
                         <input type="number" class="form-control" id="categoryName" placeholder="Enter the Stock" name = "instock" required>
                     
                         
-                    </div>
+                    </div> {% endcomment %}
 
 
 
@@ -638,12 +638,12 @@
                         
                     </div>
 
-                    <div class="mb-3">
+                    {% comment %} <div class="mb-3">
                         <label for="categoryName" class="form-label">In Stock</label>
                         <input type="text" class="form-control" id="categoryName"  value="{{product.in_stock}}"  name = "instock" required>
                     
                         
-                    </div>
+                    </div> {% endcomment %}
                     <!-- Add more form fields as needed -->
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
