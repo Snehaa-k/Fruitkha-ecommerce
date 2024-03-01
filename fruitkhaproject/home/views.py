@@ -175,11 +175,13 @@ def cart(request):
     cartitem = CartItem.objects.filter(user_id=user)
     variant = Variant.objects.all()
     
+
+    
     for item in cartitem:
         item.total = item.c_quantity * item.Variant_id.v_price
     
     subtotal = sum(item.total for item in cartitem)
-    final = subtotal + 45  
+    final = subtotal 
     print(final,"haiii")
     return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
 
@@ -268,7 +270,9 @@ def add_cart(request,id):
             if quantity1 < 6:
                 subtotal = int(quantity1) * obj.v_price
                 cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total=subtotal)
-                cart_item.save()
+                if not created:
+                    cart_item.c_quantity = cart_item.c_quantity + 1
+                    cart_item.save()
                 messages.success(request,"Your Cart is Added successfully..!")
                 return redirect('cart')
             else:
@@ -283,6 +287,32 @@ def add_cart(request,id):
 def delete_cart(request,id):
     CartItem.objects.get(id=id).delete()
     return redirect('cart')
+
+
+# increase the quantity of cartitem...............
+# def increase_cquantity(request):
+# #     def quantity_updation(request):
+#     if request.method == "POST":
+#         cart_id = int(request.POST["cart_id"])
+#         action = request.POST["action"]
+#         obj = CartItem.objects.get(id=cart_id)
+#         pro = Products.objects.get(pname=obj.product_id)
+#         unit_qnty = Variant.objects.get(product_id__pname=pro, id=obj.Variant_id.id)
+#         if action == "plus":
+#             if obj.c_quantity < 5 and obj.c_quantity < unit_qnty.v_quantity:
+#                 obj.c_quantity += 1
+#                 obj.save()
+#             else:
+#                 obj.c_quantity = 5
+
+#         else:
+#             if obj.c_quantity > 1:
+#                 obj.c_quantity -= 1
+#                 obj.save()
+#             else:
+#                 obj.c_quantity = 0
+#         return JsonResponse({"status": "alsjdjhfp"})
+
 
 
 
@@ -415,7 +445,7 @@ def checkout(request):
                 for item in cartitem:
                     item.total = item.c_quantity * item.Variant_id.v_price
                 subtotal = sum(item.total for item in cartitem)
-                final = subtotal + 45  
+                final = subtotal
            
             return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final,'pro':pro})
         else:
@@ -434,17 +464,15 @@ def proceedtocheckout(request):
     cart_details = (
         CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
     )
-    try:
-        no = cart.objects.filter(user_id=user).count()
-    except:
-        no = 0
-    for item in cart_details:
-        item.total = item.c_quantity * item.Variant_id.v_price
-        final= sum(item.total for item in cart_details)
-    subtotal = final + 45  
-    print(subtotal)
+   
+   
+    # print(subtotal)
     addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
     if cart_details.exists():
+        for item in cart_details:
+            item.total = item.c_quantity * item.Variant_id.v_price
+            final= sum(item.total for item in cart_details)
+        subtotal = final 
         Proceedtocheck.objects.create(
                 user_id=user,
                 order_date=orderdate,
@@ -452,7 +480,7 @@ def proceedtocheckout(request):
                 discount_amount=subtotal,
             )
         try:
-            checkoutdetails = proceedtocheckout.objects.get(user_id=user)
+             Proceedtocheck.objects.get(user_id=user)
         except:
             Proceedtocheck.objects.filter(user_id=user).delete()
             Proceedtocheck.objects.create(
@@ -461,17 +489,17 @@ def proceedtocheckout(request):
                 total_amount=subtotal,
                 discount_amount=subtotal,
             )
-            checkoutdetails = Proceedtocheck.objects.get(user_id=user)
-            context = {
-                "details": checkoutdetails,
+            Proceedtocheck.objects.get(user_id=user)
+            context1 = {
+               
                 "cart_details": cart_details,
                 "total1": subtotal,
                 "addresses": addres,
                 "user": user,
-                "no": no,
+               
             }
             return redirect('checkout')
-        return render(request,'checkout.html',context)
+        return render(request,'checkout.html',context1)
     else:
         messages.error(request,"Your cart is empty please add some product..!")
         return redirect('shop')
@@ -722,13 +750,13 @@ def cancelorder1(request,id):
         
         variant.v_quantity = variant.v_quantity + orderi.quantity
         variant.save()
-        return_amount = orderi.order_id.total_amounts - variant.v_price
+        return_amount =  orderi.total_amount
         print(return_amount)
         orderi.status = "cancelled"
         orderi.save()
         if orderi.order_id.paymt_method == "razor_pay" or orderi.order_id.paymt_method == "wallet":
             wallet1 = Walletuser.objects.get(userid = user.id )
-            print(type(wallet1.amountt))
+            # print(type(wallet1.amountt))
 
             
             wallet1.amountt=wallet1.amountt + return_amount
@@ -885,12 +913,6 @@ def add_addr_checkout(request):
 
 
 
-# def productofferpage(request):
-
-#     product = Products.objects.filter(id = id)
-#     off = Productoffer.objects.filter()
-
-#     return render(request,'shop.html')
 
 
 

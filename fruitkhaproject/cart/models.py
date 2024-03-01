@@ -1,6 +1,7 @@
 from django.db import models
 from products.models import Variant,Products
 from home.models import Usermodelss,Useraddress
+from django.db.models import Sum,F
 
 # Create your models 
 
@@ -14,6 +15,10 @@ class CartItem(models.Model):
     
     def __str__(self) -> str:
         return f"{self.product_id.pname}"
+    
+    # def calculate_total_price(self):
+    #     total_price = self.cartitem_set.aggregate(total=Sum(F('product__price') * F('quantity'), output_field=models.DecimalField()))['total']
+    #     return total_price if total_price is not None else 0
     
 class Coupon(models.Model):
     cop_name = models.CharField(max_length=50)

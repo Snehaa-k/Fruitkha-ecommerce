@@ -290,6 +290,14 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
+                                {% if messages %}
+                                <div class="alert alert-success mt-3">
+                                {% for message in messages %}
+                                {{ message }}
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+                
                                 <!-- Add Category Button Start -->
                                 <div class="card-header">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -402,7 +410,7 @@
             </div>
             <div class="modal-body">
                 <!-- Add Coupen-->
-                <form method='post' action ="{% url 'addcoupen' %}">
+                <form method='post' action ="{% url 'addcoupen' %} " id ="id_content">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Coupen Name</label>
@@ -424,16 +432,16 @@
                         <label for="categoryName" class="form-label">Expired</label>
                         <input type="date" id="Expired" class="form-control" id="categoryName" placeholder="Enter the date" name = "cfromdate" required>
                     </div>
-                   
-                    <!-- Add more form fields as needed -->
+                    
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">ADD</button>
+                    <button type="submit"     class="btn btn-primary">ADD</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Edit Category Modal -->
 {% for i in coup   %}
@@ -451,7 +459,7 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Coupen Name</label>
-                        <input type="text" class="form-control" id="categoryName" placeholder="Enter Coupen name" value={{i.cop_name}} name = "cname" required>
+                        <input type="text" class="form-control" id="categoryName" placeholder="Enter Coupen name" value="{{i.cop_name}}" name = "cname" required>
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Price</label>

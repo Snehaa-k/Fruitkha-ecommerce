@@ -59,19 +59,20 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
+								<li class="current-list-item"><a href="{% url 'home'  %}">Home</a>
 									
 								</li>
 								
 									
 								
 								
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="{% url 'contact' %}">Contact</a></li>
 								
 								<li>
 									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+										<a href="{% url 'orderdetails'  %}">order details</a>
+
+										<a class="{% url 'cart'    %}" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
 									</div>
 								</li>
 							</ul>
@@ -124,13 +125,13 @@
 
 												<p>{{i.unit.unit}}</p>
 												<!-- Display Address Details -->
-											    <p>Total : ₹{{i.total_amount}}</p>
+											    <p>price : ₹{{i.total_amount}}</p>
 												<p class="text-success">{{i.status}}</p>
 												
 										
 												<p class="text-primary"><b>Delivery Expected Date: <span class="text-dark">{{i.ex_deliverey}}</span></b></p>
 												<!-- Choice Option -->
-												{%if i.status == "cancelled"%}
+												{%if i.status == "cancelled" %}
 												<h4 class="text-danger"> Your Order is cancelled..!</h4>
 												{% elif i.status == "shipped" %}
 												<h4 class="text-warning"> Your Order is shipped..!</h4>
@@ -191,14 +192,7 @@
 				</div>
 				<div class="col-lg-3 col-md-6">
 					<div class="footer-box pages">
-						<h2 class="widget-title">Pages</h2>
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="services.html">Shop</a></li>
-							<li><a href="news.html">News</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
+						
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6">

@@ -100,30 +100,35 @@ def coupon_list(request):
 def addcoupen(request):
     if 'email' in request.session:
         return redirect('error404')
-    if 'email' in request.session:
-        return redirect('error404')
+    
     if request.method == 'POST':
         coupenname = request.POST['cname']
         coupenprice = request.POST['cprice']
         coupencode = request.POST['code']
         coupenvalid = request.POST['ctodate']
         coupenex = request.POST['cfromdate']
-        if Coupon.objects.filter(code = coupencode).exists():
-            messages.success(request, "the coupen code is already exists")
-            return redirect("coupon_list")
-        else:
-            cou = Coupon(
-                cop_name = coupenname,
-                cop_price = coupenprice,
-                code = coupencode,
-                from_date = coupenvalid,
-                to_date = coupenex,
-
-            )
-            cou.save()
-            messages.success(request, "your coupen added successfully")
+        
+        if  coupenname.strip() == '' or  coupencode.strip() == '' :
+            messages.error(request,"Enter valid coupen")
             return redirect('coupon_list')
-          
+        else:
+
+            if Coupon.objects.filter(code = coupencode).exists():
+                messages.success(request, "the coupen code is already exists")
+                return redirect("coupon_list")
+            else:
+                cou = Coupon(
+                    cop_name = coupenname,
+                    cop_price = coupenprice,
+                    code = coupencode,
+                    from_date = coupenvalid,
+                    to_date = coupenex,
+
+                )
+                cou.save()
+                messages.success(request, "your coupen added successfully")
+                return redirect('coupon_list')
+            
     return render(request,'coupenlist.html')
 
 
@@ -139,19 +144,23 @@ def editcoupen(request,id):
         coupenvalid = request.POST['ctodate']
         coupenex = request.POST['cfromdate']
         
-        if Coupon.objects.exclude(id=id).filter(code=coupencode).exists():
-            messages.success(request, "the coupen code is already exists")
-            return redirect("coupon_list")
+        if  coupenname.strip() == '' or coupencode.strip() == '':
+            messages.error(request,"Enter valid coupen")
+            return redirect('coupon_list')
         else:
-            coup.cop_name = coupenname
-            coup.cop_price = coupenprice
-            coup.code = coupencode
-            coup.from_date = coupenvalid
-            coup.to_date = coupenex
-            coup.save()
-            
-            messages.success(request, "your coupen added successfully")
-            return redirect("coupon_list")
+            if Coupon.objects.exclude(id=id).filter(code=coupencode).exists():
+                messages.success(request, "the coupen code is already exists")
+                return redirect("coupon_list")
+            else:
+                coup.cop_name = coupenname
+                coup.cop_price = coupenprice
+                coup.code = coupencode
+                coup.from_date = coupenvalid
+                coup.to_date = coupenex
+                coup.save()
+                
+                messages.success(request, "your coupen added successfully")
+                return redirect("coupon_list")
     return render(request,'coupenlist.html',{'coup':coup})
 
 

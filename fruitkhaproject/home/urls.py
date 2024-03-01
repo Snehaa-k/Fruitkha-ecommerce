@@ -38,6 +38,8 @@ urlpatterns = [
      path("cancel/<str:id>",views.cancelorder1,name="cancel"),
      path("pay_wallet/",views.pay_wallet,name="pay_wallet"),
      path("coupenapply/",views.coupenapply,name="coupenapply"),
+     # path("increase_cquantity/",views.increase_cquantity,name="increase_cquantity"),
+
 
 
     

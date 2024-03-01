@@ -66,7 +66,7 @@
 								
 								</li>
 								
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="{% url 'contact'  %}">Contact</a></li>
 								
 								<li>
 									<div class="header-icons">
@@ -77,7 +77,6 @@
 								</li>
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
 					</div>
@@ -136,7 +135,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 col-md-12">
-					<div class="cart-table-wrap">
+					<div class="cart-table-wrap" id ="tablediv">
 						<table class="cart-table">
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
@@ -158,9 +157,23 @@
 									<td class="product-name">{{cart.product_id.pname}}</td>
 									<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
 									<td class="product-price">{{cart.Variant_id.unit}}</td>
-									<td class="product-quantity"><input type="number" placeholder="0" value="{{cart.c_quantity}}" id="quantity-input"></td>
-									
+
+									<td class="product-quantity">
+										<div id="ppp" class="quantity-container">
+											<button class="change_quantity" data-action="minus" data-product-id="{{ cart.id }}">
+												<span class="quantity-icon">-</span>
+											</button>
+											<div class="quantity-display">
+												<h6>{{ cart.c_quantity }}</h6>
+											</div>
+											<button class="change_quantity" data-action="plus" data-product-id="{{ cart.id }}">
+												<span class="quantity-icon">+</span>
+											</button>
+										</div>
+									</td>
+									<div class="total" id = "totaload">
 									<td class="product-total">₹{{cart.total}}</td>
+									</div>
 								</tr>
 								
 								
@@ -180,14 +193,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="total-data">
+								{% comment %} <tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
 									<td>₹{{subtotal}}</td>
 								</tr>
-								<tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>₹45</td>
-								</tr>
+								 {% endcomment %}
 								<tr class="total-data">
 									<td><strong>Total: </strong></td>
 									<td>₹{{final}}</td>
@@ -308,9 +318,44 @@
 		</div>
 	</div>
 	<!-- end copyright -->
-	
-	<!-- jquery -->
 	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	{% comment %} <script>
+		$(document).ready(function () {
+		  $(".tablediv").on("click", ".change_quantity", function (e) {
+			e.preventDefault();
+  
+			var cart_id = $(this).data("product-id");
+			var token = $("input[name=csrfmiddlewaretoken]").val();
+  
+			var action = $(this).data("action");
+			$.ajax({
+			  method: "POST",
+			  url: "/increase_cquantity/",
+			  data: {
+				cart_id: cart_id,
+				action: action,
+				csrfmiddlewaretoken: token,
+			  },
+  
+			  success: function (response) {
+				if (response.status) {
+				  console.log(response.status);
+				  $("#tablediv").load("/cart/ #tablediv");
+				  $("#totaload").load("/cart/ #totaload");
+				}
+			  },
+			  error: (error) => {
+				console.log(error, "hi");
+			  },
+			});
+		  });
+		});
+	  </script> {% endcomment %}
+  
+	<!-- jquery -->
+	
+	
+	
 	<!-- bootstrap -->
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	<!-- count down -->
@@ -329,6 +374,7 @@
 	<script src="/static/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="/static/js/main.js"></script>
+	
 
 	{% comment %} <script>
 		document.addEventListener("DOMContentLoaded", function() {
@@ -364,5 +410,43 @@
 		}
 	</script> {% endcomment %}
 
+
+
 </body>
+<style>
+	.quantity-container {
+		display: flex;
+		align-items: center;
+	}
+	
+	.change_quantity {
+		background-color: #f0f0f0;
+		border: none;
+		padding: 3px 8px;
+		margin: 0 3px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+	
+	.change_quantity:hover {
+		background-color: #e0e0e0;
+	}
+	
+	.quantity-icon {
+		font-size: 1rem;
+	}
+	
+	.quantity-display h6 {
+		margin: 0;
+		font-size: 1rem;
+	}
+	
+	
+	.narrow-input {
+    width: 50px;
+}
+
+</style>
+
+
 </html>

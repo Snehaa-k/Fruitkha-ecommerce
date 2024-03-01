@@ -21,7 +21,7 @@ class Products(models.Model):
     
 
 class Variant(models.Model):
-    products = models.ForeignKey(Products,on_delete = models.CASCADE)
+    products = models.ForeignKey(Products,on_delete = models.CASCADE, related_name = "variant")
     unit_choices = [
         ('500g','500 grams'),
         ('1kg','1 kilogram'),
@@ -36,13 +36,13 @@ class Variant(models.Model):
         return f"{self.products.pname} - {self.get_unit_display()}"
 
 class Productoffer(models.Model):
-    product_id = models.ForeignKey(Products,on_delete = models.CASCADE,null = True, related_name = "offer")
-    variant_id = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True, related_name = "offers")
+    product_id = models.ForeignKey(Products,on_delete = models.CASCADE,null = True, related_name = "offepp")
+    variant_id = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True, related_name = "offerpv")
     percentage = models.IntegerField()
     is_listed = models.BooleanField(default = False)
 
 class Categoryoffer(models.Model):
-    category_id = models.ForeignKey(Category,on_delete=models.CASCADE,null = True,related_name = "offers")
-    variant_i = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True)
+    category_id = models.ForeignKey(Category,on_delete=models.CASCADE,null = True,related_name = "offerc")
+    variant_i = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True,related_name = "offerv")
     percentage = models.IntegerField()
     is_listed = models.BooleanField(default = False)    

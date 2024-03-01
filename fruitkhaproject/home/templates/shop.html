@@ -67,7 +67,7 @@
 								<li><a href="{% url 'about' %}">About</a></li>
 								
 								
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="{% url 'contact'  %}">Contact</a></li>
 								<li><a href="#">Shop</a>
 									
 								</li>
@@ -173,16 +173,31 @@
                     {% for offer in product.offer.all %}
                     {% if offer.is_listed %}
                         <p><span>Per Kg</span>
-							<del class="strike">Rs :{{ product.price }}</del></p>
-                        <p class="product text-danger"><h3>{{ offer.percentage }}% off</h3></p>
+							<del class="strike">
+								{% for var in product.variant.all %}	
+								{% if var.unit == '1kg' %}
+								Rs :{{ var.v_price }}
+								{%endif%}
+								{%endfor%}
+							</del></p>
+                        <p class="product text-danger"><h3 class="text-danger">{{ offer.percentage }}% off</h3></p>
 					{%else%}
-					<p class="product-price"><span>Per Kg</span> Rs{{ product.price }}</p>
+					<p class="product-price"><span>Per Kg</span> {% for var in product.variant.all %}	
+						{% if var.unit == '1kg' %}
+						Rs :{{ var.v_price }}
+						{%endif%}
+						{%endfor%}</p>
                     {% endif %}
 					
 					    
                     {% endfor %}
                 {% else %}
-                     <p class="product-price"><span>Per Kg</span> Rs{{ product.price }}</p>
+                     <p class="product-price"><span>Per Kg</span>
+						{% for var in product.variant.all %}	
+						{% if var.unit == '1kg' %}
+						Rs :{{ var.v_price }}
+						{%endif%}
+						{%endfor%}</p>
                 {% endif %}
 					</p>
 					  

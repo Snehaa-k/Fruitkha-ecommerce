@@ -229,7 +229,7 @@
 
                            
                             <li class="sidebar-list">
-                                <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="#">
                                     <i data-feather="tag"></i>
                                     <span>Coupons</span>
                                 </a>
@@ -238,13 +238,19 @@
 
                             <br>
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title link-nav" href="invoice.html">
+                                <a class="sidebar-link sidebar-title link-nav" href="{%  url 'productoffer'  %}">
                                     <i data-feather="archive"></i>
-                                    <span>banners</span>
+                                    <span>Productoffer</span>
+                                </a>
+                            </li>
+                            <br>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{%  url 'categoryoffer'   %}">
+                                    <i data-feather="archive"></i>
+                                    <span>Categoryoffer</span>
                                 </a>
                             </li>
 
-                          
 
                             <br>
 
@@ -324,7 +330,13 @@
                                                     </td>
                                                     <td> {{product.category}}</td>
                                                    
-                                                    <td>{{product.description}}</td>
+                                                    <td>
+                                                        <div class="description" id="description_{{product.id}}">
+                                                            {{product.description}}
+                                                        </div>
+                                                        <button class="btn btn-link toggleButton" onclick="toggleDescription({{product.id}})">Read More</button>
+                                                    </td>
+                                                    
                                                     <td>{{product.price}}</td>
                                                     {% comment %} <td>{{product.in_stock}}</td> {% endcomment %}
 
@@ -718,10 +730,34 @@
         document.getElementById('addVariantBtn').addEventListener('click', function() {
             $('#addVariantModal').modal('show');
         });
+        function toggleDescription(productId) {
+            var description = document.getElementById("description_" + productId);
+            var toggleButton = document.querySelector("#description_" + productId + " + .toggleButton");
+        
+            if (description.classList.contains("open")) {
+                description.classList.remove("open");
+                description.style.maxWidth = "100px"; 
+                toggleButton.innerText = "Read More";
+            } else {
+                description.classList.add("open");
+                description.style.maxWidth = "none"; 
+                toggleButton.innerText = "Read Less";
+            }
+        }
+        
     </script>
     
 </body>
-
+<style>
+    
+    .description {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 200px; 
+    }
+    
+</style>
 
 <!-- Mirrored from themes.pixelstrap.com/voxo/back-end/taxes.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jan 2024 18:53:37 GMT -->
 </html>

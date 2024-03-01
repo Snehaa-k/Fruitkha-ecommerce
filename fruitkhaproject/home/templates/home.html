@@ -82,8 +82,8 @@
 										{% if 'email' in request.session %}
 										<a class="shopping-cart" href="{% url 'userprofile' %}"><i class='fas fa-user-alt' style='font-size:16px;color:white'></i></a>
 										<a class="shopping-cart" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-										<a class="shopping-cart" href="#"><i class='fas fa-heart' style='font-size:17px;color:white'></i></a>
+										
+										<a class="shopping-cart" href="{% url 'wishlist'  %}"><i class='fas fa-heart' style='font-size:17px;color:white'></i></a>
 										<a class="shopping-cart" href="/logout/">logout</a>
                                     {% else %}
 									<a class="shopping-cart" href="/login/">login</a>
@@ -246,7 +246,7 @@
 							<a href="single-product.html"><img src="/static/img/products/product-img-1.jpg" alt=""></a>
 						</div>
 						<h3>Strawberry</h3>
-						<p class="product-price"><span>Per Kg</span>RS 85 </p>
+						<p class="product-price"><span>Per Kg</span>RS 85.00 </p>
 						
 					</div>
 				</div>
@@ -256,7 +256,7 @@
 							<a href="single-product.html"><img src="/static/img/products/product-img-2.jpg" alt=""></a>
 						</div>
 						<h3>Berry</h3>
-						<p class="product-price"><span>Per Kg</span>RS 70 </p>
+						<p class="product-price"><span>Per Kg</span>RS 70.00 </p>
 						
 					</div>
 				</div>
@@ -298,7 +298,7 @@
                     <h4>Hikan Strwaberry</h4>
                     <div class="text">Quisquam minus maiores repudiandae nobis, minima saepe id, fugit ullam similique! Beatae, minima quisquam molestias facere ea. Perspiciatis unde omnis iste natus error sit voluptatem accusant</div>
                     <!--Countdown Timer-->
-                    <div class="time-counter"><div class="time-countdown clearfix" data-countdown="2020/2/01"><div class="counter-column"><div class="inner"><span class="count">00</span>Days</div></div> <div class="counter-column"><div class="inner"><span class="count">00</span>Hours</div></div>  <div class="counter-column"><div class="inner"><span class="count">00</span>Mins</div></div>  <div class="counter-column"><div class="inner"><span class="count">00</span>Secs</div></div></div></div>
+                    <div class="time-counter"><div class="time-countdown clearfix" data-countdown="2024/2/27"><div class="counter-column"><div class="inner"><span class="count">00</span>Days</div></div> <div class="counter-column"><div class="inner"><span class="count">00</span>Hours</div></div>  <div class="counter-column"><div class="inner"><span class="count">00</span>Mins</div></div>  <div class="counter-column"><div class="inner"><span class="count">00</span>Secs</div></div></div></div>
                 	
                 </div>
             </div>
