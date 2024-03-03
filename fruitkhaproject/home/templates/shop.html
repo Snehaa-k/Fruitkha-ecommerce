@@ -152,7 +152,23 @@
 							
                             <li class="active" data-filter="*">All</li>
 							{% for category in categorys%}
+							{% if category.offer.exists  %}
+							{% for offer in category.offer.all  %}
+							{% if offer.is_listed  %}
+							<li data-filter=".{{ category.category_name }}"><h6 class="text-danger">{{offer.percentage}}% off</h6>  {{category.category_name}}</li>
+							
+                            {% else %}
+							
                             <li data-filter=".{{ category.category_name }}">{{category.category_name}}</li>
+							
+							
+
+							{% endif %}
+							{% endfor %}
+							{%else%}
+							<li data-filter=".{{ category.category_name }}">{{category.category_name}}</li>
+							{% endif  %}
+
 							{% endfor %}
                         </ul>
 						

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
@@ -11,6 +12,7 @@ from products.models import Variant,Products
 from cart.models import Orderditem
 from products.models import Productoffer,Categoryoffer
 from category.models import Category
+from django.db.models import Q 
 # from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
@@ -302,23 +304,26 @@ def editcategoryoffer(request,id):
         category = request.POST['cat']
         perct = int(request.POST['perc'])
         
-        if Categoryoffer.objects.filter(category_id =category ).exists():
+        preselect = cat.category_id
+        print(preselect)
+        # # if Categoryoffer.objects.filter(category_id =category ).exists():
 
-            messages.success(request, "the offer for this category is already exists")
-            return redirect("categoryoffer")
+        #     messages.success(request, "the offer for this category is already exists")
+        #     return redirect("categoryoffer")
 
         if perct <= 100 and perct >= 0:
             cate = Category.objects.get(id=category)
             
             cat.category_id = cate
             cat.percentage = perct
+           
             cat.save()
             messages.success(request,"category offer added successffully..!")
             return redirect('categoryoffer')
         messages.success(request, "the percentage should between 0 and 100")
         return redirect("categoryoffer") 
 
-    return render(request,'categoryloffer.html',{'category':cat})
+    return render(request,'categoryloffer.html',{'category':cat,'preselect':preselect})
 
 
 def list_coffer(request, id):
@@ -336,3 +341,20 @@ def ulist_coffer(request, id):
 def error404(request):
     
     return render(request,'404.html')
+
+
+def salesreport(request):
+    if request.method == "POST":
+        start = request.POST["startdate"]
+        end = request.POST["enddate"]
+        start_date = datetime.strptime(start, "%Y-%m-%d")
+        end_date = datetime.strptime(end, "%Y-%m-%d")
+        if end_date > start_date:
+            orderi = Orderditem.objects.filter(
+                Q (status="Delivered") & Q (order_id__orders_date__range=[start, end])
+            )
+        else:
+            messages.error(request, "Enter valid date..!")
+            return redirect("dashbord")
+    return render(request, "salesreport.html", {"orders": orderi})
+    

@@ -154,15 +154,38 @@
 						{% for offer in product.offer.all %}
 						{% if offer.is_listed %}
 						<p><span>Per Kg</span>
-							<del class="strike">Rs :{{ product.price }}</del></p>
+							{% for var in product.variant.all %}	
+							{% if var.unit == '1kg' %}
+							<del class="strike">Rs :{{ var.v_price }}</del></p>
+							{% endif %}
+							{% endfor  %}
                         <p class="product text-danger"><h3 class="text-danger">{{ offer.percentage }}% off</h3></p>
+                        
 						{% else %}
-						<p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}} </p>
+						
+						<p class="single-product-pricing"><span>Per Kg</span>
+							{% for var in product.variant.all %}	
+							{% if var.unit == '1kg' %}
+							RS 
+							
+							{{var.v_price}} 
+							{% endif   %}
+							{% endfor  %}
+						</p>
 						{% endif %}
-						{% endfor  %}
+						{% endfor %}
+						
 						{% else  %}
-                        <p class="single-product-pricing"><span>Per Kg</span>RS {{product.price}} </p>
+                        <p class="single-product-pricing"><span>Per Kg</span>RS 
+							{% for var in product.variant.all %}	
+							{% if var.unit == '1kg' %}
+							{{var.v_price}} 
+							{% endif  %}
+							{% endfor   %}
+						</p>
+
 						{% endif  %}
+					
 						<p>{{product.description}}</p>
 						<div class="single-product-form">
 							<form action="{% url 'add_cart' product.id %}" method="post"> 

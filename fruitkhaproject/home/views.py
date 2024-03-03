@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from decimal import Decimal
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -14,7 +15,7 @@ from django.views.decorators.cache import never_cache
 from products.models import Products,Variant
 from category.models import Category
 from cart.models import CartItem, Coupon, Orderdetails,Orderditem, Proceedtocheck
-from django.db.models import Sum
+from django.db.models import Sum,Count
 
 from django.http import JsonResponse
 from django.urls import reverse
@@ -174,15 +175,112 @@ def cart(request):
     user = Usermodelss.objects.get(email=email1)
     cartitem = CartItem.objects.filter(user_id=user)
     variant = Variant.objects.all()
+    cart_item = (
+        CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
+    )
+    
+    for i in cart_item:
+        prooffer = i.product_id.offer.first()
+        catoffer = i.product_id.category.offer.first()
+        if prooffer and catoffer:
+            if prooffer.is_listed == True and catoffer.is_listed == True:
+                a = (
+                    i.Variant_id.v_price
+                    - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
+                )
+                b = (
+                    i.Variant_id.v_price
+                    - Decimal(catoffer.percentage / 100) * i.Variant_id.v_price
+                )
+                c = int(min(a, b))
+                i.total = c * i.c_quantity
+                
+                i.save()
+            elif prooffer.is_listed == True and catoffer.is_listed == False:
+                a = (
+                    i.Variant_id.v_price
+                    - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
+                )
+                i.total = a * i.c_quantity
+                
+                i.save()
+            elif prooffer.is_listed == False and catoffer.is_listed == True:
+                a = (
+                    i.Variant_id.v_price
+                    - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
+                )
+                i.total = a * i.c_quantity
+                
+                i.save()
+            else:
+                i.total = i.Variant_id.v_price * i.c_quantity
+               
+                i.save()
+        elif prooffer:
+            if prooffer.is_listed:
+                p = (
+                    i.Variant_id.v_price
+                    - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
+                )
+                i.total = p * i.c_quantity
+                
+                i.save()
+            else:
+                i.total = i.Variant_id.v_price * i.c_quantity
+                
+                i.save()
+        elif catoffer:
+            if catoffer.is_listed == True:
+                w = int(
+                    i.Variant_id.v_price
+                    - Decimal(catoffer.percentage / 100) *  i.Variant_id.v_price
+                )
+                i.total = w * i.c_quantity
+               
+                i.save()
+            else:
+                i.total = i.Variant_id.v_price * i.c_quantity
+               
+                i.save()
+        else:
+            i.total = i.Variant_id.v_price * i.c_quantity
+            
+            i.save()
+    subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
+    final = subtotal
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #         i.total = i.c_quantity * i.Variant_id.v_price
+    #         i.save()
+    # subtotal = sum(item.total for item in cart_item)
+    # final = subtotal
+
+
+        
+
+    
     
 
     
-    for item in cartitem:
-        item.total = item.c_quantity * item.Variant_id.v_price
+    # for item in cartitem:
+    #     item.total = item.c_quantity * item.Variant_id.v_price
     
-    subtotal = sum(item.total for item in cartitem)
-    final = subtotal 
-    print(final,"haiii")
+     
+    # print(final,"haiii")
     return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
 
 
@@ -429,17 +527,29 @@ def checkout(request):
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         cartitem = CartItem.objects.filter(user_id = user)
-       
-        if cartitem.exists():
 
+        if cartitem.exists():
+            cart_item = (
+        CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
+    )
             addres = Useraddress.objects.filter(user_id=user)
         
             variant = Variant.objects.all()
             pro = Proceedtocheck.objects.get(user_id = user)
+            for i in cart_item:
+                prooffer = i.product_id.offer.first()
+                catoffer = i.product_id.category.offer.first()
+            
             
             if pro.is_coupenapplyed:
                 
                 final = pro.discount_amount
+            
+            elif prooffer or catoffer:
+               
+                subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
+                final = subtotal
+
 
             else:    
                 for item in cartitem:
@@ -447,7 +557,7 @@ def checkout(request):
                 subtotal = sum(item.total for item in cartitem)
                 final = subtotal
            
-            return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final,'pro':pro})
+            return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final,'pro':pro,'prooffer':prooffer,'catoffer':catoffer})
         else:
             messages.error(request,"you can't checkout your cart is empty!...")
             return redirect('shop')
@@ -492,7 +602,7 @@ def proceedtocheckout(request):
             Proceedtocheck.objects.get(user_id=user)
             context1 = {
                
-                "cart_details": cart_details,
+               
                 "total1": subtotal,
                 "addresses": addres,
                 "user": user,
@@ -599,6 +709,12 @@ def pay_razorpay1(request):
                 coupen_code = checkout.applyed_coupen,
                 
                     )
+        if checkout.is_coupenapplyed:
+            order.coupen_apply = True
+            order.save()
+        else:
+            order.coupen_apply=False
+            order.save()
                     
         cart_items = CartItem.objects.filter(user_id=user)
         
@@ -659,7 +775,13 @@ def pay_wallet(request):
                             discount_amount = checkout.discount_amount,
                             coupen_code = checkout.applyed_coupen,
                                 )
-                                
+                    
+                    if checkout.is_coupenapplyed:
+                        order.coupen_apply = True
+                        order.save()
+                    else:
+                        order.coupen_apply=False
+                        order.save()    
                     cart_items = CartItem.objects.filter(user_id=user)
                     
                     for cart_item in cart_items:
@@ -704,8 +826,7 @@ def pay_wallet(request):
 
 
 def orderplace(request):
-    
-    
+   
     return render(request,'orderplaced.html')
 
 def orderdetails(request):
@@ -755,12 +876,24 @@ def cancelorder1(request,id):
         orderi.status = "cancelled"
         orderi.save()
         if orderi.order_id.paymt_method == "razor_pay" or orderi.order_id.paymt_method == "wallet":
-            wallet1 = Walletuser.objects.get(userid = user.id )
+            # wallet1 = Walletuser.objects.get(userid = user.id )
             # print(type(wallet1.amountt))
+            if orderi.order_id.coupen_apply == "True":
+                walle = Walletuser.objects.get(user_id=user)
+            my_dict = Orderditem.objects.filter(order_id_id=orderi.order_id.id).aggregate(no=Count("id"))
+            no_of_orders = my_dict["no"]
+            discount = orderi.order_id.coupen_code.cop_price
+            each_pro = int(discount / no_of_orders)
+            rtrn_to_wlt = orderi.total_amount - each_pro
+            walle.amountt = walle.amountt + rtrn_to_wlt
+            walle.save()
+            messages.success(request, "your order cacelled successfully")
+            return redirect("orderdetails")
+        else:
+            walle = Walletuser.objects.get(user_id=user)
 
-            
-            wallet1.amountt=wallet1.amountt + return_amount
-            wallet1.save()
+            walle.amountt=walle.amountt + return_amount
+            walle.save()
 
             
         messages.success(request,"order cancelled successfully")

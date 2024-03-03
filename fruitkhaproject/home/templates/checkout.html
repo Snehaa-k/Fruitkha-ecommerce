@@ -213,20 +213,25 @@
 							<thead>
 								<tr>
 									<th>Your order Details</th>
-									<th>Price</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody class="order-details-body">
 								<tr>
 									
-									<td>Product</td>
-									<td>Total</td>
+									
 								</tr>
 								{% for cart in cartitem  %}
 								<tr>
 									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
 									
-									<td>₹{{cart.total}}</td>
+									<td>
+										<b>Price  :</b>   ₹{{cart.Variant_id.v_price}}<br>
+										<b>Unit(pack) :</b>     {{cart.Variant_id.unit}}<br>
+										<b>Quantity :</b> {{cart.c_quantity}}
+										
+									</td>
+									
 								</tr>
 								{% endfor  %}
 								
@@ -235,15 +240,28 @@
 								
 								
 								<tr>
-									{% if pro.is_coupenapplyed  %}
+									
+									
+									{% if pro.is_coupenapplyed %}
 									<td><h5 class="text-success">Coupen applyed..</h5>
-										Discount amount:</td>
-									<td>₹{{final}}</td>
 									
-									
+										Discount amount:
+									</td>
+									<td>₹{{final}}.00</td>
+
+									{% elif prooffer or  catoffer%}
+									  {% if prooffer.is_listed  or catoffer.is_listed  %}
+									<td>
+									    <h6 class="text-primary">{{prooffer.percentage}}% off</h6>
+										<h5 class="text-danger">Discount amount:</h5></td>
+									<td>₹{{final}}.00</td>
+									  {% else %}
+									  <td>Total</td>
+									  <td>₹{{final}}.00</td>
+									  {% endif  %}
 									{%  else  %}
 									<td>Total</td>
-									<td>₹{{final}}</td>
+									<td>₹{{final}}.00</td>
 									
 									{% endif  %}
 								</tr>

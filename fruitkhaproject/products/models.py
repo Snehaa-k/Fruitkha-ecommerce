@@ -36,13 +36,13 @@ class Variant(models.Model):
         return f"{self.products.pname} - {self.get_unit_display()}"
 
 class Productoffer(models.Model):
-    product_id = models.ForeignKey(Products,on_delete = models.CASCADE,null = True, related_name = "offepp")
+    product_id = models.ForeignKey(Products,on_delete = models.CASCADE,null = True, related_name = "offer")
     variant_id = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True, related_name = "offerpv")
     percentage = models.IntegerField()
     is_listed = models.BooleanField(default = False)
 
 class Categoryoffer(models.Model):
-    category_id = models.ForeignKey(Category,on_delete=models.CASCADE,null = True,related_name = "offerc")
+    category_id = models.ForeignKey(Category,on_delete=models.CASCADE,null = True,related_name = "offer")
     variant_i = models.ForeignKey(Variant,on_delete = models.CASCADE,null = True,related_name = "offerv")
     percentage = models.IntegerField()
     is_listed = models.BooleanField(default = False)    

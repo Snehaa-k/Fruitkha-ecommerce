@@ -36,7 +36,7 @@ def addproducts(request):
             image = image,
             category = category_instance,
             description = description,
-            price = price ,
+            # price = price ,
             # in_stock = instock,
             imagea = imagea,
             imageb = imageb,
@@ -79,7 +79,7 @@ def updateproduct(request,id):
         imageb = request.FILES.get('imagesb')
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
-        price = request.POST['price']
+        # price = request.POST['price']
         # instock = request.POST['instock']
         category_instance, created = Category.objects.get_or_create(category_name = category_name)
        
@@ -98,7 +98,7 @@ def updateproduct(request,id):
         image = image,
         category = category_instance,
         description = description,
-        price = price,
+        # price = price,
         # in_stock = instock,
         imagea = imagea,
         imageb = imageb,

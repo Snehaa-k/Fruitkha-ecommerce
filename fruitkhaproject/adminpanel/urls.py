@@ -27,6 +27,8 @@ urlpatterns = [
     path('list_coffer/<str:id>',views.list_coffer,name='list_coffer'),
     path('ulist_coffer/<str:id>',views.ulist_coffer,name='ulist_coffer'),
     path('error/',views.error404,name='error404'),
+    path('salesreport/',views.salesreport,name='salesreport'),
+
 
 
 

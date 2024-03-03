@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 21cm; 
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .download-btn {
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Sales Report</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>Product name</th>
+          <th>Category</th>
+          <th>Unit</th>
+          <th>Address</th>
+          <th>Quantity</th>
+          
+          <th>Total amount</th>
+          
+          <th>Order Date</th>
+          <th>Expected Delivery Date</th>
+          <th>Payment method</th>
+          <th>Coupen Name</th>
+          <th>Coupen Code</th>
+          <th>Status</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in orders %}
+        <tr>
+          <td>{{item.order_id.id}}</td>
+          <td>{{item.product_n.pname}}</td>
+          <td>{{item.product_n.category}}</td>
+          <td>{{item.unit}}</td>
+          <td>{{item.order_id.addr.Name}},
+            {{item.order_id.addr.email}},
+            {{item.order_id.addr.address}},
+            {{item.order_id.addr.country}},{{item.order_id.addr.state}},
+            {{item.order_id.addr.pin}},{{item.order_id.addr.post}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.total_amount}}</td>
+            <td>{{item.order_id.orders_date}}</td>
+            <td>{{item.ex_deliverey}}</td>
+            <td>{{item.order_id.paymt_method}}</td>
+            {% if item.order_id.coupen_apply  %}
+            <td>{{item.order_id.coupen_code.cop_name}}</td>
+            <td>{{item.order_id.coupen_code.code}}</td>
+            {% else  %}
+            <td>None</td>
+            <td> None</td>
+            {% endif  %}
+            <td>{{item.status}}</td>
+        </tr>
+       {% endfor  %}
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+    <div class="download-btn">
+      <button onclick="downloadReport()">Download Sales Report</button>
+      <button id="downloadExcelButton">Download Excel</button>       <a href="{% url 'dashbord'  %}">Back</a>
+
+    </div>
+  </div>
+
+  <script>
+    function downloadReport() {
+      const element = document.createElement('a');
+      const file = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+      element.href = URL.createObjectURL(file);
+      element.download = 'sales_report.html';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+
+    function downloadExcel() {
+      var salesReportData = [
+          {% for item in orders %}
+          {
+              "Order ID": "{{ item.order_id.id }}",
+              "Product Name": "{{ item.product_n.pname }}",
+              "Category": "{{ item.product_n.category }}",
+              "Unit": "{{ item.unit }}",
+              "Address": "{{ item.order_id.addr.Name }}, {{ item.order_id.addr.email }}, {{ item.order_id.addr.address }}, {{ item.order_id.addr.country }}, {{ item.order_id.addr.state }}, {{ item.order_id.addr.pin }}, {{ item.order_id.addr.post }}",
+              "Quantity": "{{ item.quantity }}",
+              "Total Amount": "{{ item.total_amount }}",
+              "Order Date": "{{ item.order_id.orders_date }}",
+              "Expected Delivery Date": "{{ item.ex_deliverey }}",
+              "Payment Method": "{{ item.order_id.paymt_method }}",
+              "Coupon Name": "{% if item.order_id.coupen_apply %}{{ item.order_id.coupen_code.cop_name }}{% else %}None{% endif %}",
+              "Coupon Code": "{% if item.order_id.coupen_apply %}{{ item.order_id.coupen_code.code }}{% else %}None{% endif %}",
+              "Status": "{{ item.status }}"
+          }
+          {% if not forloop.last %},{% endif %}
+          {% endfor %}
+      ];
+  
+      var ws = XLSX.utils.json_to_sheet(salesReportData);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
+  
+      XLSX.writeFile(wb, "sales_report.xlsx");
+  }
+  
+  document.getElementById("downloadExcelButton").addEventListener("click", downloadExcel);
+  
+  </script>
+</body>
+</html>

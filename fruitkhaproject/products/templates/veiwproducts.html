@@ -308,7 +308,7 @@
                                                     <th>PRODUCT IMAGE</th>
                                                     <th>CATEGORY</th>
                                                     <th>DESCRIPTION</th>
-                                                    <th>PRCE</th>
+                                                    {% comment %} <th>PRCE</th> {% endcomment %}
                                                     {% comment %} <th>IN STOCK</th> {% endcomment %}
                                                     <th>PUBLISH</th>
                                                     <th>OPTIONS</th>
@@ -337,7 +337,7 @@
                                                         <button class="btn btn-link toggleButton" onclick="toggleDescription({{product.id}})">Read More</button>
                                                     </td>
                                                     
-                                                    <td>{{product.price}}</td>
+                                                    {% comment %} <td>{{product.price}}</td> {% endcomment %}
                                                     {% comment %} <td>{{product.in_stock}}</td> {% endcomment %}
 
                                                     <td>
@@ -567,12 +567,12 @@
                         
                     </div>
 
-                    <div class="mb-3">
+                    {% comment %} <div class="mb-3">
                         <label for="categoryName" class="form-label">Price</label>
                         <input  type="number"  step="0.01" min="0.00" class="form-control" id="categoryName" placeholder="Enter the price" name = "price" required>
                     
                         
-                    </div>
+                    </div> {% endcomment %}
                     {% comment %} <div class="mb-3">
                         <label for="categoryName" class="form-label">In Stock</label>
                         <input type="number" class="form-control" id="categoryName" placeholder="Enter the Stock" name = "instock" required>
@@ -643,12 +643,12 @@
                     
                         
                     </div>
-                    <div class="mb-3">
+                    {% comment %} <div class="mb-3">
                         <label for="categoryName" class="form-label">Price</label>
                         <input type="number"  step="0.01" min="0.00" class="form-control" id="categoryName"  value="{{product.price}}" name = "price" required>
                     
                         
-                    </div>
+                    </div> {% endcomment %}
 
                     {% comment %} <div class="mb-3">
                         <label for="categoryName" class="form-label">In Stock</label>

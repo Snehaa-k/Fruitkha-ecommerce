@@ -136,6 +136,7 @@
 			<div class="row">
 				<div class="col-lg-8 col-md-12">
 					<div class="cart-table-wrap" id ="tablediv">
+						{% if cartitem.exists %}
 						<table class="cart-table">
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
@@ -149,7 +150,9 @@
 								</tr>
 							</thead>
 							<tbody>
+							
 							{% for cart in cartitem %}
+
 							    
 								<tr class="table-body-row">
 									<td class="product-remove"><a href="{% url 'deletecart' cart.id %}"><i class="far fa-window-close"></i></a></td>
@@ -179,10 +182,15 @@
 								
 							</tbody>
 							{% endfor %}
+							
 						</table>
 					</div>
+					{% else %}
+					<h3 class="text-center text-pt-5" style = "margin-top:100px; margin-left: 400px; margin-bottom: 100px;"><center>Your Cart is empty</center></h3>
+					<a href="{% url 'shop'   %}" class="boxed-btn" >Back Shopping</a>
+					{% endif  %}
 				</div>
-
+                {%  if cartitem.exists  %}
 				<div class="col-lg-4">
 					<div class="total-section">
 						<table class="total-table">
@@ -192,6 +200,7 @@
 									<th>Price</th>
 								</tr>
 							</thead>
+							
 							<tbody>
 								{% comment %} <tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
@@ -221,6 +230,8 @@
 
 					
 				</div>
+				{% endif   %}
+
 			</div>
 		</div>
 	</div>
