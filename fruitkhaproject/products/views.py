@@ -65,7 +65,7 @@ def is_listed(request,id):
 
 def editproducts(request):
     prdts = Products.objects.get(id=id)
-
+   
     return render(request,'veiwproducts.html',{'product':prdts})
 
 

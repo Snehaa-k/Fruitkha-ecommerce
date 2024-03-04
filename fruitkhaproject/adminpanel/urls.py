@@ -28,6 +28,10 @@ urlpatterns = [
     path('ulist_coffer/<str:id>',views.ulist_coffer,name='ulist_coffer'),
     path('error/',views.error404,name='error404'),
     path('salesreport/',views.salesreport,name='salesreport'),
+    path('delete_productoff/<str:id>',views.delete_productoff,name='delete_productoff'),
+    path('delete_catoff/<str:id>',views.delete_catoff,name='delete_catoff'),
+
+
 
 
 

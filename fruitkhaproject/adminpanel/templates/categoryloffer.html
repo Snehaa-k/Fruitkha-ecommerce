@@ -276,13 +276,7 @@
                 </nav>
             </div>
         </div>
-        {% if messages %}
-        <div class="alert alert-success mt-3">
-        {% for message in messages %}
-        {{ message }}
-        {% endfor %}
-        </div>
-        {% endif %}
+       
             <!-- Texes Table Section Start -->
             <div class="page-body">
                 <div class="title-header">
@@ -293,6 +287,13 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
+                                {% if messages %}
+                                <div class="alert alert-success mt-3">
+                                {% for message in messages %}
+                                {{ message }}
+                                {% endfor %}
+                                </div>
+                                {% endif %}
                                 <!-- Add Category Button Start -->
                                 <div class="card-header">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -331,6 +332,14 @@
                                                                 {% else %}
                                                                     <a href="{% url 'list_coffer' i.id %}" class="btn btn-danger">UnListed</a>
                                                                 {% endif %}
+                                                            </li>
+                                                            <li>
+                                                                <form method="post" action="{% url 'delete_catoff' i.id %}" >
+                                                                    {% csrf_token  %}
+                                                                    
+                                                                    <button type="submit" class="btn btn-dark" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+
+                                                                 </form>
                                                             </li>
                                                         </ul>
                                                     </td>

@@ -41,7 +41,7 @@ var options = {
     // },
 
     xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','aug','sep','oct','Nov','dec'],
         labels: {
             show: false,
         }
@@ -92,7 +92,7 @@ var options = {
             breakpoint: 330,
             options: {
                 chart: {
-                    width: "112%",
+                    width: "118%",
                 },
             },
         },
@@ -108,29 +108,29 @@ var options = {
         name: 'Actual',
 
         data: [{
-                x: '2011',
+                x: '2024',
                 y: 1292,
                 goals: [{
                     name: 'Expected',
-                    value: 1400,
+                    value: 1200,
                     strokeWidth: 5,
                     strokeColor: '#775DD0'
                 }]
             },
 
             {
-                x: '2012',
+                x: '2025',
                 y: 4432,
                 goals: [{
                     name: 'Expected',
-                    value: 5400,
+                    value: 3400,
                     strokeWidth: 5,
                     strokeColor: '#775DD0'
                 }]
             },
 
             {
-                x: '2013',
+                x: '2026',
                 y: 5423,
                 goals: [{
                     name: 'Expected',
@@ -141,7 +141,7 @@ var options = {
             },
 
             {
-                x: '2014',
+                x: '2027',
                 y: 6653,
                 goals: [{
                     name: 'Expected',
@@ -152,7 +152,7 @@ var options = {
             },
 
             {
-                x: '2015',
+                x: '2028',
                 y: 8133,
                 goals: [{
                     name: 'Expected',
@@ -163,7 +163,7 @@ var options = {
             },
 
             {
-                x: '2016',
+                x: '2029',
                 y: 7132,
                 goals: [{
                     name: 'Expected',
@@ -174,7 +174,7 @@ var options = {
             },
 
             {
-                x: '2017',
+                x: '2030',
                 y: 7332,
                 goals: [{
                     name: 'Expected',
@@ -185,7 +185,7 @@ var options = {
             },
 
             {
-                x: '2018',
+                x: '2031',
                 y: 6553,
                 goals: [{
                     name: 'Expected',

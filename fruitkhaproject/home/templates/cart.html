@@ -1,4 +1,6 @@
+{%  load  static    %}
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -8,6 +10,9 @@
 
 	<!-- title -->
 	<title>Cart</title>
+	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	{% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> {% endcomment %}
+	{% comment %} <script src="{% static 'js/update_cart.js' %}"></script> {% endcomment %}
 
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="/static/img/favicon.png">
@@ -162,7 +167,52 @@
 									<td class="product-price">{{cart.Variant_id.unit}}</td>
 
 									<td class="product-quantity">
-										<div id="ppp" class="quantity-container">
+										<form method = "post" >
+											{% csrf_token  %}
+										<input type="number" class="quantity-input" value="{{ cart.c_quantity }}" data-item-id="{{ cart.id }}" min = "1" max="6">
+										<button type="submit"class="btn btn-danger" >+/-</button>
+										</form>
+										<script>
+										
+
+										$(document).ready(function() {
+											
+											function getCSRFToken() {
+												return $('input[name="csrfmiddlewaretoken"]').val();
+											}
+
+											$('.quantity-input').change(function() {
+												var item_id = $(this).data('item-id');
+												var quantity = $(this).val();
+
+												
+												var csrftoken = getCSRFToken();
+
+												
+												$.ajax({
+													url: '/update_cart_quantity/',
+													type: 'POST',
+													data: {
+														'item_id': item_id,
+														'quantity': quantity,
+														'csrfmiddlewaretoken': csrftoken 
+													},
+													dataType: 'json',
+													success: function(response) {
+														
+														$('#total-price-' + item_id).text(response.total_price.toFixed(2));
+														
+														location.reload();
+													},
+													error: function(xhr, status, error) {
+														console.error(xhr.responseText);
+													}
+												});
+											});
+										});
+
+									</script>
+										{% comment %} <div id="ppp" class="quantity-container">
 											<button class="change_quantity" data-action="minus" data-product-id="{{ cart.id }}">
 												<span class="quantity-icon">-</span>
 											</button>
@@ -172,7 +222,7 @@
 											<button class="change_quantity" data-action="plus" data-product-id="{{ cart.id }}">
 												<span class="quantity-icon">+</span>
 											</button>
-										</div>
+										</div> {% endcomment %}
 									</td>
 									<div class="total" id = "totaload">
 									<td class="product-total">₹{{cart.total}}</td>
@@ -186,8 +236,22 @@
 						</table>
 					</div>
 					{% else %}
-					<h3 class="text-center text-pt-5" style = "margin-top:100px; margin-left: 400px; margin-bottom: 100px;"><center>Your Cart is empty</center></h3>
-					<a href="{% url 'shop'   %}" class="boxed-btn" >Back Shopping</a>
+					<div class="full-height-section error-section">
+						<div class="full-height-tablecell">
+							<div class="container">
+								<div class="row">
+									<div class="col-lg-8 offset-lg-5 text-center">
+										<div class="error-text text-center text-mt-5" style =" margin-bottom: 50px;margin-right: 10px;">
+											<i class="far fa-sad-cry"></i>
+											<h1>Your Cart is Empty!.</h1>
+											<p>Please Add some products</p>
+											<a href="{% url 'shop'  %}" class="boxed-btn">Back to Shop</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					{% endif  %}
 				</div>
                 {%  if cartitem.exists  %}
@@ -329,7 +393,7 @@
 		</div>
 	</div>
 	<!-- end copyright -->
-	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	{% comment %} <script src="/static/js/jquery-1.11.3.min.js"></script> {% endcomment %}
 	{% comment %} <script>
 		$(document).ready(function () {
 		  $(".tablediv").on("click", ".change_quantity", function (e) {

@@ -252,7 +252,7 @@
 									{% elif prooffer or  catoffer%}
 									  {% if prooffer.is_listed  or catoffer.is_listed  %}
 									<td>
-									    <h6 class="text-primary">{{prooffer.percentage}}% off</h6>
+									    <h6 class="text-primary">{{prooffer.percentage}} or {{catoffer.percentage}}% off</h6>
 										<h5 class="text-danger">Discount amount:</h5></td>
 									<td>₹{{final}}.00</td>
 									  {% else %}
@@ -533,7 +533,13 @@
 
 														<p><input type="text" placeholder="Coupon " name="coupon_code"></p>
 														<p><input type="submit" value="Apply"></p>
+
 													</form>
+
+
+													<br>
+													    <span> <a  href = "{% url 'removecoupen'  %}" type="submit" class="btn btn-primary" >Remove</a></span>
+
 												</div>
 												<div id="coupon-message"></div>
 											</div> 

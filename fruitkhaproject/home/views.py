@@ -388,28 +388,29 @@ def delete_cart(request,id):
 
 
 # increase the quantity of cartitem...............
-# def increase_cquantity(request):
-# #     def quantity_updation(request):
-#     if request.method == "POST":
-#         cart_id = int(request.POST["cart_id"])
-#         action = request.POST["action"]
-#         obj = CartItem.objects.get(id=cart_id)
-#         pro = Products.objects.get(pname=obj.product_id)
-#         unit_qnty = Variant.objects.get(product_id__pname=pro, id=obj.Variant_id.id)
-#         if action == "plus":
-#             if obj.c_quantity < 5 and obj.c_quantity < unit_qnty.v_quantity:
-#                 obj.c_quantity += 1
-#                 obj.save()
-#             else:
-#                 obj.c_quantity = 5
+def update_cart_quantity(request):
 
-#         else:
-#             if obj.c_quantity > 1:
-#                 obj.c_quantity -= 1
-#                 obj.save()
-#             else:
-#                 obj.c_quantity = 0
-#         return JsonResponse({"status": "alsjdjhfp"})
+    if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        quantity = int(request.POST.get('quantity'))
+
+        
+        cart_item = CartItem.objects.get(id=item_id)
+
+        if cart_item.c_quantity < cart_item.Variant_id.v_quantity:
+            cart_item.c_quantity = quantity
+            cart_item.save()
+            total_price = cart_item.Variant_id.v_price * quantity
+
+        else:
+            messages.error(request,"out of stock")
+            return redirect('cart')
+
+        
+
+        return JsonResponse({'total_price': total_price})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 
@@ -569,7 +570,7 @@ def checkout(request):
 def proceedtocheckout(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email = email1)
-    userid = user.id
+    # userid = user.id
     orderdate = timezone.now().date()
     cart_details = (
         CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
@@ -577,7 +578,7 @@ def proceedtocheckout(request):
    
    
     # print(subtotal)
-    addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
+    # addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
     if cart_details.exists():
         for item in cart_details:
             item.total = item.c_quantity * item.Variant_id.v_price
@@ -600,16 +601,17 @@ def proceedtocheckout(request):
                 discount_amount=subtotal,
             )
             Proceedtocheck.objects.get(user_id=user)
-            context1 = {
+            # context1 = {
                
                
-                "total1": subtotal,
-                "addresses": addres,
-                "user": user,
+            #     "total1": subtotal,
+            #     "addresses": addres,
+            #     "user": user,
                
-            }
+            # }
             return redirect('checkout')
-        return render(request,'checkout.html',context1)
+        
+        return render(request,'checkout.html')
     else:
         messages.error(request,"Your cart is empty please add some product..!")
         return redirect('shop')
@@ -879,21 +881,23 @@ def cancelorder1(request,id):
             # wallet1 = Walletuser.objects.get(userid = user.id )
             # print(type(wallet1.amountt))
             if orderi.order_id.coupen_apply == "True":
-                walle = Walletuser.objects.get(user_id=user)
-            my_dict = Orderditem.objects.filter(order_id_id=orderi.order_id.id).aggregate(no=Count("id"))
-            no_of_orders = my_dict["no"]
-            discount = orderi.order_id.coupen_code.cop_price
-            each_pro = int(discount / no_of_orders)
-            rtrn_to_wlt = orderi.total_amount - each_pro
-            walle.amountt = walle.amountt + rtrn_to_wlt
-            walle.save()
-            messages.success(request, "your order cacelled successfully")
-            return redirect("orderdetails")
-        else:
-            walle = Walletuser.objects.get(user_id=user)
+                walle = Walletuser.objects.get(userid=user)
+                my_dict = Orderditem.objects.filter(order_id_id=orderi.order_id.id).aggregate(no=Count("id"))
+                no_of_orders = my_dict["no"]
+                discount = orderi.order_id.coupen_code.cop_price
+                each_pro = int(discount / no_of_orders)
+                rtrn_to_wlt = orderi.total_amount - each_pro
+                walle.amountt = walle.amountt + rtrn_to_wlt
+                walle.save()
+                messages.success(request, "your order cacelled successfully")
+                return redirect("orderdetails")
+            else:
+                walle = Walletuser.objects.get(userid=user)
 
-            walle.amountt=walle.amountt + return_amount
-            walle.save()
+                walle.amountt=walle.amountt + return_amount
+                walle.save()
+                messages.success(request, "your order cacelled successfully")
+                return redirect("orderdetails")
 
             
         messages.success(request,"order cancelled successfully")
@@ -911,10 +915,11 @@ def coupenapply(request):
         
         try:
             coupen = Coupon.objects.get(code = appcoup)
-            if coupen.to_date < date.today():
+            if coupen.to_date <= date.today() or coupen.from_date > date.today():
                 return JsonResponse({'success': False, 'message': 'Coupon has expired'})
             if Orderdetails.objects.filter(custom_id = user , coupen_code = coupen ).exists():
                 return JsonResponse({'success': False, 'message': 'Coupon already applied'})
+            
             if coupen.is_listed:
                 pro.discount_amount = pro.total_amount - coupen.cop_price
                 if pro.discount_amount < 0:
@@ -1045,6 +1050,18 @@ def add_addr_checkout(request):
 
 
 
+def removecoupen(request):
+    email1 = request.session["email"]
+    user= Usermodelss.objects.get(email=email1)
+    
+    coup = Proceedtocheck.objects.get(user_id = user)
+    if coup.is_coupenapplyed == True:
+        coup.is_coupenapplyed = False
+        coup.save()
+        messages.success(request,"coupen removed ssuccessfully")
+        return redirect('checkout')
+
+    return redirect('checkout')
 
 
 

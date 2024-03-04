@@ -12,7 +12,7 @@ from products.models import Variant,Products
 from cart.models import Orderditem
 from products.models import Productoffer,Categoryoffer
 from category.models import Category
-from django.db.models import Q 
+from django.db.models import Q ,Sum,Count
 # from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
@@ -38,11 +38,18 @@ def dashboard(request):
     if 'email' in request.session:
         return redirect('error404')
     if 'username'in request.session:
-      return render(request,'ahome.html')
+        total_earnings = Orderdetails.objects.aggregate(total_amount = Sum('discount_amount'))['total_amount']
+        ear_per = total_earnings/100
+        total_coustomers = Usermodelss.objects.aggregate(count_u = Count('id') )['count_u']
+        c_per = total_coustomers/100
+        total_orders = Orderdetails.objects.aggregate(count_o = Count('id'))['count_o']
+        or_pec = total_orders/100
+        return render(request,'ahome.html',{'total_e':total_earnings,'total_user':total_coustomers,'total_orders':total_orders,'ear_per':ear_per,'c_per':c_per,'or_pec':or_pec})
+      
      
     else:
        return redirect(adlogin)
-   
+    
 
 @never_cache
 def viewusers(request):
@@ -285,14 +292,15 @@ def addcategoryoffer(request):
 
             messages.success(request, "the offer for this category is already exists")
             return redirect("categoryoffer")
+        else:
 
-        if perct <= 100 and perct >= 0:
-            cat = Category.objects.get(id=category)
-            Categoryoffer.objects.create(category_id = cat,percentage = perct)
-            messages.success(request,"product offer added successffully..!")
-            return redirect('categoryoffer')
-        messages.success(request, "the percentage should between 0 and 100")
-        return redirect("categoryoffer") 
+            if perct <= 100 and perct >= 0:
+                cat = Category.objects.get(id=category)
+                Categoryoffer.objects.create(category_id = cat,percentage = perct)
+                messages.success(request,"product offer added successffully..!")
+                return redirect('categoryoffer')
+            messages.success(request, "the percentage should between 0 and 100")
+            return redirect("categoryoffer") 
 
     return render(request,'categoryloffer.html')
 
@@ -357,4 +365,16 @@ def salesreport(request):
             messages.error(request, "Enter valid date..!")
             return redirect("dashbord")
     return render(request, "salesreport.html", {"orders": orderi})
-    
+
+def delete_productoff(request, id):
+    if request.method == 'POST':
+        Productoffer.objects.get(id=id).delete()
+        messages.error(request, "offer deleted succesfully")
+        return redirect("productoffer")
+
+def delete_catoff(request,id):
+    if request.method == 'POST':
+        Categoryoffer.objects.get(id=id).delete()
+        messages.error(request, "offer deleted succesfully")
+        return redirect("categoryoffer")
+

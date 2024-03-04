@@ -15,6 +15,7 @@
     <link rel="icon" href="/static/images/favicon.png" type="image/x-icon">
     <link rel="shortcut icon" href="" type="image/x-icon">
     <title>Admin panel  - Products</title>
+    
 
     <!-- Google font -->
     <link
@@ -604,7 +605,7 @@
             </div>
             <div class="modal-body">
                 <!-- Edit Category Form -->
-                <form method="post" action="{% url 'updateproducts' product.id %}" enctype="multipart/form-data">
+                <form method="post" action="{% url 'updateproducts' product.id %}" enctype="multipart/form-data" id="uploadForm"  >
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Product Name</label>
@@ -621,11 +622,11 @@
                         <br>
                        
                         
-                        <input type="file" class="form-control"   accept="image/*"  name="images" required>
+                        <input type="file" class="form-control"   accept="image/*"  name="images" id="imageInput" required>
                         <br>
-                        <input type="file" class="form-control"   accept="image/*"  name="imagesa" required>
+                        <input type="file" class="form-control"   accept="image/*"  name="imagesa" id="imageInput" required>
                         <br>
-                        <input type="file" class="form-control"   accept="image/*"  name="imagesb" required>
+                        <input type="file" class="form-control"   accept="image/*"  name="imagesb" id="imageInput"   required>
 
                     </div>
                     <div class="mb-3">
@@ -690,6 +691,21 @@
 
     <!-- latest js -->
     <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Image validation
+            $("input[type='file']").change(function() {
+                var fileInput = $(this);
+                var filePath = fileInput.val();
+                var allowedExtensions = /\.(jpg|jpeg|png|gif)$/i;
+
+                if (!allowedExtensions.test(filePath)) {
+                    alert('Please upload image files only (jpg, jpeg, png, gif)');
+                    fileInput.val(''); // Clear the file input
+                }
+            });
+        });
+    </script>
 
     <!-- Bootstrap js -->
     <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>

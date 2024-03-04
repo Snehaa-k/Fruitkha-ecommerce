@@ -334,6 +334,14 @@
                                                                     <a href="{% url 'listed' i.id %}" class="btn btn-danger">UnListed</a>
                                                                 {% endif %}
                                                             </li>
+                                                            <li>
+                                                                <form method="post" action="{% url 'delete_productoff' i.id %}" >
+                                                                    {% csrf_token  %}
+                                                                    
+                                                                    <button type="submit" class="btn btn-dark" onclick="return confirm('Are you sure you want to delete?')">Delete</button>
+
+                                                                 </form>
+                                                            </li>
                                                         </ul>
                                                     </td>
                                                 </tr>

@@ -143,7 +143,19 @@
 									
 									<td class="product-image"><img src="{{wish.product_id.image.url}}" alt=""></td>
 									<td class="product-name">{{wish.product_id.pname}}</td>
+                                    {% if wish.product_id.offer.exists or wish.product_id.category.offer.exists %}
+									{% for offer in wish.product_id.offer.all %}
+									{% if offer.is_listed  %}
+									<td><h6 class="text-danger">{{offer.percentage}}% off</h6><del class="strike">{{wish.vaiant_id.v_price}}</del></td>
+									{% else  %}
+							
 									<td class="product-price">{{wish.vaiant_id.v_price}}</td>
+                                    {% endif %}
+									{% endfor  %}
+									{% else  %}
+									<td class="product-price">{{wish.vaiant_id.v_price}}</td>
+                                    {% endif  %}
+
 									<td class="product-price">{{wish.vaiant_id.unit}}</td>
 									<td>
 										

@@ -57,6 +57,7 @@
           <th>Quantity</th>
           
           <th>Total amount</th>
+          <th>Discount Amount</th>
           
           <th>Order Date</th>
           <th>Expected Delivery Date</th>
@@ -81,7 +82,9 @@
             {{item.order_id.addr.country}},{{item.order_id.addr.state}},
             {{item.order_id.addr.pin}},{{item.order_id.addr.post}}</td>
             <td>{{item.quantity}}</td>
-            <td>{{item.total_amount}}</td>
+            <td>{{item.order_id.total_amounts}}</td>
+            <td>{{item.order_id.discount_amount}}</td>
+
             <td>{{item.order_id.orders_date}}</td>
             <td>{{item.ex_deliverey}}</td>
             <td>{{item.order_id.paymt_method}}</td>
