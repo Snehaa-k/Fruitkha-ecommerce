@@ -218,12 +218,12 @@
                                 </a>
                             </li>
                             <br>
-                            <li class="sidebar-list">
+                            {% comment %} <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                     <i data-feather="star"></i>
                                     <span>Return request</span>
                                 </a>
-                            </li>
+                            </li> {% endcomment %}
 
                          <br>
 
@@ -411,7 +411,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit offer</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -423,7 +423,7 @@
                         <select id="categorySelect" class="form-control" name="prodt" required>
                             <option value="" disabled selected>Select a Product</option>
                             {% for produc in product %}
-                                <option value="{{ produc.id }}">{{ produc.pname }}</option>
+                                <option value="{{ produc.id }}" {% if i.product_id.id == produc.id  %} selected {% endif %}>{{ produc.pname }}</option>
                             {% endfor %}
                         </select>
                     </div>

@@ -218,12 +218,12 @@
                                 </a>
                             </li>
                             <br>
-                            <li class="sidebar-list">
+                            {% comment %} <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                     <i data-feather="star"></i>
                                     <span>Return request</span>
                                 </a>
-                            </li>
+                            </li> {% endcomment %}
 
                          <br>
 
@@ -404,7 +404,7 @@
 </div>
 
 <!-- Edit Category Modal -->
-{% for j in offerc %}
+{% for i in offerc %}
 <div class="modal fade" id="editCategoryModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="editCategoryModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -415,20 +415,20 @@
             </div>
             <div class="modal-body">
                 <!-- Edit Category Form -->
-                <form method="post" action="{% url 'editcategoryoffer' j.id %}" enctype="multipart/form-data">
+                <form method="post" action="{% url 'editcategoryoffer' i.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Select Product</label>
                         <select id="categorySelect" class="form-control" name="cat" required>
-                            <option value="" disabled selected>Select a category</option>
+                            {% comment %} <option value="" disabled selected>Select a category</option> {% endcomment %}
                             {% for j in category %}
-                                <option value="{{ j.id }}" {% if j.id == preselect %} selected {% endif %}>{{ j.category_name }}</option>
+                                <option value="{{ j.id }}" {% if i.category_id.id == j.id  %} selected {% endif %}>{{ j.category_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="editedCategoryName" class="form-label">Percentage</label>
-                        <input type="number" class="form-control" value="{{j.percentage}}" name="perc" required min="0" max="100">
+                        <input type="number" class="form-control" value="{{i.percentage}}" name="perc" required min="0" max="100">
                             
                     </div>
                     <!-- Add more form fields as needed -->

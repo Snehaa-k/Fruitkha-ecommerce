@@ -223,15 +223,27 @@
 								</tr>
 								{% for cart in cartitem  %}
 								<tr>
-									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
+									{% if cart.c_quantity > cart.Variant_id.v_quantity   %}
 									
-									<td>
-										<b>Price  :</b>   ₹{{cart.Variant_id.v_price}}<br>
-										<b>Unit(pack) :</b>     {{cart.Variant_id.unit}}<br>
-										<b>Quantity :</b> {{cart.c_quantity}}
+										<td class="product-image"><del class="strike"><img src="{{cart.product_id.image.url}}" alt=""></del></td>
 										
-									</td>
+										<td>
+											<del class="strike"><b>Price  :</b>   ₹{{cart.Variant_id.v_price}}<br>
+											<b>Unit(pack) :</b>     {{cart.Variant_id.unit}}<br>
+											<b>Quantity :</b> {{cart.c_quantity}}</del>
+											<h4 class="text-danger"> Out of Stock </h4>
+										</td>
 									
+									{% else   %}
+									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
+										
+										<td>
+											<b>Price  :</b>   ₹{{cart.Variant_id.v_price}}<br>
+											<b>Unit(pack) :</b>     {{cart.Variant_id.unit}}<br>
+											<b>Quantity :</b> {{cart.c_quantity}}
+											
+										</td>
+									{% endif    %}
 								</tr>
 								{% endfor  %}
 								
@@ -249,17 +261,28 @@
 									</td>
 									<td>₹{{final}}.00</td>
 
-									{% elif prooffer or  catoffer%}
-									  {% if prooffer.is_listed  or catoffer.is_listed  %}
+									{% elif prooffer or  catoffer %}
+									{% if prooffer.is_listed  and catoffer.is_listed  %}
 									<td>
-									    <h6 class="text-primary">{{prooffer.percentage}} or {{catoffer.percentage}}% off</h6>
+									    <h6 class="text-primary"></h6>
 										<h5 class="text-danger">Discount amount:</h5></td>
 									<td>₹{{final}}.00</td>
-									  {% else %}
+									{%elif prooffer.is_listed%}
+									<td>
+									    {% comment %} <h6 class="text-primary">{{prooffer.percentage}} % off</h6> {% endcomment %}
+										<h5 class="text-danger">Discount amount:</h5></td>
+									<td>₹{{final}}.00</td>
+                                    {% elif  catoffer.is_listed  %}
+									<td>
+									    {% comment %} <h6 class="text-primary">{{catoffer.percentage}} % off</h6> {% endcomment %}
+										<h5 class="text-danger">Discount amount:</h5></td>
+									<td>₹{{final}}.00</td>
+									{% else %}
 									  <td>Total</td>
 									  <td>₹{{final}}.00</td>
-									  {% endif  %}
+									{% endif  %}
 									{%  else  %}
+									
 									<td>Total</td>
 									<td>₹{{final}}.00</td>
 									
@@ -288,10 +311,16 @@
 										
 										<div class="card-body ">
 											
-											<button id="cash-on-delivery-btn" class="btn btn-outline-dark" style="width:290px;" type="submit" onclick="alert('confirm your payment!')" >
+											<button id="cash-on-delivery-btn" class="btn btn-outline-dark" style="width:290px;" type="submit"  onclick="return confirm('confirm your payment')" >
 												 CASH
 											</button>
-											<input type="hidden" id="razorpayTotal1"  value="{{final}}">
+											<input type="hidden" id="razorpayTotal1"   value="{{final}}">
+											<input type="hidden" id="product-quantity" class="form-check-input product-quantity" value="{{variant_quantity}}">
+											<input type="hidden" id="cart-quantity"  class="form-check-input cart-quantity" value="{{cartquantity}}">
+											<input type="hidden" id="wallet-balance"  class="form-check-input wallet-balance" value="{{wallet}}">
+
+
+
 
                     </form>
 											<!-- sweet alert buttton......................................... -->
@@ -325,7 +354,7 @@
 
 
 										 
-											<a href="{% url 'pay_wallet'  %}" class="btn btn-outline-dark" style="width:290px;" id="wallet-button1"type="button" onclick="return confirm('confirm Your payment')" >
+											<a href="{% url 'pay_wallet'  %}" class="btn btn-outline-dark" style="width:290px;" id="wallet-button1"type="button">
 												<i class='fas fa-wallet' style='font-size:20px; color:black;'></i>    WALLET
 											</a>
 
@@ -351,7 +380,24 @@
 															});
 															return;
 														}
-
+                                                        var productquantity = document.getElementById('product-quantity');
+														var cartquantity = document.getElementById('cart-quantity');
+													    var cart =  parseInt(cartquantity.value)
+														var product =  parseInt(productquantity.value)
+														console.log(cart)
+														console.log(product)
+														if ( product < cart)
+														{
+																			
+														Swal.fire({
+															icon: 'error',
+															title: 'Oops...',
+															text: 'your product is out of stock!',
+															showConfirmButton: false,
+															timer: 2000
+															});
+														return; 
+														}
 
 														// if (walletBalance < total) {
 																
@@ -429,6 +475,23 @@
 																				title: 'Oops...',
 																				text: 'Please select an address before proceeding!',
 																				showConfirmButton: false,
+																				timer: 2000
+																			});
+																			return; // Stop further execution
+																		}
+																		var productquantity = document.getElementById('product-quantity');
+																		var cartquantity = document.getElementById('cart-quantity');
+																		var cart =  parseInt(cartquantity.value)
+																		var product =  parseInt(productquantity.value)
+																		console.log(cart)
+																		console.log(product)
+																		if ( product<cart ) {
+																		    console.log(product)
+																			Swal.fire({
+																				icon: 'error',
+																				title: 'Oops...',
+																				text: 'your product is out of stock!',
+																				showConfirmButton:false,
 																				timer: 2000
 																			});
 																			return; // Stop further execution

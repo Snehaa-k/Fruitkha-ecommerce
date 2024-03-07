@@ -194,7 +194,7 @@
                            <br>
 
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                <a class="sidebar-link sidebar-title" href="#">
                                     <i data-feather="archive"></i>
                                     <span>Orders</span>
                                 </a>
@@ -218,18 +218,18 @@
                                 </a>
                             </li>
                             <br>
-                            <li class="sidebar-list">
+                            {% comment %} <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                     <i data-feather="star"></i>
                                     <span>Return request</span>
                                 </a>
-                            </li>
+                            </li> {% endcomment %}
 
                          <br>
 
                            
                             <li class="sidebar-list">
-                                <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="{% url 'coupon_list'  %}">
                                     <i data-feather="tag"></i>
                                     <span>Coupons</span>
                                 </a>
@@ -238,13 +238,14 @@
 
                             <br>
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title link-nav" href="invoice.html">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'productslist'   %}">
                                     <i data-feather="archive"></i>
                                     <span>Productoffer</span>
                                 </a>
                             </li>
+                            <br>
                             <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title link-nav" href="invoice.html">
+                                <a class="sidebar-link sidebar-title link-nav" href="{% url 'category'   %}">
                                     <i data-feather="archive"></i>
                                     <span>Categoryoffer</span>
                                 </a>

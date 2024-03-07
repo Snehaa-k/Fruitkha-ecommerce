@@ -219,18 +219,18 @@
                                 </a>
                             </li>
                             <br>
-                            <li class="sidebar-list">
+                            {% comment %} <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                     <i data-feather="star"></i>
                                     <span>Return request</span>
                                 </a>
-                            </li>
+                            </li> {% endcomment %}
 
                          <br>
 
                            
                             <li class="sidebar-list">
-                                <a class="linear-icon-link sidebar-link sidebar-title" href="#">
+                                <a class="linear-icon-link sidebar-link sidebar-title" href="{% url 'coupon_list'  %}">
                                     <i data-feather="tag"></i>
                                     <span>Coupons</span>
                                 </a>
@@ -302,7 +302,7 @@
                                 <!-- Table Start -->
                                 <div class="card-body">
                                     <div class="table-responsive table-desi">
-                                        <table class="user-table trans-table texes-table table table-striped">
+                                        <table class="user-table  texes-table table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>PRODUCT NAME</th>
@@ -312,7 +312,7 @@
                                                     {% comment %} <th>PRCE</th> {% endcomment %}
                                                     {% comment %} <th>IN STOCK</th> {% endcomment %}
                                                     <th>PUBLISH</th>
-                                                    <th>OPTIONS</th>
+                                                    <th>OP</th>
                                                     <th>VARIANT</th>
                                                     <th>VARIANT DETAILS</th>
                                                 </tr>
@@ -347,9 +347,9 @@
                                                             <li>
                                                                
                                                                 {% if product.is_listed %}
-                                                                    <a href="{% url 'list1'  product.id %}" class="btn btn-danger">List</a>
+                                                                    <a href="{% url 'list1'  product.id %}" class="btn btn-danger">Listed</a>
                                                                 {% else %}
-                                                                    <a href="{% url 'list1' product.id %}" class="btn btn-danger" >UnList</a>
+                                                                    <a href="{% url 'list1' product.id %}" class="btn btn-danger" >UnListed</a>
                                                                 {% endif %}
                                                                 
                                                                 
@@ -372,7 +372,7 @@
                                                     </td>
                                                     <td>
                                                         <a href="#addVariantModal-{{forloop.counter}}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addVariantModal-{{forloop.counter}}">
-                                                            Add_Variant
+                                                            +unit
                                                           </a>
                                                           {% comment %} ..........modal of variant............. {% endcomment %}
                                                           <div class="modal fade" id="addVariantModal-{{forloop.counter}}" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
@@ -418,8 +418,8 @@
                                                     </td>
                                                     <td>
                                                     {% comment %} /////................end variant modal ................./// {% endcomment %}
-                                                    <a href="" class="btn btn-primary" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal{{product.id}}">
-                                                        variant_report
+                                                    <a href="" class="btn btn-primary btn-sm" style="color: white !important;" type="button" data-toggle="modal" data-target="#variantModal{{product.id}}">
+                                                        view
                                                     </a>
                         
                         
@@ -614,30 +614,31 @@
                     <div class="mb-3">
                         {% if product.image %}
                         <div class="existing-image-container">
-                            <img src="{{ product.image.url }}" alt="Product Image" width="120" height="120">
-                            <img src="{{ product.imagea.url }}" alt="Product Image" width="130" height="130">
-                           <img src="{{ product.imageb.url }}" alt="Product Image" width="130" height="130">   
+                            <img src="{{ product.image.url }}" alt="Product Image" width="120" height="120" name="images">
+                            <img src="{{ product.imagea.url }}" alt="Product Image" width="130" height="130"  name="images">
+                           <img src="{{ product.imageb.url }}" alt="Product Image" width="130" height="130"    name="images">   
                         </div>
                         {% endif %}
                         <br>
                        
                         
-                        <input type="file" class="form-control"   accept="image/*"  name="images" id="imageInput" required>
+                        <input value="" type="file" class="form-control"   accept="image/*"  name="images" id="imageInput"  >
                         <br>
-                        <input type="file" class="form-control"   accept="image/*"  name="imagesa" id="imageInput" required>
+                        <input value="" type="file" class="form-control"   accept="image/*"  name="imagesa" id="imageInput" required>
                         <br>
-                        <input type="file" class="form-control"   accept="image/*"  name="imagesb" id="imageInput"   required>
+                        <input  value=""  type="file" class="form-control"   accept="image/*"  name="imagesb" id="imageInput" required>
 
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Select Category</label>
                         <select id="categorySelect" class="form-control" name="categoryname" required>
-                            <option value="" disabled selected>Select a category</option>
+                            {% comment %} <option value="" disabled selected>Select a category</option> {% endcomment %}
                             {% for category in categorys %}
-                                <option value="{{ category.category_name }}">{{ category.category_name }}</option>
+                                <option  value="{{category.category_name}}"{% if product.category.id == category.id %} selected {% endif %}>{{category.category_name}}</option>
                             {% endfor %}
                         </select>
                     </div>
+                   
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Description</label>
                         <input type="text" class="form-control" id="categoryName" value="{{product.description}}" name = "description" required>

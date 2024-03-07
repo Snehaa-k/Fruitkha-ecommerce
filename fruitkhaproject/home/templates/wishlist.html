@@ -105,6 +105,20 @@
 			</div>
 		</div>
 	</div>
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>WHISHLIST</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
 	<!-- profile section -->
 	<div class="container rounded bg-white mt-100 mb-100">
 		<div class="row">
@@ -129,7 +143,7 @@
 									
 									<th class="product-image">Product Image</th>
 									<th class="product-name">Name</th>
-									<th class="product-price">Price</th>
+									{% comment %} <th class="product-price">Price</th> {% endcomment %}
 									<th class="product-price">Unit</th>
 									<th class="product-remove"></th>
 									<th class="product-remove"></th>
@@ -141,9 +155,9 @@
 							{% for wish in wish %} 
 								<tr class="table-body-row">
 									
-									<td class="product-image"><img src="{{wish.product_id.image.url}}" alt=""></td>
+									<td class="product-image"><a href="{% url 'singleproduct' wish.product_id.id %}"><img src="{{wish.product_id.image.url}}" alt=""></a></td>
 									<td class="product-name">{{wish.product_id.pname}}</td>
-                                    {% if wish.product_id.offer.exists or wish.product_id.category.offer.exists %}
+                                    {% comment %} {% if wish.product_id.offer.exists or wish.product_id.category.offer.exists %}
 									{% for offer in wish.product_id.offer.all %}
 									{% if offer.is_listed  %}
 									<td><h6 class="text-danger">{{offer.percentage}}% off</h6><del class="strike">{{wish.vaiant_id.v_price}}</del></td>
@@ -154,7 +168,7 @@
 									{% endfor  %}
 									{% else  %}
 									<td class="product-price">{{wish.vaiant_id.v_price}}</td>
-                                    {% endif  %}
+                                    {% endif  %} {% endcomment %}
 
 									<td class="product-price">{{wish.vaiant_id.unit}}</td>
 									<td>
@@ -293,7 +307,7 @@
 	
 	
 	body {
-		background: rgb(99, 39, 120)
+		background: white;
 	}
 	
 	.form-control:focus {
@@ -349,15 +363,15 @@
     left: 600px;
     top: 50px; /* Adjust top position if needed */
 }
-.cart-table-wrap {
-    width: 190%; /* Set the width to 100% or any desired value */
+ .cart-table-wrap {
+    width: 300%; /* Set the width to 100% or any desired value */
    
 }
 
 .cart-table {
-    width: 190%; /* Set the width to 100% or any desired value */
+    width: 300%; /* Set the width to 100% or any desired value */
     /* Add other styling as needed */
-}
+} 
 
 </style>
 </body>

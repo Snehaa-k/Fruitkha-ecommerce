@@ -24,7 +24,7 @@ def addproducts(request):
         imageb = request.FILES.get('imagesb')
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
-        price = request.POST['price']
+        # price = request.POST['price']
         # instock = request.POST['instock']
        
     

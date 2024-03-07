@@ -218,12 +218,12 @@
                                 </a>
                             </li>
                             <br>
-                            <li class="sidebar-list">
+                            {% comment %} <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                     <i data-feather="star"></i>
                                     <span>Return request</span>
                                 </a>
-                            </li>
+                            </li> {% endcomment %}
 
                          <br>
 
@@ -426,11 +426,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Valid</label>
-                        <input type="date" id="Valid" class="form-control" id="categoryName" placeholder="Enter the date" name = "ctodate" required>
+                        <input type="date" id="Valid" class="form-control" id="categoryName"  name = "ctodate" required>
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Expired</label>
-                        <input type="date" id="Expired" class="form-control" id="categoryName" placeholder="Enter the date" name = "cfromdate" required>
+                        <input type="date" id="Expired" class="form-control" id="categoryName"  name = "cfromdate" required>
                     </div>
                     
 
@@ -469,13 +469,14 @@
                         <label for="categoryName" class="form-label">Code</label>
                         <input type="text"  class="form-control" id="categoryName" placeholder="Enter the code" value="{{i.code}}"  name = "code" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="categoryName" class="form-label">Expired</label>
-                        <input type="date" id="Valid" class="form-control" id="categoryName" placeholder="Enter the date"  value="{{i.from_date}}"  name = "cfromdate" required>
-                    </div>
+                   
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Valid</label>
-                        <input type="date" id="Expired" class="form-control" id="categoryName" placeholder="Enter the date" value="{{i.to_date}}" name = "ctodate" required>
+                        <input type="date"  class="form-control" id="categoryName" value="{{i.to_date}}" name = "ctodate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Expired</label>
+                        <input type="date"  class="form-control" id="categoryName"   value="{{i.from_date}}"  name = "cfromdate" required>
                     </div>
                     <!-- Add more form fields as needed -->
 

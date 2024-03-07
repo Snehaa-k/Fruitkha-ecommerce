@@ -220,12 +220,12 @@
                                 </li>
                                 
                                 <br>
-                                <li class="sidebar-list">
+                                {% comment %} <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                         <i data-feather="star"></i>
                                         <span>Return request</span>
                                     </a>
-                                </li>
+                                </li> {% endcomment %}
 
                              <br>
 
@@ -332,13 +332,13 @@
 
                         <div class="col-sm-6 col-xxl-3 col-lg-6">
                             <div class="b-b-secondary border-5 border-0  card o-hidden">
-                                <div class=" custome-3-bg b-r-4 card-body">
+                                <div class=" custome-2-bg b-r-4 card-body">
                                     <div class="media static-top-widget">
                                         <div class="media-body p-0">
-                                            <span class="m-0">Reviews</span>
-                                            <h4 class="mb-0 counter">893
+                                            <span class="m-0">Total coupons</span>
+                                            <h4 class="mb-0 counter">{{total_coup}}
                                                 <span class="badge badge-light-secondary grow ">
-                                                    <i data-feather="trending-up"></i>8.5%</span>
+                                                    <i data-feather="trending-up"></i>{{cop_pec}}</span>
                                             </h4>
                                         </div>
 

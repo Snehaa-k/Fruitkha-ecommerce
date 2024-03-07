@@ -59,7 +59,7 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
+								<li class="current-list-item"><a href="{% url 'home' %}">Home</a>
 									
 								</li>
 								
@@ -125,8 +125,9 @@
 											    <p>Total : ₹{{i.total_amounts}}</p>
 												<p>{{i.addr.address}},{{i.addr.state}},{{i.addr.country}},
 													{{i.order_id.addr.pin}},{{i.addr.post}},</p>
-										
-												<p class="text-danger"><b>Ordered Date:  {{i.orders_date}}</b></p>
+													
+													<h6 style="display: inline;">Payment method: </h6><p style="display: inline;" class="text-success">  {{i.paymt_method}}</p>
+													<p class="text-danger"><b>Ordered Date:  {{i.orders_date}}</b></p>
 												<!-- Choice Option -->
 											           
 													

@@ -315,12 +315,12 @@
                                     </a>
                                 </li>
                                 <br>
-                                <li class="sidebar-list">
+                                {% comment %} <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
                                         <i data-feather="star"></i>
                                         <span>Return request</span>
                                     </a>
-                                </li>
+                                </li> {% endcomment %}
 
                              <br>
 
@@ -393,10 +393,9 @@
                                                     <tr>
                                                         <th>
                                                             <span class="form-check user-checkbox">
-                                                                <input class="checkbox_animated" type="checkbox"
-                                                                    value="" id="checkall">
-                                                            </span>User</th>
-                                                        <th>Name</th>
+                                                                
+                                                            </span></th>
+                                                        <th>UserName</th>
                                                         <th>Phone</th>
                                                         <th>Email</th>
                                                        
@@ -408,10 +407,7 @@
                                                     {% for user in User%}
                                                     <tr>
                                                         <td>
-                                                            <div class="form-check user-checkbox">
-                                                                <input class="checkbox_animated check-it"
-                                                                    type="checkbox" value="" id="flexCheckDefault">
-                                                            </div>
+                                                            
                                                             <span>
                                                                 <img src="/static/images/dashboard/profile.jpg" alt="users">
                                                             </span>

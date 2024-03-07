@@ -38,13 +38,41 @@ def dashboard(request):
     if 'email' in request.session:
         return redirect('error404')
     if 'username'in request.session:
-        total_earnings = Orderdetails.objects.aggregate(total_amount = Sum('discount_amount'))['total_amount']
-        ear_per = total_earnings/100
-        total_coustomers = Usermodelss.objects.aggregate(count_u = Count('id') )['count_u']
-        c_per = total_coustomers/100
-        total_orders = Orderdetails.objects.aggregate(count_o = Count('id'))['count_o']
-        or_pec = total_orders/100
-        return render(request,'ahome.html',{'total_e':total_earnings,'total_user':total_coustomers,'total_orders':total_orders,'ear_per':ear_per,'c_per':c_per,'or_pec':or_pec})
+
+        total = Orderdetails.objects.aggregate(total_amount = Sum('discount_amount'))['total_amount']
+        if total != None:
+            total_earnings = total
+            ear_per = total_earnings/100
+        else:
+            total_earnings=0
+        
+        
+        total_c = Usermodelss.objects.aggregate(count_u = Count('id') )['count_u']
+        if total_c != None:
+            total_coustomers = total_c
+            c_per = total_coustomers/100
+           
+        else:
+            total_coustomers=0
+       
+        total_o = Orderdetails.objects.aggregate(count_o = Count('id'))['count_o']
+        if total_o != None:
+            total_orders = total_o
+            or_pec = total_orders/100
+           
+        else:
+            total_orders=0
+        
+        total_cop = Coupon.objects.aggregate(count_cop = Count('id'))['count_cop']
+        if total_cop != None:
+            total_coup = total_cop
+            cop_pec = total_coup/100
+           
+        else:
+            total_coup=0
+       
+       
+        return render(request,'ahome.html',{'total_e':total_earnings,'total_user':total_coustomers,'total_orders':total_orders,'ear_per':ear_per,'c_per':c_per,'or_pec':or_pec,'total_coup':total_coup,'cop_pec':cop_pec})
       
      
     else:

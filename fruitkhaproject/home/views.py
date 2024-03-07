@@ -15,7 +15,7 @@ from django.views.decorators.cache import never_cache
 from products.models import Products,Variant
 from category.models import Category
 from cart.models import CartItem, Coupon, Orderdetails,Orderditem, Proceedtocheck
-from django.db.models import Sum,Count
+from django.db.models import Sum,Count,Q
 
 from django.http import JsonResponse
 from django.urls import reverse
@@ -157,12 +157,18 @@ def userlogout(request):
 
 
 def searchh(request):
-  if 'email' in request.session:
-    searchh = request.POST.get('S')
-    
-    prdts = Products.objects.filter(pname__icontains=searchh)
-    
-    return render(request,'shop.html',{'products':prdts})
+    if 'email' in request.session:
+        search_query = request.GET.get('S')  
+        if search_query:
+            prdts = Products.objects.filter(pname__icontains=search_query)
+        else:
+            prdts = Products.objects.all()
+        
+        return render(request, 'shop.html', {'products': prdts, 'search_query': search_query})
+    else:
+       
+        return HttpResponse("Unauthorized", status=401)
+
 
 def about(request):
     return render(request,'about.html')
@@ -246,41 +252,11 @@ def cart(request):
             i.total = i.Variant_id.v_price * i.c_quantity
             
             i.save()
+        
     subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
     final = subtotal
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    #         i.total = i.c_quantity * i.Variant_id.v_price
-    #         i.save()
-    # subtotal = sum(item.total for item in cart_item)
-    # final = subtotal
-
-
-        
-
-    
-    
-
-    
-    # for item in cartitem:
-    #     item.total = item.c_quantity * item.Variant_id.v_price
-    
-     
-    # print(final,"haiii")
     return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
 
 
@@ -301,7 +277,9 @@ def add_wishlist(request,id):
         messages.success(request, "Product is added to wishlist")
         return redirect('singleproduct',product.id)
 
- # show whishlistt.......................
+
+
+# show whishlistt.......................
 def wishlist(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email=email1)
@@ -312,6 +290,10 @@ def wishlist(request):
     return render(request,'wishlist.html',{'wish':wish})
    
     
+
+
+
+
 def deletewishlist(request,id):
     Wishlist.objects.get(id=id).delete()
     return redirect('wishlist')
@@ -327,19 +309,9 @@ def deletewishlist(request,id):
 
 
 def add_cart(request,id):
-    
-    # try:
-   
     Product = Products.objects.get(id=id)
-    
-    # except Variant.DoesNotExist:
-    #     messages.error(request, "Variant does not exist.")
-    #     return redirect('cart')
-    # user = request.id
-    # user_instance = get_object_or_404(Usermodelss, id=id)
-    # print(user_id)
     user = request.session['email']
-    # print(user)
+   
 
     if request.method == 'POST':
         
@@ -350,8 +322,14 @@ def add_cart(request,id):
         
         obj = Variant.objects.get(products = Product,unit = var)
 
-        cartitem = CartItem.objects.all()
+        cartitem = CartItem.objects.filter(user_id = user_instance,product_id = Product,Variant_id = obj)
         
+        if cartitem.exists():
+            messages.error(request,"the product is already in the cart just update the quantity")
+            return redirect('cart')
+
+        
+            
 
         quantity1 = int(request.POST.get('quantity',1))
       
@@ -363,14 +341,15 @@ def add_cart(request,id):
          
        
         
-        print(var,quantity1)  
+       
         if  int(quantity1) <= obj.v_quantity: 
             if quantity1 < 6:
                 subtotal = int(quantity1) * obj.v_price
+                
                 cart_item, created = CartItem.objects.get_or_create( user_id=user_instance,Variant_id = obj,product_id=Product, c_quantity = quantity1,total=subtotal)
                 if not created:
-                    cart_item.c_quantity = cart_item.c_quantity + 1
-                    cart_item.save()
+                    messages.error(request,"The product is already in the cart just update it")
+                    return redirect('cart')
                 messages.success(request,"Your Cart is Added successfully..!")
                 return redirect('cart')
             else:
@@ -396,11 +375,14 @@ def update_cart_quantity(request):
 
         
         cart_item = CartItem.objects.get(id=item_id)
+        
 
         if cart_item.c_quantity < cart_item.Variant_id.v_quantity:
+           
             cart_item.c_quantity = quantity
             cart_item.save()
             total_price = cart_item.Variant_id.v_price * quantity
+            
 
         else:
             messages.error(request,"out of stock")
@@ -528,6 +510,10 @@ def checkout(request):
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         cartitem = CartItem.objects.filter(user_id = user)
+        for cart_item in cartitem:
+            variant_quantity = cart_item.Variant_id.v_quantity
+            cartquantity = cart_item.c_quantity
+            
 
         if cartitem.exists():
             cart_item = (
@@ -537,6 +523,7 @@ def checkout(request):
         
             variant = Variant.objects.all()
             pro = Proceedtocheck.objects.get(user_id = user)
+
             for i in cart_item:
                 prooffer = i.product_id.offer.first()
                 catoffer = i.product_id.category.offer.first()
@@ -546,19 +533,40 @@ def checkout(request):
                 
                 final = pro.discount_amount
             
-            elif prooffer or catoffer:
+            
+            elif prooffer and catoffer:
                
                 subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
                 final = subtotal
+            
+            elif prooffer:
+                subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
+                final = subtotal
 
+            elif catoffer:
+                subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
+                final = subtotal
+               
+
+                   
 
             else:    
-                for item in cartitem:
-                    item.total = item.c_quantity * item.Variant_id.v_price
-                subtotal = sum(item.total for item in cartitem)
+                subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
                 final = subtotal
-           
-            return render(request,'checkout.html',{'user':user,'addres':addres,'cartitem':cartitem,'variant':variant,'final':final,'pro':pro,'prooffer':prooffer,'catoffer':catoffer})
+            contex1={'user':user,'addres':addres,
+                     'cartitem':cartitem,
+                     'variant':variant,
+                     'final':final,
+                     'pro':pro,
+                     'prooffer':prooffer,
+                     'catoffer':catoffer,
+                     'variant_quantity':variant_quantity,
+                     'cartquantity':cartquantity,
+
+
+                    }
+            return render(request,'checkout.html',contex1)
+        
         else:
             messages.error(request,"you can't checkout your cart is empty!...")
             return redirect('shop')
@@ -579,11 +587,20 @@ def proceedtocheckout(request):
    
     # print(subtotal)
     # addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
+
     if cart_details.exists():
+        
+        subtotal = 0
         for item in cart_details:
-            item.total = item.c_quantity * item.Variant_id.v_price
-            final= sum(item.total for item in cart_details)
-        subtotal = final 
+            if item.c_quantity > item.Variant_id.v_quantity:
+                # item.total = item.c_quantity * item.Variant_id.v_price
+                # subtotal= sum(item.total for item in cart_details)
+            # else:
+                messages.error(request,"the product is out od stock..!")
+                return redirect('cart')
+        subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
+                
+        
         Proceedtocheck.objects.create(
                 user_id=user,
                 order_date=orderdate,
@@ -591,7 +608,7 @@ def proceedtocheckout(request):
                 discount_amount=subtotal,
             )
         try:
-             Proceedtocheck.objects.get(user_id=user)
+            Proceedtocheck.objects.get(user_id=user)
         except:
             Proceedtocheck.objects.filter(user_id=user).delete()
             Proceedtocheck.objects.create(
@@ -611,7 +628,7 @@ def proceedtocheckout(request):
             # }
             return redirect('checkout')
         
-        return render(request,'checkout.html')
+        return redirect('checkout')
     else:
         messages.error(request,"Your cart is empty please add some product..!")
         return redirect('shop')
@@ -636,9 +653,17 @@ def place_order(request):
         print("haii")
         userid = user.id
         checkout = Proceedtocheck.objects.get(user_id=user)
+ 
         orderdate = timezone.now().date() 
         addres = request.POST["selected_address_id"]
         ad = Useraddress.objects.get(id=addres)
+        
+        caritem = CartItem.objects.filter(user_id=userid)
+        for cart_item in caritem:
+                if cart_item.c_quantity > cart_item.Variant_id.v_quantity:
+                    
+                    messages.error(request, f"Product {cart_item.product_id.pname} is out of stock.")
+                    return redirect('checkout')
         ad1 = ad.id
         if addres != None:
             order = Orderdetails(
@@ -656,6 +681,7 @@ def place_order(request):
                 order.coupen_apply=False
             order.save()
             caritem = CartItem.objects.filter(user_id=userid)
+            
             for i in caritem:
                 items = Orderditem(
                     order_id = order,
@@ -698,8 +724,11 @@ def pay_razorpay1(request):
        
         orderdate = timezone.now().date() 
         address_id = request.POST.get("selected_address_id")
+
         address = Useraddress.objects.get(id=address_id)
         amount = checkout.total_amount
+        print(amount)
+        
         
         order = Orderdetails.objects.create(
                 custom_id=user,
@@ -711,6 +740,7 @@ def pay_razorpay1(request):
                 coupen_code = checkout.applyed_coupen,
                 
                     )
+        print(order.total_amounts)
         if checkout.is_coupenapplyed:
             order.coupen_apply = True
             order.save()
@@ -1057,6 +1087,7 @@ def removecoupen(request):
     coup = Proceedtocheck.objects.get(user_id = user)
     if coup.is_coupenapplyed == True:
         coup.is_coupenapplyed = False
+        coup.applyed_coupen = None
         coup.save()
         messages.success(request,"coupen removed ssuccessfully")
         return redirect('checkout')
