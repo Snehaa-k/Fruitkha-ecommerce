@@ -380,7 +380,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div id="bar-chart-earning"></div>
+                                    <div id="bar-chart-earning"  data-monthly-revenue ="{{ monthly_revenue_data | safe }}"></div>
                                 </div>
                             </div>
                         </div>
@@ -402,6 +402,208 @@
                         <!-- Earning chart  end-->
                         <div class="form-group w-100">
                             <div class="container text-center mt-5">
+                               <h4 class="text-dark">Sales Report</h4>
+                            </div>
+                            <form method="POST" action="{% url 'salesreport'   %}">
+                                {% csrf_token %}
+                                <div class="date-fields text-center mt-4">
+                                    <div class="date-field">
+                                        <label for="date1">Start date:</label>
+                                        <input type="date" id="date1" name="startdate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}">
+                                    </div>
+                                    <div class="date-field">
+                                        <label for="date2">End date:</label>
+                                        <input type="date" id="date2" name="enddate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                         <!-- Recent Activity start-->
+                         <div class="col-xxl-4 col-md-6">
+                            <div class="card o-hidden card-hover">
+                                <div class="card-header border-0">
+                                    <div class="card-header-title">
+                                        <h4>Recent Activity</h4>
+                                    </div>
+                                </div>
+
+                                <div class="card-body pt-0">
+                                    <ul class="recent-activity">
+                                        <li class="recent-item">
+                                            <div class="recent-icon">
+                                                <i data-feather="truck"></i>
+                                                <p>Delivered</p>
+                                            </div>
+
+                                            <div class="recent-timer">
+                                                <h6 class="color-3">{{deliverd}}</h6>
+                                            </div>
+                                        </li>
+                                        {% comment %} <li class="recent-item">
+                                            <div class="recent-icon">
+                                                <span class="lnr lnr-calendar-full"></span>
+                                                <p>Calendar Updated</p>
+                                            </div>
+
+                                            <div class="recent-timer">
+                                                <h6 class="color-1">Just Now</h6>
+                                            </div>
+                                        </li> {% endcomment %}
+                                        <li class="recent-item">
+                                            <div class="recent-icon">
+                                                <i data-feather="alert-circle"></i>
+                                                <p>Pending</p>
+                                            </div>
+
+                                            <div class="recent-timer">
+                                                <h6 class="color-2">{{pending}}</h6>
+                                            </div>
+                                        </li>
+                                        
+                                        <li class="recent-item">
+                                            <div class="recent-icon">
+                                                <i data-feather="dollar-sign"></i>
+                                                <p>Shipped</p>
+                                            </div>
+
+                                            <div class="recent-timer">
+                                                <h6 class="color-4">{{shipped}}</h6>
+                                            </div>
+                                        </li>
+                                        <li class="recent-item">
+                                            <div class="recent-icon">
+                                                <span class="lnr lnr-user"></span>
+                                                <p>Cancelled</p>
+                                            </div>
+
+                                            <div class="recent-timer">
+                                                <h6 class="color-1">{{cancelled}}</h6>
+                                            </div>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recent Activity end-->
+                              <!-- Transactions start-->
+                              {% comment %} <div class="col-xxl-4 col-md-6">
+                                <div class="card o-hidden card-hover">
+                                    <div class="card-header border-0">
+                                        <div class="card-header-title">
+                                            <h4>Transactions</h4>
+                                        </div>
+                                    </div>
+    
+                                    <div class="card-body pt-0">
+                                        <div>
+                                            <div class="table-responsive table-desi">
+                                                <table class="user-table transactions-table table border-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                              
+                                                                <div class="transactions-icon">
+                                                                    <i data-feather="shield"></i>
+                                                                </div>
+                                                                <div class="transactions-name">
+                                                                    <h6>Wallets</h6>
+                                                                    <p>Wallets</p>
+                                                                </div>
+                                                            </td>
+                                                        
+                                                            <td class="lost">{{wallet_user}}</td>
+                                                        </tr>
+                                                       
+                                                        <tr>
+                                                            <td class="td-color-2">
+                                                                <div class="transactions-icon">
+                                                                    <i data-feather="dollar-sign"></i>
+                                                                </div>
+                                                                <div class="transactions-name">
+                                                                    <h6>Paypal</h6>
+                                                                    <p>razor pay</p>
+                                                                </div>
+                                                            </td>
+    
+                                                            <td class="lost">{{razor_pay}}</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td class="td-color-4 pb-0">
+                                                                <div class="transactions-icon">
+                                                                    <i data-feather="trending-up"></i>
+                                                                </div>
+                                                                <div class="transactions-name">
+                                                                    <h6>Cash On Delivery</h6>
+                                                                    <p>cod</p>
+                                                                </div>
+                                                            </td>
+    
+                                                            <td class="success pb-0">{{cod_user}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Transactions end--> {% endcomment %}
+                             <!-- New & Update start-->
+                        <div class="col-xxl-4 col-md-6">
+                            <div class="card o-hidden card-hover">
+                                <div class="card-header border-0">
+                                    <div class="card-header-title">
+                                        <h4>TOP PRODUCTS</h4>
+                                    </div>
+                                </div>
+                                {% for i in  top_products %}
+                                   
+                                <div class="card-body pt-0">
+                                    <ul class="StepProgress">
+                                        <li class="StepProgress-item">
+                                            <strong><img src="{{ i.image.url }}" class="img-fluid img-sm blur-up lazyload" width="30" height="30" alt="Small Image">
+                                                {{i.pname}}</strong>
+                                            <p></p>
+                                        </li>
+                                        
+                                    </ul>
+                                   
+                                </div>
+                                {% endfor  %}
+                            </div>
+                        </div>
+                        <!-- New & Update end-->
+                         <!-- New & Update start-->
+                         <div class="col-xxl-4 col-md-6">
+                            <div class="card o-hidden card-hover">
+                                <div class="card-header border-0">
+                                    <div class="card-header-title">
+                                        <h4>TOP CATERGORY</h4>
+                                    </div>
+                                </div>
+
+                                {% for i in  top_cat %}
+                                   
+                                <div class="card-body pt-0">
+                                    <ul class="StepProgress">
+                                        <li class="StepProgress-item">
+                                            <strong><img src="{{ i.image.url }}" class="img-fluid img-sm blur-up lazyload" width="30" height="30" alt="Small Image">
+                                                {{i.category_name}}</strong>
+                                            <p></p>
+                                        </li>
+                                        
+                                    </ul>
+                                   
+                                </div>
+                                {% endfor  %}
+                            </div>
+                        </div>
+                        <!-- New & Update end-->
+                        {% comment %} <div class="form-group w-100">
+                            <div class="container text-center mt-5">
                                 <h3 class="text-dark">Sales Report</h3>
                             </div>
                             <form method="POST" action="{% url 'salesreport'   %}">
@@ -419,7 +621,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+                         {% endcomment %}
 
 
                       

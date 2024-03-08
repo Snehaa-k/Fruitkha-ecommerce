@@ -472,11 +472,11 @@
                    
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Valid</label>
-                        <input type="date"  class="form-control" id="categoryName" value="{{i.to_date}}" name = "ctodate" required>
+                        <input type="date"  class="form-control" id="categoryName" value="{{i.to_date|date:'Y-m-d'}}" name = "ctodate" required>
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Expired</label>
-                        <input type="date"  class="form-control" id="categoryName"   value="{{i.from_date}}"  name = "cfromdate" required>
+                        <input type="date"  class="form-control" id="categoryName"   value="{{i.from_date|date:'Y-m-d'}}"  name = "cfromdate" required>
                     </div>
                     <!-- Add more form fields as needed -->
 

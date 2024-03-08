@@ -13,6 +13,7 @@ from cart.models import Orderditem
 from products.models import Productoffer,Categoryoffer
 from category.models import Category
 from django.db.models import Q ,Sum,Count
+from django.db.models.functions import TruncMonth
 # from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
@@ -70,9 +71,61 @@ def dashboard(request):
            
         else:
             total_coup=0
+        
+        top_ten = Orderditem.objects.values('product_n').annotate(count_pr = Count("product_n")).order_by("-count_pr")[:5]
+        top_products = Products.objects.filter(id__in=[item['product_n'] for item in top_ten])
+        top_tenc = Orderditem.objects.values('product_n__category__id').annotate(count_c = Count("product_n__category__id")).order_by("-count_c")[:5]
+        top_cat = Category.objects.filter(id__in=[item['product_n__category__id'] for item in top_tenc])
+        cod_user = Orderdetails.objects.filter(paymt_method = "cod").aggregate(count_user = Count("custom_id__id"))['count_user']
+        wallet_user = Orderdetails.objects.filter(paymt_method = "wallet").aggregate(count_user = Count("custom_id__id"))['count_user']
+        razor_pay = Orderdetails.objects.filter(paymt_method = "razor_pay").aggregate(count_user = Count("custom_id__id"))['count_user']
+        deliverd = Orderditem.objects.filter(status= "Delivered").aggregate(count_user = Count("product_n__id"))['count_user']
+        shipped =  Orderditem.objects.filter(status= "shipped").aggregate(count_user = Count("product_n__id"))['count_user']
+        pending = Orderditem.objects.filter(status= "pending").aggregate(count_user = Count("product_n__id"))['count_user']
+        cancelled = Orderditem.objects.filter(status= "Cancelled").aggregate(count_user = Count("product_n__id"))['count_user']
+        data = Orderdetails.objects.annotate(month=TruncMonth('orders_date')).values('month').annotate(total_revenue=Sum('total_amounts')).order_by('month')
+        monthly_revenue_data = []
+        for i in data:
+           monthly_revenue_data.append(i['total_revenue'])
+        # print(monthly_revenue_data)
+        data2 = Orderdetails.objects.annotate(month=TruncMonth('orders_date')).values('month').annotate(total_orders=Sum('id')).order_by('month')
+        print(data2)
+
+        
+
+
+        print(cod_user)
+        
+
+        # for i in top_ten:
+        #     print(i)
+        
+        # print(top_tenc)
+        context = {
+            'total_e':total_earnings,
+            'total_user':total_coustomers,
+            'total_orders':total_orders,
+            'ear_per':ear_per,'c_per':c_per,
+            'or_pec':or_pec,
+            'total_coup':total_coup,
+            'cop_pec':cop_pec,
+            'top_products':top_products,
+            'top_cat':top_cat,
+            'cod_user':cod_user,
+            'wallet_user':wallet_user,
+            'razor_pay':razor_pay,
+            'deliverd':deliverd,
+            'shipped':shipped,
+            'pending':pending,
+            'cancelled':cancelled,
+            'monthly_revenue_data':monthly_revenue_data,
+
+
+
+        }
        
        
-        return render(request,'ahome.html',{'total_e':total_earnings,'total_user':total_coustomers,'total_orders':total_orders,'ear_per':ear_per,'c_per':c_per,'or_pec':or_pec,'total_coup':total_coup,'cop_pec':cop_pec})
+        return render(request,'ahome.html',context)
       
      
     else:

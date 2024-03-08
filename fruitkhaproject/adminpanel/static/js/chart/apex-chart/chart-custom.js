@@ -276,14 +276,17 @@ chart.render();
 // total-earnings-chart
 var options = {
     series: [{
-        name: "STOCK ABC",
-        data: series.monthDataSeries1.prices
+        name: "Monthly Orders", // Series name for monthly orders
+        data: series.monthDataSeries1.orders // Assuming orders data is available in series.monthDataSeries1.orders
+    },{
+        name: "Monthly Revenue", // Series name for monthly revenue
+        data: series.monthDataSeries1.revenue // Assuming revenue data is available in series.monthDataSeries1.revenue
     }],
 
     chart: {
         type: 'area',
-        height: 90,
-        width: 90,
+        height: 300, // Increased height to accommodate both lines
+        width: '100%', // Utilizing full width
         zoom: {
             enabled: false
         }
@@ -297,45 +300,48 @@ var options = {
         curve: 'straight'
     },
 
-    labels: series.monthDataSeries1.dates,
+    labels: series.monthDataSeries1.dates, // Assuming dates are common for both orders and revenue
+
     xaxis: {
-        labels: {
-            show: false,
-
-        },
-
         type: 'datetime',
         axisBorder: {
             show: false,
         },
-
         axisTicks: {
             show: false,
         },
     },
 
-    yaxis: {
+    yaxis: [{
         opposite: true,
-
-        labels: {
-            show: false,
+        title: {
+            text: "Orders", // Y-axis label for orders
         },
-    },
+        labels: {
+            show: true, // Showing labels for orders
+        },
+    },{
+        title: {
+            text: "Revenue", // Y-axis label for revenue
+        },
+        labels: {
+            show: true, // Showing labels for revenue
+        },
+    }],
+
     grid: {
         xaxis: {
             lines: {
-                borderColor: 'transparent',
+                borderColor: 'yellow',
                 show: false
             }
         },
-
         yaxis: {
             lines: {
                 borderColor: 'transparent',
-                show: false,
+                show: true, // Showing grid lines for better readability
             }
         },
-
         padding: {
             right: 0,
             bottom: 0,

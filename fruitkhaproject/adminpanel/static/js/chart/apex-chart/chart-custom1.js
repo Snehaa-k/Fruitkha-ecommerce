@@ -1,8 +1,12 @@
 //bar chart
+document.addEventListener('DOMContentLoaded', function () {
+    // Retrieve the monthly revenue data from the data attribute
+    var monthlyRevenueData = JSON.parse(document.getElementById('bar-chart-earning').getAttribute('data-monthly-revenue'));
+
 var options = {
     series: [{
-            // name: "High - 2013",
-            data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35]
+            name: " Total Revenue",
+            data : monthlyRevenueData,
         },
 
         {
@@ -25,7 +29,7 @@ var options = {
         show: false,
     },
 
-    colors: ['#e22454', '#2483e2'],
+    colors: ['#000000', '#2483e2'],
 
     markers: {
         size: 1,
@@ -101,7 +105,7 @@ var options = {
 
 var chart = new ApexCharts(document.querySelector("#bar-chart-earning"), options);
 chart.render();
-
+});
 // expenses cart
 var options = {
     series: [{
