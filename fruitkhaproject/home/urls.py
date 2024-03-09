@@ -40,6 +40,8 @@ urlpatterns = [
      path("coupenapply/",views.coupenapply,name="coupenapply"),
      path("update_cart_quantity/",views.update_cart_quantity,name="update_cart_quantity"),
      path("removecoupen/",views.removecoupen,name="removecoupen"),
+     path("invoice/<str:id>",views.invoice,name="invoice"),
+
 
 
 

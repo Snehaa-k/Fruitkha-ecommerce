@@ -295,7 +295,9 @@ def wishlist(request):
 
 
 def deletewishlist(request,id):
+    
     Wishlist.objects.get(id=id).delete()
+    
     return redirect('wishlist')
 
 
@@ -1095,7 +1097,30 @@ def removecoupen(request):
     return redirect('checkout')
 
 
+def invoice(request,id):
+    
+    email1 = request.session["email"]
+    user= Usermodelss.objects.get(email=email1)
+   
+    order = Orderditem.objects.filter(order_id = id)
+    orders = Orderdetails.objects.filter(id = id)
+   
 
+    today = timezone.now().date()
+    discount_amout_each = Proceedtocheck.objects.get(user_id = user)
+    if discount_amout_each.is_coupenapplyed:
+        discount_amt = discount_amout_each.total_amount-discount_amout_each.discount_amount
+    else:
+        discount_amt = None
+    
+        
+        
+       
+       
+    
+    
+    return render(request,"invoice.html",{'order':order,'today':today,'discount_amt':discount_amt,'orders':orders})
+  
 
 
 

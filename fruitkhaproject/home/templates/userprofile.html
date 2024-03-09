@@ -88,10 +88,8 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										<a href="{% url 'orderdetails'  %}">order details</a>
 										<a class="shopping-cart" href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="shopping-cart" href="{% url 'wishlist'  %}"><i class='fas fa-heart' style='font-size:17px;color:white;'></i></a>
-										<a class="shopping-cart" href="/logout/">logout</a>
 									</div>
 								</li>
 							</ul>
@@ -125,8 +123,8 @@
 			<div class="col-md-3 ">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">{{user.username}}</span><span class="text-black-50">{{user.email}}</span><br><span><p class="d-inline-flex gap-1">
 					
-					<button class="btn btn-primary   profile-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-						<i class='fas fa-wallet' style='font-size:19px; color:white;'></i>  Wallet 
+					<button class="btn btn-primary   profile-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+						<i class='fas fa-wallet' style='font-size:19px; color:white;'></i>       Wallet 
 					</button>
 				  </p>
 				  <div class="collapse" id="collapseExample">
@@ -134,8 +132,22 @@
 					<div class="card card-body">
 					  <p>amount: Rs {{wallet_amount}}
 					</div>
-				  </div> </span></div>
+					
+				  </div> </span>
+				  <a href="{% url 'orderdetails' %}"  type="button"  aria-expanded="false"  style='color:#682773;'>
+					<i data-feather="truck" style='font-size:12px;color:#682773;'></i> <b>Orders</b>    
+				  </a>
+				  <br>
+				  <a href="{% url 'wishlist' %}"  type="button"  aria-expanded="false" style='color:#682773;'>
+					<i class='fas fa-heart' style='font-size:17px;color:#682773;'></i> <b>Wishlist</b>
+				 </a>
+                 <br>
+				 <a  style='color:#682773;' href="/logout/"><i class="fas fa-sign-out-alt" style='font-size:17px;color:#682773;'></i> <b>Logout</b></a>
+
+				</div>
+				 
 			</div>
+
 			<div class="col-md-5 ">
 				<div class="p-3 py-5">
 					<div class="d-flex justify-content-between align-items-center mb-3">
@@ -302,7 +314,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="addCategoryModalLabel">Add Products</h5>
+						<h5 class="modal-title" id="addCategoryModalLabel">Add Address</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
@@ -511,6 +523,8 @@
 		background: rgb(99, 39, 120);
 		box-shadow: none;
 		border: none
+		
+		
 	}
 	
 	.profile-button:hover {

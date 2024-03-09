@@ -380,7 +380,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div id="bar-chart-earning"  data-monthly-revenue ="{{ monthly_revenue_data | safe }}"></div>
+                                    <div id="bar-chart-earning"  data-monthly-revenue ="{{ monthly_revenue_data | safe }}" data-monthly-orders="{{monthly_order_data | safe}}" ></div>
                                 </div>
                             </div>
                         </div>
@@ -395,7 +395,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div id="report-chart"></div>
+                                    <div id="report-chart"  data-yearly-orders = "{{yearly_revenue | safe}}"></div>
                                 </div>
                             </div>
                         </div>

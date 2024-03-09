@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+	
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .invoice {
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .invoice h1 {
+            text-align: center;
+        }
+        .invoice-header-line {
+            border-top: 1px solid #ccc;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .invoice .invoice-details {
+            margin-bottom: 20px;
+        }
+        .invoice .invoice-details p {
+            margin: 5px 0;
+        }
+        .invoice .invoice-items {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .invoice .invoice-items th,
+        .invoice .invoice-items td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .invoice .invoice-items th {
+            background-color: #f2f2f2;
+        }
+        .invoice .invoice-total {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .invoice-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .invoice-footer img {
+            max-width: 100px;
+        }
+    </style>
+
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="/static/css/all.min.css">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="/static/css/owl.carousel.css">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="/static/css/magnific-popup.css">
+	<!-- animate css -->
+	<link rel="stylesheet" href="/static/css/animate.css">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="/static/css/meanmenu.min.css">
+	<!-- main style -->
+	<link rel="stylesheet" href="/static/css/main.css">
+	<!-- responsive -->
+	<link rel="stylesheet" href="/static/css/responsive.css">
+
+</head>
+<body>
+	
+	<!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<div class="invoice" id="invoiceContent">
+        <h1>Invoice</h1>
+        <div class="invoice-header-line"></div>
+        <h6>Mr John Wallats</h6>
+        <p>Shop Address: 456 Market St, City, Country</p>
+        
+        <div class="invoice-header-line"></div>
+       {%for i in orders%}
+        <div class="invoice-details">
+            <p><strong>Order Id:</strong>#FF{{i.id}}</p>
+            <p><strong>{{i.addr.Name}}</strong>,<br>
+                {{i.addr.email}},
+                {{i.addr.phone}},
+                {{i.addr.address}},<br>
+                {{i.addr.pin}},
+                {{i.addr.post}},
+                {{i.addr.state}},
+                {{i.addr.country}}
+            </p>
+            <br>
+            <p><strong>Invoice Date:</strong> {{today}} </p>
+
+            <p><strong>Order Date:</strong> {{i.orders_date}}</p>
+        </div>
+       
+        <table class="invoice-items">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Gross Amount</th>
+                    <th>coupon</th>
+                    <th>Disscount</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in order %}
+                <tr>
+                    <td>
+                        <strong>{{i.product_n.pname}},</strong><br>
+                           unit (pack) :    {{i.unit.unit}},<br>
+                           price   : Rs   {{i.unit.v_price}},
+                      
+
+
+                    </td>
+                    <td>{{i.quantity}}</td>
+                    <td>Rs: {{i.total_amount}}</td>
+                    
+                    {% if i.coupen_apply  %}
+                    
+                    <td>{{i.discount_amount}}</td>
+                    <td>{{i.order_id.coupen_code.cop_name}}</td>
+                    <td>Rs: {{i.discount_amount}}</td>
+                    
+                    
+                    
+                    {% else   %}
+                    <td>None</td>
+                    <td> None </td>
+                    <td>Rs: {{i.total_amount}} </td>
+                    {% endif  %}
+                    
+                </tr>
+              
+                {% endfor  %}  
+            </tbody>
+        </table>
+        <div class="invoice-total">
+            <p><strong>Total Amount:</strong> Rs :{{i.total_amounts}}</p>
+        </div>
+        {% endfor  %}
+        <div class="invoice-footer invoice-header-line">
+           
+            <img src="/static/img/logo.png" alt="Fruitkha Logo">
+            <p>Privacy Policy | Terms & Conditions</p>
+        </div>
+
+    </div>
+   
+    <br>
+    <center><button  onclick="downloadInvoice()">Download invoice</button>    <a href="{% url 'orderdetails'  %}" ><b> Back ---></b></a></center>
+    <script>
+        function downloadInvoice() 
+        {
+            window.print();
+        }
+    </script>
+    
+   <br>
+   <br>
+	
+	
+	
+	<!-- jquery -->
+	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="/static/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="/static/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="/static/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="/static/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="/static/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="/static/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="/static/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="/static/js/main.js"></script>
+	
+	</body>
+</html>

@@ -102,23 +102,20 @@
       </tbody>
     </table>
     <div class="download-btn">
-      
+      <button  onclick="downloadsalesreport()">Download Salesreport(pdf)</button>    
+
       <button id="downloadExcelButton">Download Salesreport</button>       <a href="{% url 'dashbord'  %}">Back</a>
 
     </div>
   </div>
 
   <script>
-    function downloadReport() {
-      const element = document.createElement('a');
-      const file = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
-      element.href = URL.createObjectURL(file);
-      element.download = 'sales_report.html';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }
-
+   
+      function downloadsalesreport() 
+      {
+          window.print();
+      }
+  
     function downloadExcel() {
       var salesReportData = [
           {% for item in orders %}

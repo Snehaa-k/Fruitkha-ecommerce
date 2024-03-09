@@ -2,6 +2,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Retrieve the monthly revenue data from the data attribute
     var monthlyRevenueData = JSON.parse(document.getElementById('bar-chart-earning').getAttribute('data-monthly-revenue'));
+    var monthlyordersdata = JSON.parse(document.getElementById('bar-chart-earning').getAttribute('data-monthly-orders'));
+
 
 var options = {
     series: [{
@@ -10,8 +12,8 @@ var options = {
         },
 
         {
-            // name: "Low - 2013",
-            data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47]
+            name: "Total Orders",
+            data: monthlyordersdata,
         }
     ],
 
@@ -29,7 +31,7 @@ var options = {
         show: false,
     },
 
-    colors: ['#000000', '#2483e2'],
+    colors: ['#e22454', '#2483e2'],
 
     markers: {
         size: 1,
@@ -107,116 +109,44 @@ var chart = new ApexCharts(document.querySelector("#bar-chart-earning"), options
 chart.render();
 });
 // expenses cart
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Retrieve the monthly revenue data from the data attribute
+var YearlyRevenueData = JSON.parse(document.getElementById('report-chart').getAttribute('data-yearly-orders'));
+var data = [];
+for (var i = 2023; i <= 2031; i++) {
+    var randomValue = YearlyRevenueData; // Generate random value
+
+    data.push({
+        x: i.toString(),
+        y: randomValue,
+        goals: [{
+            name: 'Expected',
+            value: Math.floor(Math.random() * 10000), // Generate random expected value
+            strokeWidth: 5,
+            strokeColor: '#775DD0' // Keep stroke color consistent
+        }]
+    });
+}
+
 var options = {
     series: [{
         name: 'Actual',
-
-        data: [{
-                x: '2024',
-                y: 1292,
-                goals: [{
-                    name: 'Expected',
-                    value: 1200,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2025',
-                y: 4432,
-                goals: [{
-                    name: 'Expected',
-                    value: 3400,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2026',
-                y: 5423,
-                goals: [{
-                    name: 'Expected',
-                    value: 5200,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2027',
-                y: 6653,
-                goals: [{
-                    name: 'Expected',
-                    value: 6500,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2028',
-                y: 8133,
-                goals: [{
-                    name: 'Expected',
-                    value: 6600,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2029',
-                y: 7132,
-                goals: [{
-                    name: 'Expected',
-                    value: 7500,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2030',
-                y: 7332,
-                goals: [{
-                    name: 'Expected',
-                    value: 8700,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            },
-
-            {
-                x: '2031',
-                y: 6553,
-                goals: [{
-                    name: 'Expected',
-                    value: 7300,
-                    strokeWidth: 5,
-                    strokeColor: '#775DD0'
-                }]
-            }
-        ]
+        data: data,
     }],
-
     chart: {
         height: 320,
         type: 'bar'
     },
-
     plotOptions: {
         bar: {
             columnWidth: '40%'
         }
     },
-
-    colors: ['#e22454'],
     dataLabels: {
         enabled: false
     },
-
     legend: {
         show: false,
     }
@@ -224,6 +154,8 @@ var options = {
 
 var chart = new ApexCharts(document.querySelector("#report-chart"), options);
 chart.render();
+});
+
 
 //pie chart for visitors
 var options = {

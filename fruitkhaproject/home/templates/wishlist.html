@@ -119,12 +119,14 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
+	{% if wish.exists   %}
 	<!-- profile section -->
 	<div class="container rounded bg-white mt-100 mb-100">
 		<div class="row">
 			
 			<div class="col-md-5  mx-auto">
 				<div class="p-3 py-5">
+					
 					<h3 class="text-center mb-4">WishList</h3>
 
 					{% if messages %}
@@ -136,57 +138,56 @@
 					{% endif %}
 				<!-- order details card...........................................	 -->
 				<div class="col-lg-8 col-md-12  mx-auto">
+				
 					<div class="cart-table-wrap">
 						<table class="cart-table">
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
-									
+									<th class="product-remove"></th>
 									<th class="product-image">Product Image</th>
 									<th class="product-name">Name</th>
-									{% comment %} <th class="product-price">Price</th> {% endcomment %}
-									<th class="product-price">Unit</th>
-									<th class="product-remove"></th>
-									<th class="product-remove"></th>
+									
+									<th class="" style="color:white;"></th>
+									<th class=""></th>
+									
 									
 								</tr>
 							</thead>
+						
 							<tbody>
 							
-							{% for wish in wish %} 
+							{% for i in wish %} 
 								<tr class="table-body-row">
-									
-									<td class="product-image"><a href="{% url 'singleproduct' wish.product_id.id %}"><img src="{{wish.product_id.image.url}}" alt=""></a></td>
-									<td class="product-name">{{wish.product_id.pname}}</td>
-                                    {% comment %} {% if wish.product_id.offer.exists or wish.product_id.category.offer.exists %}
-									{% for offer in wish.product_id.offer.all %}
-									{% if offer.is_listed  %}
-									<td><h6 class="text-danger">{{offer.percentage}}% off</h6><del class="strike">{{wish.vaiant_id.v_price}}</del></td>
-									{% else  %}
-							
-									<td class="product-price">{{wish.vaiant_id.v_price}}</td>
-                                    {% endif %}
-									{% endfor  %}
-									{% else  %}
-									<td class="product-price">{{wish.vaiant_id.v_price}}</td>
-                                    {% endif  %} {% endcomment %}
+									<td class="product-image">
 
-									<td class="product-price">{{wish.vaiant_id.unit}}</td>
-									<td>
-										
-										<form method = "post" action="{% url 'add_cart' wish.product_id.id %}">
-											{% csrf_token  %}
-											
-											<input type="hidden" name="unit" value="{{wish.vaiant_id.unit}}">
-
-									    <button type="submit"  class="btn btn-warning btn-sm"><i class="fas fa-shopping-cart"></i>Add</button>
-										</form>
+										<a href="{% url 'deletewishlist' i.id %}" ><i class="far fa-window-close"></i></a>
 									</td>
+									<td class="product-image"><a href="{% url 'singleproduct' i.product_id.id %}"><img src="{{i.product_id.image.url}}" alt="">
+									</a>
+									<br>
+									<b>{{i.product_id.pname}}</b><br>
+									            <b>Unit(pack)</b> :{{i.vaiant_id.unit}}
+									</td>
+									<td class="product-name">
+										<form method = "post" action="{% url 'add_cart' i.product_id.id %}">
+										{% csrf_token  %}
+										
+										<input type="hidden" name="unit" value="{{i.vaiant_id.unit}}">
 
-									<td class="product-remove"><a href="{% url 'deletewishlist' wish.id %}"><i class="far fa-window-close"></i></a></td>
+									<button type="submit"  class="btn btn-warning btn-sm"><i class="fas fa-shopping-cart"></i>Add</button>
+									</form></td>
+                                    
+
+									
+									
+								
+
 									
 								</tr>
-								
-							{% endfor %} 	
+
+							{% endfor %} 
+							
+							
 							</tbody>
 							
 						</table>
@@ -201,6 +202,7 @@
 			<div class="col-md-4">
 				
 			</div>
+			
 		</div>
 	</div>
 	</div>
@@ -209,7 +211,25 @@
 
 	
 <!-- end profile -->
-	
+{%else%}
+<div class="full-height-section error-section">
+	<div class="full-height-tablecell">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-5 ">
+					<div class="error-text text-center text-mt-5" style =" margin-bottom: 5px;margin-right:500px;">
+						<i class="far fa-sad-cry"></i>
+						<h1>Your WishList is Empty!.</h1>
+						<p>Please Add some products</p>
+						<a href="{% url 'shop'  %}" class="boxed-btn">Back to Shop</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %} 
+
 
 	<!-- footer -->
 	<div class="footer-area">

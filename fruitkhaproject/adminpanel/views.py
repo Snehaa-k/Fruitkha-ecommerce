@@ -13,7 +13,7 @@ from cart.models import Orderditem
 from products.models import Productoffer,Categoryoffer
 from category.models import Category
 from django.db.models import Q ,Sum,Count
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth,TruncYear
 # from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
@@ -88,13 +88,27 @@ def dashboard(request):
         for i in data:
            monthly_revenue_data.append(i['total_revenue'])
         # print(monthly_revenue_data)
-        data2 = Orderdetails.objects.annotate(month=TruncMonth('orders_date')).values('month').annotate(total_orders=Sum('id')).order_by('month')
-        print(data2)
+        data2 = Orderdetails.objects.annotate(month=TruncMonth('orders_date')).values('month').annotate(total_orders=Count('id')).order_by('month')
+        monthly_order_data = []
+
+        
+        
+        for i in data2:
+           
+            monthly_order_data.append(i['total_orders'])
+        
+        data3 = Orderdetails.objects.annotate(year=TruncYear('orders_date')).values('year').annotate(total_revenue=Count('id')).order_by('year')
+
+        yearly_revenue = []
+        for i in data3:
+            yearly_revenue.append(i['total_revenue'])
+        print(yearly_revenue)
+       
 
         
 
 
-        print(cod_user)
+        # print(cod_user)
         
 
         # for i in top_ten:
@@ -119,6 +133,8 @@ def dashboard(request):
             'pending':pending,
             'cancelled':cancelled,
             'monthly_revenue_data':monthly_revenue_data,
+            'monthly_order_data':monthly_order_data,
+            'yearly_revenue':yearly_revenue,
 
 
 
