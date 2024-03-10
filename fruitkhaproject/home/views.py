@@ -123,9 +123,19 @@ def shop(request):
     
     categry = Category.objects.filter(is_listed = True)
     prodts = Products.objects.filter(category__in = categry ,is_listed = True,variant__isnull=False).distinct()
-    poffer = Productoffer.objects.filter(is_listed = True)
+    
+    # poffer = Productoffer.objects.filter(is_listed = True)
+
+    cate_offer = Categoryoffer.objects.filter(category_id__in=categry, is_listed = True)
+    
+    
+
+    
+    
+            
+    
    
-    return render(request,'shop.html',{'products':prodts,'categorys':categry,'poffer':poffer})
+    return render(request,'shop.html',{'products':prodts,'categorys':categry,'cate_offer':cate_offer})
 
 
 def userlogout(request):
@@ -652,7 +662,7 @@ def place_order(request):
     if request.method == 'POST':
         email1 = request.session['email']
         user = Usermodelss.objects.get(email=email1)
-        print("haii")
+        # print("haii")
         userid = user.id
         checkout = Proceedtocheck.objects.get(user_id=user)
  
@@ -729,7 +739,7 @@ def pay_razorpay1(request):
 
         address = Useraddress.objects.get(id=address_id)
         amount = checkout.total_amount
-        print(amount)
+        # print(amount)
         
         
         order = Orderdetails.objects.create(
@@ -871,11 +881,13 @@ def orderdetails(request):
         # ord = Orderdetails.objects.filter(custom_id = userid)
         
         order1 = Orderdetails.objects.filter(custom_id=user).order_by("-id")
-                
+        wallet = Walletuser.objects.get(userid=user)
+        wallet_amount = wallet.amountt
+               
         # print(order.total_amount)
         # print(order)
 
-    return render(request,'orderdetails.html',{'order':order1})
+    return render(request,'orderdetails.html',{'order':order1,'wallet_amount':wallet_amount})
 
 
 
@@ -897,16 +909,16 @@ def cancelorder1(request,id):
         email1 = request.session["email"]
         user =  Usermodelss.objects.get(email=email1)
         usr = user.id
-        print(usr)
+        # print(usr)
         orderi = Orderditem.objects.get(id=id)
         
         variant = Variant.objects.get(products = orderi.product_n ,unit = orderi.unit.unit)
-        print(variant.products)
+        # print(variant.products)
         
         variant.v_quantity = variant.v_quantity + orderi.quantity
         variant.save()
         return_amount =  orderi.total_amount
-        print(return_amount)
+        # print(return_amount)
         orderi.status = "cancelled"
         orderi.save()
         if orderi.order_id.paymt_method == "razor_pay" or orderi.order_id.paymt_method == "wallet":

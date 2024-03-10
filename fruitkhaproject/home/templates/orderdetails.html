@@ -103,11 +103,51 @@
 			</div>
 		</div>
 	</div>
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1></h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- profile section -->
 	<div class="container rounded bg-white mt-100 mb-100">
 		<div class="row">
 			
-			<div class="col-md-5 ">
+			
+				<div class="col-md-3 ">
+					<div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">{{user.username}}</span><span class="text-black-50">{{user.email}}</span><br><span><p class="d-inline-flex gap-1">
+						
+						<button class="btn btn-primary   profile-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+							<i class='fas fa-wallet' style='font-size:19px; color:white;'></i>       Wallet 
+						</button>
+					  </p>
+					  <div class="collapse" id="collapseExample">
+						
+						<div class="card card-body">
+						  <p>amount: Rs {{wallet_amount}}
+						</div>
+						
+					  </div> </span>
+					  <a href="{% url 'orderdetails' %}"  type="button"  aria-expanded="false"  style='color:#682773;'>
+						<i data-feather="truck" style='font-size:12px;color:#682773;'></i> <b>Orders</b>    
+					  </a>
+					  <br>
+					  <a href="{% url 'wishlist' %}"  type="button"  aria-expanded="false" style='color:#682773;'>
+						<i class='fas fa-heart' style='font-size:17px;color:#682773;'></i> <b>Wishlist</b>
+					 </a>
+					 <br>
+					 <a  style='color:#682773;' href="/logout/"><i class="fas fa-sign-out-alt" style='font-size:17px;color:#682773;'></i> <b>Logout</b></a>
+	
+					</div>
+				</div>	 
+			 
+	
 				<div class="p-3 py-5">
 					<h3>Order Details</h3>
 				<!-- order details card...........................................	 -->
@@ -124,9 +164,9 @@
 												<!-- Display Address Details -->
 											    <p>Total : ₹{{i.total_amounts}}</p>
 												<p>{{i.addr.address}},{{i.addr.state}},{{i.addr.country}},
-													{{i.order_id.addr.pin}},{{i.addr.post}},</p>
+													{{i.addr.pin}},{{i.addr.post}},</p>
 													
-													<h6 style="display: inline;">Payment method: </h6><p style="display: inline;" class="text-success">  {{i.paymt_method}}</p>
+													<h6 style="display: inline;">Payment method: </h6><p style="display: inline;" class="text-danger">  {{i.paymt_method}}</p>
 													<p class="text-danger"><b>Ordered Date:  {{i.orders_date}}</b></p>
 												<!-- Choice Option -->
 											           
@@ -232,8 +272,19 @@
 	
 	<!-- jquery -->
 	<script src="/static/js/jquery-1.11.3.min.js"></script>
+	<!-- Bootstrap js -->
+	<script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
 	<!-- bootstrap -->
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<!-- feather icon js -->
+	<script src="/static/js/icons/feather-icon/feather.min.js"></script>
+	<script src="/static/js/icons/feather-icon/feather-icon.js"></script>
+  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   
+	<!-- Bootstrap JavaScript -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
 	<!-- count down -->
 	<script src="/static/js/jquery.countdown.js"></script>
 	<!-- isotope -->
@@ -254,7 +305,7 @@
 	
 	
 	body {
-		background: rgb(99, 39, 120)
+		background:white;
 	}
 	
 	.form-control:focus {
@@ -310,6 +361,57 @@
     left: 600px;
     top: 50px; /* Adjust top position if needed */
 }
+.form-control:focus {
+		box-shadow: none;
+		border-color: #BA68C8
+	}
+	
+	.profile-button {
+		background: rgb(99, 39, 120);
+		box-shadow: none;
+		border: none
+		
+		
+	}
+	
+	.profile-button:hover {
+		background: #682773
+	}
+	
+	.profile-button:focus {
+		background: #682773;
+		box-shadow: none
+	}
+	
+	.profile-button:active {
+		background: #682773;
+		box-shadow: none
+	}
+	
+	.back:hover {
+		color: #682773;
+		cursor: pointer
+	}
+	
+	.labels {
+		font-size: 11px
+	}
+	
+	.add-experience:hover {
+		background: #BA68C8;
+		color: #fff;
+		cursor: pointer;
+		border: solid 1px #BA68C8
+
+	}
+	.btn btn-dark a{
+		width: 100px;
+	}
+	.breadcrumb-pro{
+		height: 10px;
+	}
+	
+
 
 </style>
 </body>

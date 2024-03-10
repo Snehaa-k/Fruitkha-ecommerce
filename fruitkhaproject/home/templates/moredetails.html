@@ -104,6 +104,27 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1></h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if messages %}
+	<div class="alert alert-success mt-3">
+	{% for message in messages %}
+	{{ message }}
+	{% endfor %}
+	</div>
+	{% endif %}
+
 	<!-- profile section -->
 	<div class="container rounded bg-white mt-100 mb-100">
 		<div class="row">
@@ -123,10 +144,10 @@
 												<h5>{{i.product_n.pname}}</h5>
 												<img src="{{i.product_n.image.url}}" alt="" style="width: 100px; height: auto;">
 
-												<p>{{i.unit.unit}}</p>
+												<p>unit : <b>{{i.unit.unit}}</b></p>
 												<!-- Display Address Details -->
-											    <p>price : ₹{{i.total_amount}}</p>
-												<p class="text-success">{{i.status}}</p>
+											    <p>price  : <b> ₹{{i.total_amount}} </b></p>
+												<p class="text-muted"><b>{{i.status}}</b></p>
 												
 										
 												<p class="text-primary"><b>Delivery Expected Date: <span class="text-dark">{{i.ex_deliverey}}</span></b></p>
@@ -140,7 +161,7 @@
 												{% else %}
 
 
-												<a href="/cancel/{{i.id}}"   class="btn btn-dark text-white "   onclick="return confirm('Are you sure You want to Cancel the order?')">Cancel Order</a> 
+												<a href="/cancel/{{i.id}}"   class="btn btn-danger text-white "    onclick="return confirm('Are you sure You want to Cancel the order?')">Cancel Order</a> 
                                                 {% endif %}
 											
 											</div>
@@ -259,7 +280,7 @@
 	
 	
 	body {
-		background: rgb(99, 39, 120)
+		background: white;
 	}
 	
 	.form-control:focus {
