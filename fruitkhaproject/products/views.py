@@ -79,17 +79,10 @@ def updateproduct(request,id):
         imageb = request.FILES.get('imagesb')
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
-        # price = request.POST['price']
-        # instock = request.POST['instock']
+       
         category_instance, created = Category.objects.get_or_create(category_name = category_name)
        
-        # delete_image = request.POST.get('delete_image')
-        # if delete_image:
-        #     Products.image.delete()
-        # image = request.FILES.get('images')
-        # imagea = request.FILES.get('imagesa')
-        # imageb = request.FILES.get('imagesb')
-        
+       
         
 
         prdts = Products(
@@ -98,8 +91,7 @@ def updateproduct(request,id):
         image = image,
         category = category_instance,
         description = description,
-        # price = price,
-        # in_stock = instock,
+       
         imagea = imagea,
         imageb = imageb,
 

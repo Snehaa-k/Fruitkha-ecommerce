@@ -614,20 +614,20 @@
                     <div class="mb-3">
                         {% if product.image %}
                         <div class="existing-image-container">
-                            <img src="{{ product.image.url }}" alt="Product Image" width="120" height="120" alt="Existing Image">
+                            <img src="{{ product.image.url  }}" alt="Product Image" width="120" height="120" alt="Existing Image">
                             <img src="{{ product.imagea.url }}" alt="Product Image" width="130" height="130"  alt="Existing Image">
                            <img src="{{ product.imageb.url }}" alt="Product Image" width="130" height="130"   alt="Existing Image">   
                         </div>
                         {% endif %}
                         <br>
                        
-                        
+                    
                         <input value="" type="file" class="form-control"   accept="image/*"  name="images" id="imageInput"  >
                         <br>
-                        <input value="" type="file" class="form-control"   accept="image/*"  name="imagesa" id="imageInput" required>
+                        <input value="" type="file" class="form-control"   accept="image/*"  name="imagesa" id="imageInput" >
                         <br>
                         <input  value=""  type="file" class="form-control"   accept="image/*"  name="imagesb" id="imageInput" required>
-
+                        
                     </div>
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Select Category</label>

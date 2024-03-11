@@ -190,11 +190,12 @@ def cart(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email=email1)
     cartitem = CartItem.objects.filter(user_id=user)
+    
     variant = Variant.objects.all()
     cart_item = (
         CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
     )
-    
+    total = 0
     for i in cart_item:
         prooffer = i.product_id.offer.first()
         catoffer = i.product_id.category.offer.first()
@@ -210,7 +211,8 @@ def cart(request):
                 )
                 c = int(min(a, b))
                 i.total = c * i.c_quantity
-                
+                total = i.total/i.c_quantity
+
                 i.save()
             elif prooffer.is_listed == True and catoffer.is_listed == False:
                 a = (
@@ -218,7 +220,8 @@ def cart(request):
                     - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
                 )
                 i.total = a * i.c_quantity
-                
+                total = i.total/i.c_quantity
+
                 i.save()
             elif prooffer.is_listed == False and catoffer.is_listed == True:
                 a = (
@@ -226,11 +229,13 @@ def cart(request):
                     - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
                 )
                 i.total = a * i.c_quantity
-                
+                total = i.total/i.c_quantity
+
                 i.save()
             else:
                 i.total = i.Variant_id.v_price * i.c_quantity
-               
+                total = i.total/i.c_quantity
+
                 i.save()
         elif prooffer:
             if prooffer.is_listed:
@@ -239,11 +244,13 @@ def cart(request):
                     - Decimal(prooffer.percentage / 100) * i.Variant_id.v_price
                 )
                 i.total = p * i.c_quantity
-                
+                total = i.total/i.c_quantity
+
                 i.save()
             else:
                 i.total = i.Variant_id.v_price * i.c_quantity
-                
+                total = i.total/i.c_quantity
+
                 i.save()
         elif catoffer:
             if catoffer.is_listed == True:
@@ -252,22 +259,22 @@ def cart(request):
                     - Decimal(catoffer.percentage / 100) *  i.Variant_id.v_price
                 )
                 i.total = w * i.c_quantity
-               
+                total = i.total/i.c_quantity
                 i.save()
             else:
                 i.total = i.Variant_id.v_price * i.c_quantity
-               
+                total = i.total/i.c_quantity
                 i.save()
         else:
             i.total = i.Variant_id.v_price * i.c_quantity
             
             i.save()
-        
+       
     subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
     final = subtotal
     
     
-    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final})
+    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final,'total':total})
 
 
 # wishlist...............
@@ -676,7 +683,12 @@ def place_order(request):
                     
                     messages.error(request, f"Product {cart_item.product_id.pname} is out of stock.")
                     return redirect('checkout')
+        if checkout.total_amount > 1000:
+            messages.error( request,"you can'nt place order ,your amount should be limited to 1000..!") 
+            return redirect('checkout')      
+        
         ad1 = ad.id
+        
         if addres != None:
             order = Orderdetails(
                 custom_id = user,
@@ -700,7 +712,7 @@ def place_order(request):
                     product_n=i.product_id,
                     quantity=i.c_quantity,
                     total_amount=i.total,
-                    status="pending",
+                    status="ordered",
                     order_number=order.custom_id.id,
                     address_id=ad,
                     ex_deliverey=orderdate + timedelta(days=7),
@@ -768,7 +780,7 @@ def pay_razorpay1(request):
                     product_n=cart_item.product_id,
                     quantity=cart_item.c_quantity,
                     total_amount=cart_item.total,
-                    status="pending",
+                    status="ordered",
                     order_number=order.custom_id.id,
                     address_id=address,
                     ex_deliverey=orderdate + timedelta(days=7),
@@ -834,7 +846,7 @@ def pay_wallet(request):
                                 product_n=cart_item.product_id,
                                 quantity=cart_item.c_quantity,
                                 total_amount=cart_item.total,
-                                status="pending",
+                                status="ordered",
                                 order_number=order.custom_id.id,
                                 address_id=address,
                                 ex_deliverey=orderdate + timedelta(days=7),
@@ -1119,11 +1131,11 @@ def invoice(request,id):
    
 
     today = timezone.now().date()
-    discount_amout_each = Proceedtocheck.objects.get(user_id = user)
-    if discount_amout_each.is_coupenapplyed:
-        discount_amt = discount_amout_each.total_amount-discount_amout_each.discount_amount
-    else:
-        discount_amt = None
+    # discount_amout_each = Proceedtocheck.objects.get(user_id = user)
+    # if discount_amout_each.is_coupenapplyed:
+    #     discount_amt = discount_amout_each.total_amount-discount_amout_each.discount_amount
+    # else:
+    #     discount_amt = None
     
         
         
@@ -1131,7 +1143,7 @@ def invoice(request,id):
        
     
     
-    return render(request,"invoice.html",{'order':order,'today':today,'discount_amt':discount_amt,'orders':orders})
+    return render(request,"invoice.html",{'order':order,'today':today,'orders':orders})
   
 
 

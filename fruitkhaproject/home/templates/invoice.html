@@ -143,15 +143,18 @@
                     <td>{{i.quantity}}</td>
                     <td>Rs: {{i.total_amount}}</td>
                     
-                    {% if i.coupen_apply  %}
+                {% if i.coupen_apply %}
                     
-                    <td>{{i.discount_amount}}</td>
-                    <td>{{i.order_id.coupen_code.cop_name}}</td>
-                    <td>Rs: {{i.discount_amount}}</td>
+                
+                <td>{{i.order_id.coupen_code.code}}</td>
+
+                    <td>{{i.order_id.discount_amount}}</td>
+                    {% comment %} <td>{{i.order_id.coupen_code.code}}</td> {% endcomment %}
+                    <td>Rs: {{i.total_amount}}</td>
                     
                     
                     
-                    {% else   %}
+                {% else   %}
                     <td>None</td>
                     <td> None </td>
                     <td>Rs: {{i.total_amount}} </td>

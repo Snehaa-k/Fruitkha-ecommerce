@@ -152,7 +152,11 @@
 						<h3>{{product.pname}}</h3>
 						{% if product.offer.exists %}
 						{% for offer in product.offer.all %}
-						{% if offer.is_listed %}
+		{% if offer.is_listed %}
+			{% for i in product.category.offer.all  %}
+				{% if i.is_listed  %}
+					{% if offer.percentage > i.percentage  %}
+
 						<p><span>Per Kg</span>
 							{% for var in product.variant.all %}	
 							{% if var.unit == '1kg' %}
@@ -160,8 +164,28 @@
 							{% endif %}
 							{% endfor  %}
                         <p class="product text-danger"><h3 class="text-danger">{{ offer.percentage }}% off</h3></p>
-                        
-						{% else %}
+                    {% else  %}  
+					<p><span>Per Kg</span>
+						{% for var in product.variant.all %}	
+						{% if var.unit == '1kg' %}
+						<del class="strike">Rs :{{ var.v_price }}</del></p>
+						{% endif %}
+						{% endfor  %}
+					<p class="product text-danger"><h3 class="text-danger">{{ i.percentage }}% off</h3></p>
+					{% endif  %}
+				{% else  %}
+				<p class="single-product-pricing"><span>Per Kg</span>
+					{% for var in product.variant.all %}	
+					{% if var.unit == '1kg' %}
+					RS 
+					
+					{{var.v_price}} 
+					{% endif   %}
+					{% endfor  %}
+				</p>
+	            {% endif %}
+			{%  endfor  %}
+		{% else %}
 						
 						<p class="single-product-pricing"><span>Per Kg</span>
 							{% for var in product.variant.all %}	
@@ -172,8 +196,9 @@
 							{% endif   %}
 							{% endfor  %}
 						</p>
-						{% endif %}
-						{% endfor %}
+			{% endif %}
+						
+			            {% endfor %}
 						{% elif product.category.offer.exists  %}
 						{% for offer in product.category.offer.all %}
 						{% if offer.is_listed %}

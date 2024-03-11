@@ -223,7 +223,7 @@
 								</tr>
 								{% for cart in cartitem  %}
 								<tr>
-									{% if cart.c_quantity > cart.Variant_id.v_quantity   %}
+									{% if cart.c_quantity > cart.Variant_id.v_quantity  %}
 									
 										<td class="product-image"><del class="strike"><img src="{{cart.product_id.image.url}}" alt=""></del></td>
 										
@@ -593,15 +593,18 @@
 												<div class="coupon-form-wrap">
 													<form id="coupon-form" method = "post">
 														{% csrf_token %}
-
+            
 														<p><input type="text" placeholder="Coupon " name="coupon_code"></p>
-														<p><input type="submit" value="Apply"></p>
-
+														
+														<p class="button-group" >
+														<input type="submit" value="Apply">
+														 <a  href = "{% url 'removecoupen'  %}" class="boxed-btn text-dark" ><b>REMOVE</b></a>
+                                                        </p>
 													</form>
 
 
-													<br>
-													    <span> <a  href = "{% url 'removecoupen'  %}" type="submit" class="btn btn-primary" >Remove</a></span>
+													
+													    {% comment %} <span> <a  href = "{% url 'removecoupen'  %}" class="btn btn-primary" >Remove</a></span> {% endcomment %}
 
 												</div>
 												<div id="coupon-message"></div>
@@ -860,7 +863,10 @@
 		border-color: red; 
 	}
 
-
+	.button-group {
+		display: inline-block; 
+		vertical-align: middle; 
+	}
 
 
 	

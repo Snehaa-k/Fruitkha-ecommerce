@@ -355,10 +355,10 @@ def editproductoffer(request,id):
     if request.method == 'POST':
         product1 = request.POST['prodt']
         perc = int(request.POST['perc'])
-        if Productoffer.objects.filter(product_id = product1).exists():
+        # if Productoffer.objects.filter(product_id = product1).exists():
 
-            messages.success(request, "the offer for this product is already exists")
-            return redirect("productoffer") 
+        #     messages.success(request, "the offer for this product is already exists")
+        #     return redirect("productoffer") 
         if perc <= 100 and perc >= 0:
             produc = Products.objects.get(id=product1)
             offer.product_id = produc

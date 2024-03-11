@@ -163,7 +163,42 @@
 									<td class="product-remove"><a href="{% url 'deletecart' cart.id %}"><i class="far fa-window-close"></i></a></td>
 									<td class="product-image"><img src="{{cart.product_id.image.url}}" alt=""></td>
 									<td class="product-name">{{cart.product_id.pname}}</td>
+									{% if cart.product_id.offer.exists  %}
+									    {% for offer in cart.product_id.offer.all  %}
+									        {% if offer.is_listed %}
+									            {% for i in cart.product_id.category.offer.all  %}
+									            {% if i.is_listed  %}
+													{% if i.percentage > offer.percentage  %}
+													<td><p><span>Per Kg</span>
+														<del class="strike">
+															
+															
+															₹{{cart.Variant_id.v_price}}
+															
+														</del></p>
+													<p class="product text-danger">₹{{total}}</p></td>
+													{%else%}
+													<td><p><span>Per Kg</span>
+														<del class="strike">
+															
+															
+															₹{{cart.Variant_id.v_price}}
+															
+														</del></p>
+													<p class="product text-danger">₹{{total}}</p></td>
+													{% endif   %}
+												{% else  %}	
+									            <td class="product-price">₹{{cart.Variant_id.v_price}}</td>
+												{% endif  %}
+												{% endfor %}
+											{% else   %}	
+											<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
+                                            {% endif  %}
+										{% endfor  %}
+									{% else  %}
 									<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
+									{% endif  %}
+
 									<td class="product-price">{{cart.Variant_id.unit}}</td>
 
 									<td class="product-quantity">
