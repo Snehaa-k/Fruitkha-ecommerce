@@ -1,3 +1,4 @@
+import os
 from django.contrib import messages
 from django.shortcuts import render,redirect
 from . models import Products
@@ -72,34 +73,32 @@ def editproducts(request):
 def updateproduct(request,id):
     if 'email' in request.session:
         return redirect('error404')
+    prdts = Products.objects.select_related("category").get(id=id)
+
     if request.method == 'POST':
         product_name = request.POST['pname']
-        image = request.FILES.get('images')
-        imagea = request.FILES.get('imagesa')
-        imageb = request.FILES.get('imagesb')
+        
+        image = request.FILES["images"] if "images" in request.FILES else None
+        imagea = request.FILES["imagesa"] if "imagesa" in request.FILES else None
+        imageb = request.FILES["imagesb"] if "imagesb" in request.FILES else None
+        
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
        
         category_instance, created = Category.objects.get_or_create(category_name = category_name)
-       
-       
-        
+        prdts.pname = product_name
+        prdts.image = image if image else prdts.image
+        prdts.imagea = imagea if imagea else prdts.imagea
+        prdts.imageb = imageb if imageb else prdts.imageb
+        prdts.category = category_instance
+        prdts.description = description
 
-        prdts = Products(
-        id = id,
-        pname = product_name,
-        image = image,
-        category = category_instance,
-        description = description,
-       
-        imagea = imagea,
-        imageb = imageb,
-
-        )
-
-
-        prdts.save()
-        return redirect('productslist')
+        try:
+            prdts.save()
+            messages.success(request, 'Product updated successfully.')
+            return redirect('productslist')
+        except Exception as e:
+            messages.error(request, f'Error updating product: {e}')
     return render(request,'veiwproducts.html')
 
 # variant section........................

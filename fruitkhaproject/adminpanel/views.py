@@ -97,7 +97,7 @@ def dashboard(request):
            
             monthly_order_data.append(i['total_orders'])
         
-        data3 = Orderdetails.objects.annotate(year=TruncYear('orders_date')).values('year').annotate(total_revenue=Count('id')).order_by('year')
+        data3 = Orderdetails.objects.annotate(year=TruncYear('orders_date')).values('year').annotate(total_revenue=Sum('total_amounts')).order_by('year')
 
         yearly_revenue = []
         for i in data3:
@@ -168,7 +168,7 @@ def isblock(request,id):
     # usr = Usermodelss.objects.all()
     # return render(request,'veiwusers.html',{'User':usr})
     return redirect('vusers')
-
+@never_cache
 def adminlogout(request):
     if 'email' in request.session:
         return redirect('error404')

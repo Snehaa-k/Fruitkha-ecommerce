@@ -80,7 +80,16 @@
 	<link rel="stylesheet" href="/static/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="/static/css/responsive.css">
-
+    <style>
+    @media print {
+        body * {
+          visibility: hidden;
+        }
+        #invoiceuser, #invoicetable ,#invoiceContent * {
+          visibility: visible;
+        }
+    }
+</style>
 </head>
 <body>
 	
@@ -99,7 +108,7 @@
         <h6>Mr John Wallats</h6>
         <p>Shop Address: 456 Market St, City, Country</p>
         
-        <div class="invoice-header-line"></div>
+        <div class="invoice-header-line" id="invoiceuser"></div>
        {%for i in orders%}
         <div class="invoice-details">
             <p><strong>Order Id:</strong>#FF{{i.id}}</p>
@@ -118,7 +127,7 @@
             <p><strong>Order Date:</strong> {{i.orders_date}}</p>
         </div>
        
-        <table class="invoice-items">
+        <table class="invoice-items" id = "invoicetable">
             <thead>
                 <tr>
                     <th>Product</th>

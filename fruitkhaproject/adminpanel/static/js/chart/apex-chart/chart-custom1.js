@@ -112,50 +112,54 @@ chart.render();
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Retrieve the monthly revenue data from the data attribute
-var YearlyRevenueData = JSON.parse(document.getElementById('report-chart').getAttribute('data-yearly-orders'));
-var data = [];
-for (var i = 2023; i <= 2031; i++) {
-    var randomValue = YearlyRevenueData; // Generate random value
+    // Retrieve the yearly revenue data from the data attribute
+    var YearlyRevenueData = JSON.parse(document.getElementById('report-chart').getAttribute('data-yearly-orders'));
+    var data = [];
 
-    data.push({
-        x: i.toString(),
-        y: randomValue,
-        goals: [{
-            name: 'Expected',
-            value: Math.floor(Math.random() * 10000), // Generate random expected value
-            strokeWidth: 5,
-            strokeColor: '#775DD0' // Keep stroke color consistent
-        }]
-    });
-}
+    // Assuming YearlyRevenueData is an array of yearly revenue values
+    for (var i = 0; i < YearlyRevenueData.length; i++) {
+        var year = 2023 + i; // Adjust the year based on the index
+        var yearlyValue = YearlyRevenueData[i]; // Use the yearly revenue value
 
-var options = {
-    series: [{
-        name: 'Actual',
-        data: data,
-    }],
-    chart: {
-        height: 320,
-        type: 'bar'
-    },
-    plotOptions: {
-        bar: {
-            columnWidth: '40%'
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    legend: {
-        show: false,
+        data.push({
+            x: year.toString(),
+            y: yearlyValue,
+            goals: [{
+                name: 'Expected',
+                value: Math.floor(Math.random() * 10000), // Generate random expected value
+                strokeWidth: 5,
+                strokeColor: '#775DD0' // Keep stroke color consistent
+            }]
+        });
     }
-};
 
-var chart = new ApexCharts(document.querySelector("#report-chart"), options);
-chart.render();
+    // Chart options
+    var options = {
+        series: [{
+            name: 'Total Revenue',
+            data: data,
+        }],
+        chart: {
+            height: 320,
+            type: 'bar'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: '20%'
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false,
+        }
+    };
+
+    // Render the chart
+    var chart = new ApexCharts(document.querySelector("#report-chart"), options);
+    chart.render();
 });
-
 
 //pie chart for visitors
 var options = {

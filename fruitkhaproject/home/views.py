@@ -17,6 +17,8 @@ from category.models import Category
 from cart.models import CartItem, Coupon, Orderdetails,Orderditem, Proceedtocheck
 from django.db.models import Sum,Count,Q
 
+from decimal import Decimal
+
 from django.http import JsonResponse
 from django.urls import reverse
 from products.models import Productoffer,Categoryoffer
@@ -56,7 +58,7 @@ def userloginp(request):
 
 
 
-
+@never_cache
 def usersignupa(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -275,6 +277,10 @@ def cart(request):
     
     
     return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final,'total':total})
+
+
+
+
 
 
 # wishlist...............
@@ -594,6 +600,7 @@ def checkout(request):
 
 
 #proceedtocheckout
+@never_cache
 def proceedtocheckout(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email = email1)
@@ -712,7 +719,7 @@ def place_order(request):
                     product_n=i.product_id,
                     quantity=i.c_quantity,
                     total_amount=i.total,
-                    status="ordered",
+                    status="pending",
                     order_number=order.custom_id.id,
                     address_id=ad,
                     ex_deliverey=orderdate + timedelta(days=7),
@@ -780,7 +787,7 @@ def pay_razorpay1(request):
                     product_n=cart_item.product_id,
                     quantity=cart_item.c_quantity,
                     total_amount=cart_item.total,
-                    status="ordered",
+                    status="pending",
                     order_number=order.custom_id.id,
                     address_id=address,
                     ex_deliverey=orderdate + timedelta(days=7),
@@ -846,7 +853,7 @@ def pay_wallet(request):
                                 product_n=cart_item.product_id,
                                 quantity=cart_item.c_quantity,
                                 total_amount=cart_item.total,
-                                status="ordered",
+                                status="pending",
                                 order_number=order.custom_id.id,
                                 address_id=address,
                                 ex_deliverey=orderdate + timedelta(days=7),
@@ -1014,6 +1021,7 @@ def coupenapply(request):
    
 
 # change password section..........
+@never_cache
 def changepassword(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email = email1)
@@ -1034,6 +1042,7 @@ def changepassword(request):
 
 
 #password confirmation...........
+@never_cache
 def old_pass_confirm(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email = email1)

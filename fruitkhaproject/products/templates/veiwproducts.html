@@ -626,9 +626,24 @@
                         <br>
                         <input value="" type="file" class="form-control"   accept="image/*"  name="imagesa" id="imageInput" >
                         <br>
-                        <input  value=""  type="file" class="form-control"   accept="image/*"  name="imagesb" id="imageInput" required>
+                        <input  value=""  type="file" class="form-control"   accept="image/*"  name="imagesb" id="imageInput" >
                         
                     </div>
+                   
+                        {% comment %} <script>
+                            window.onload = function() {
+                                // Check if the page is in edit mode
+                                var isEditMode = var isEditMode = window.location.pathname.includes('media');
+                                if (isEditMode) {
+                                    // Set the value of the file input fields to the URL of the existing images
+                                    document.getElementById('imageInput').value = "{{ product.image.url }}";
+                                    document.getElementById('imageInput').value = "{{ product.imagea.url }}";
+                                    document.getElementById('imageInput').value = "{{ product.imageb.url }}";
+                                }
+                            };
+                            
+                          </script> {% endcomment %}
+                          
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Select Category</label>
                         <select id="categorySelect" class="form-control" name="categoryname" required>

@@ -1,19 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<html lang="en" dir="ltr">
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sales Report</title>
+
+<!-- Mirrored from themes.pixelstrap.com/voxo/back-end/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jan 2024 18:52:49 GMT -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Voxo admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
+    <meta name="keywords"
+        content="admin template, Voxo admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="pixelstrap">
+    <link rel="icon" href="/static/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon">
+    <title>Admin Panel</title>
+    
   <style>
     body {
       font-family: Arial, sans-serif;
     }
     .container {
-      max-width: 21cm; 
-      margin: 0 auto;
-      padding: 20px;
+      /* max-width: 21cm; 
+      margin: 0 auto; */
+      padding: 5px;
       box-sizing: border-box;
     }
     h1 {
@@ -26,8 +37,8 @@
     }
     th, td {
       border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
+      text-align: center;
+      padding: 5px;
     }
     tr:nth-child(even) {
       background-color: #f2f2f2;
@@ -41,112 +52,313 @@
       cursor: pointer;
     }
   </style>
-</head>
-<body>
 
-  <div class="container">
-    <h1>Sales Report</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>Product name</th>
-          <th>Category</th>
-          <th>Unit</th>
-          <th>Address</th>
-          <th>Quantity</th>
-          
-          <th>Total amount</th>
-          <th>Discount Amount</th>
-          
-          <th>Order Date</th>
-          <th>Expected Delivery Date</th>
-          <th>Payment method</th>
-          <th>Coupen Name</th>
-          <th>Coupen Code</th>
-          <th>Status</th>
+    <!-- Google font-->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&amp;family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&amp;display=swap"
+        rel="stylesheet">
 
+    <!-- Linear Icon css -->
+    <link rel="stylesheet" href="/static/css/linearicon.css">
 
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in orders %}
-        <tr>
-          <td>{{item.order_id.id}}</td>
-          <td>{{item.product_n.pname}}</td>
-          <td>{{item.product_n.category}}</td>
-          <td>{{item.unit}}</td>
-          <td>{{item.order_id.addr.Name}},
-            {{item.order_id.addr.email}},
-            {{item.order_id.addr.address}},
-            {{item.order_id.addr.country}},{{item.order_id.addr.state}},
-            {{item.order_id.addr.pin}},{{item.order_id.addr.post}}</td>
-            <td>{{item.quantity}}</td>
-            <td>{{item.order_id.total_amounts}}</td>
-            <td>{{item.order_id.discount_amount}}</td>
+    <!-- fontawesome css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/font-awesome.css">
 
-            <td>{{item.order_id.orders_date}}</td>
-            <td>{{item.ex_deliverey}}</td>
-            <td>{{item.order_id.paymt_method}}</td>
-            {% if item.order_id.coupen_apply  %}
-            <td>{{item.order_id.coupen_code.cop_name}}</td>
-            <td>{{item.order_id.coupen_code.code}}</td>
-            {% else  %}
-            <td>None</td>
-            <td> None</td>
-            {% endif  %}
-            <td>{{item.status}}</td>
-        </tr>
-       {% endfor  %}
-        <!-- Add more rows as needed -->
-      </tbody>
-    </table>
-    <div class="download-btn">
-      <button  onclick="downloadsalesreport()">Download Salesreport(pdf)</button>    
+    <!-- Themify icon css-->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/themify.css">
 
-      <button id="downloadExcelButton">Download Salesreport</button>       <a href="{% url 'dashbord'  %}">Back</a>
+    <!-- ratio css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/ratio.css">
 
-    </div>
-  </div>
+    <!-- Feather icon css-->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/feather-icon.css">
 
-  <script>
-   
-      function downloadsalesreport() 
-      {
-          window.print();
+    <!-- Plugins css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/animate.css">
+
+    <!-- Bootstrap css-->
+    <link rel="stylesheet" type="text/css" href="/static/css/vendors/bootstrap.css">
+
+    <!-- vector map css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vector-map.css">
+
+    <!-- slick slider css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/slick.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/slick-theme.css">
+
+    <!-- App css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+    <!-- Responsive css-->
+    <link rel="stylesheet" type="text/css" href="/static/css/responsive.css">
+    <style>
+      @media print {
+      body * {
+        visibility: hidden;
       }
+      #salesContainer, #salesTable, #salesTable * {
+        visibility: visible;
+      }
+      #salesContainer {
+        width: -200px;
+      }
+      #salesTable {
+        width: 50px;
+        max-width: 200px;
+        /* margin: 0; */
+      
+        overflow-x:unset;
+      }
+     
+    }
+    </style>
+</head>
+
+<body>
+   
+    <!-- tap on top start -->
+    <div class="tap-top">
+        <span class="lnr lnr-chevron-up"></span>
+    </div>
+    <!-- tap on tap end -->
+
+    <!-- page-wrapper Start-->
+    <div class="page-wrapper compact-wrapper dark-sidebar" id="pageWrapper">
+        <!-- Page Header Start-->
+     
+        <!-- Page Header Ends-->
+ 
+            <!-- Page Sidebar Ends-->
+            {% if messages %}
+            <div class="alert alert-success mt-3">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- index body start -->
+            
+                        <!-- chart caard section End -->
+                      
+                        <div class="container" id="salesContainer">
+                            <h4 class="text-center">Sales Report</h4>
+                            <div class="table-responsive" id="salesTable">
+                              <table class="table  table-striped ">
+                                <thead class="thead-dark">
+                                  <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Unit</th>
+                                    <th>Address</th>
+                                    <th>Quantity</th>
+                                    <th>Total Amount</th>
+                                    <th>Discount Amount</th>
+                                    <th>Order Date</th>
+                                    <th>Expected Delivery Date</th>
+                                    <th>Payment Method</th>
+                                    <th>Coupon Name</th>
+                                    <th>Coupon Code</th>
+                                    <th>Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in orders %}
+                                    <tr>
+                                      <td>{{item.order_id.id}}</td>
+                                      <td>{{item.product_n.pname}}</td>
+                                      <td>{{item.product_n.category}}</td>
+                                      <td>{{item.unit}}</td>
+                                      <td>{{item.order_id.addr.Name}},
+                                        {{item.order_id.addr.email}},
+                                        {{item.order_id.addr.address}},
+                                        {{item.order_id.addr.country}},{{item.order_id.addr.state}},
+                                        {{item.order_id.addr.pin}},{{item.order_id.addr.post}}</td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{item.order_id.total_amounts}}</td>
+                                        {% if item.order_id.coupen_apply or item.product_n.offer.is_listed or item.product_n.category.offer.is_listed %}
+                                        <td>{{item.order_id.discount_amount}}</td>
+                                        {% else %}
+                                        <td>no Discount</td>
+                                         {% endif %}
+                                        <td>{{item.order_id.orders_date}}</td>
+                                        <td>{{item.ex_deliverey}}</td>
+                                        <td>{{item.order_id.paymt_method}}</td>
+                                        {% if item.order_id.coupen_apply  %}
+                                        <td>{{item.order_id.coupen_code.cop_name}}</td>
+                                        <td>{{item.order_id.coupen_code.code}}</td>
+                                        {% else  %}
+                                        <td>None</td>
+                                        <td> None</td>
+                                        {% endif  %}
+                                        <td>{{item.status}}</td>
+                                    </tr>
+                                   {% endfor  %}
+                                </tbody>
+                              </table>
+                            </div>
+                              <div class="download-btn">
+                                <button  onclick="downloadsalesreport()">Download Salesreport(pdf)</button>    
+                          
+                                <button id="downloadExcelButton" >Download Salesreport</button>   <a href="{% url 'dashbord'  %}">Back</a>
+                          
+                              </div>
+                            </div>
+                          
+                            
+                    
+
+                       
+                      
+                       
+                             
+
+                      
+
+                        
+                        <!-- Browser States end-->
+                    </div>
+                </div>
+                <!-- Container-fluid Ends-->
+
+                <!-- footer start-->
+                <div class="container-fluid">
+                    <footer class="footer">
+                        <div class="row">
+                            <div class="col-md-12 footer-copyright text-center">
+                                <p class="mb-0">Copyright 2021 © Voxo theme by pixelstrap</p>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+                <!-- footer End-->
+            </div>
+            <!-- index body end -->
+        </div>
+        <!-- Page Body End -->
+    </div>
+    <!-- page-wrapper End-->
+
+    <!-- Modal Start -->
+    
+    <!-- Modal End -->
+
+    <!-- latest js -->
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap js -->
+    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+    <!-- feather icon js -->
+    <script src="/static/js/icons/feather-icon/feather.min.js"></script>
+    <script src="/static/js/icons/feather-icon/feather-icon.js"></script>
+
+    <!-- scrollbar simplebar js -->
+    <script src="/static/js/scrollbar/simplebar.js"></script>
+    <script src="/static/js/scrollbar/custom.js"></script>
+
+    <!-- Sidebar jquery -->
+    <script src="/static/js/config.js"></script>
+
+    <!-- tooltip init js -->
+    <script src="/static/js/tooltip-init.js"></script>
+
+    <!-- Plugins JS -->
+    <script src="/static/js/sidebar-menu.js"></script>
+    <script src="/static/js/notify/bootstrap-notify.min.js"></script>
+    <script src="/static/js/notify/index.js"></script>
+
+    <!-- Apexchar js -->
+    <script src="/static/js/chart/apex-chart/apex-chart1.js"></script>
+    <script src="/static/js/chart/apex-chart/moment.min.js"></script>
+    <script src="/static/js/chart/apex-chart/apex-chart.js"></script>
+    <script src="/static/js/chart/apex-chart/stock-prices.js"></script>
+    <script src="/static/js/chart/apex-chart/chart-custom1.js"></script>
+
+    <!-- customizer js -->
+    <script src="/static/js/customizer.js"></script>
+
+    <!-- ratio js -->
+    <script src="/static/js/ratio.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+    <!-- Theme js -->
+    <script src="/static/js/script.js"></script>
+    <script>
+                             
+        function downloadsalesreport() 
+        {
+            window.print();
+        }
+    
+      function downloadExcel() {
+        var salesReportData = [
+            {% for item in orders %}
+            {
+                "Order ID": "{{ item.order_id.id }}",
+                "Product Name": "{{ item.product_n.pname }}",
+                "Category": "{{ item.product_n.category }}",
+                "Unit": "{{ item.unit }}",
+                "Address": "{{ item.order_id.addr.Name }}, {{ item.order_id.addr.email }}, {{ item.order_id.addr.address }}, {{ item.order_id.addr.country }}, {{ item.order_id.addr.state }}, {{ item.order_id.addr.pin }}, {{ item.order_id.addr.post }}",
+                "Quantity": "{{ item.quantity }}",
+                "Total Amount": "{{ item.total_amount }}",
+                "Order Date": "{{ item.order_id.orders_date }}",
+                "Expected Delivery Date": "{{ item.ex_deliverey }}",
+                "Payment Method": "{{ item.order_id.paymt_method }}",
+                "Coupon Name": "{% if item.order_id.coupen_apply %}{{ item.order_id.coupen_code.cop_name }}{% else %}None{% endif %}",
+                "Coupon Code": "{% if item.order_id.coupen_apply %}{{ item.order_id.coupen_code.code }}{% else %}None{% endif %}",
+                "Status": "{{ item.status }}"
+            }
+            {% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+    
+        var ws = XLSX.utils.json_to_sheet(salesReportData);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
+    
+        XLSX.writeFile(wb, "sales_report.xlsx");
+    }
+    
+    document.getElementById("downloadExcelButton").addEventListener("click", downloadExcel);
+    
+    </script>
   
-    function downloadExcel() {
-      var salesReportData = [
-          {% for item in orders %}
-          {
-              "Order ID": "{{ item.order_id.id }}",
-              "Product Name": "{{ item.product_n.pname }}",
-              "Category": "{{ item.product_n.category }}",
-              "Unit": "{{ item.unit }}",
-              "Address": "{{ item.order_id.addr.Name }}, {{ item.order_id.addr.email }}, {{ item.order_id.addr.address }}, {{ item.order_id.addr.country }}, {{ item.order_id.addr.state }}, {{ item.order_id.addr.pin }}, {{ item.order_id.addr.post }}",
-              "Quantity": "{{ item.quantity }}",
-              "Total Amount": "{{ item.total_amount }}",
-              "Order Date": "{{ item.order_id.orders_date }}",
-              "Expected Delivery Date": "{{ item.ex_deliverey }}",
-              "Payment Method": "{{ item.order_id.paymt_method }}",
-              "Coupon Name": "{% if item.order_id.coupen_apply %}{{ item.order_id.coupen_code.cop_name }}{% else %}None{% endif %}",
-              "Coupon Code": "{% if item.order_id.coupen_apply %}{{ item.order_id.coupen_code.code }}{% else %}None{% endif %}",
-              "Status": "{{ item.status }}"
-          }
-          {% if not forloop.last %},{% endif %}
-          {% endfor %}
-      ];
-  
-      var ws = XLSX.utils.json_to_sheet(salesReportData);
-      var wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
-  
-      XLSX.writeFile(wb, "sales_report.xlsx");
-  }
-  
-  document.getElementById("downloadExcelButton").addEventListener("click", downloadExcel);
-  
-  </script>
 </body>
+<style>
+    .form-group {
+        background-color: white;
+        text-align: center;
+        padding: 20px; /* Add padding for spacing */
+    }
+
+    .date-fields {
+        display: flex;
+        justify-content: center;
+    }
+
+    .date-field {
+        margin-right: 10px; /* Add margin between date fields */
+    }
+
+    input[type="date"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: 1px solid #ced4da;
+        padding: 8px; /* Add padding */
+        border-radius: 0; /* Make input square */
+        width: 180px; /* Set width */
+    }
+
+    button {
+        border-radius: 0; /* Make button square */
+    }
+    
+</style>
+
+
+<!-- Mirrored from themes.pixelstrap.com/voxo/back-end/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jan 2024 18:52:49 GMT -->
 </html>
