@@ -166,7 +166,10 @@
 												<p>{{i.addr.address}},{{i.addr.state}},{{i.addr.country}},
 													{{i.addr.pin}},{{i.addr.post}},</p>
 													
-													<h6 style="display: inline;">Payment method: </h6><p style="display: inline;" class="text-danger">  {{i.paymt_method}}</p>
+													<h6 style="display: inline;">Payment Method: </h6><p style="display: inline;" class="text-danger">  {{i.paymt_method}}</p> <br>
+													{% if i.paymt_method == "cod"  %}
+													<h6 style="display: inline;">Delivery Charge: </h6><p style="display: inline;" class="text-danger">₹50</p>
+                                                    {% endif  %}
 													<p class="text-danger"><b>Ordered Date:  {{i.orders_date}}</b></p>
 												<!-- Choice Option -->
 											           

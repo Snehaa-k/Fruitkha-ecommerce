@@ -169,14 +169,10 @@
 									            {% for i in cart.product_id.category.offer.all  %}
 									            {% if i.is_listed  %}
 													{% if i.percentage > offer.percentage  %}
-													<td><p><span>Per Kg</span>
-														<del class="strike">
-															
-															
-															₹{{cart.Variant_id.v_price}}
-															
-														</del></p>
+													 <td><p><span>Per Kg</span>
+														<del class="strike">₹{{cart.Variant_id.v_price}}</del></p>
 													<p class="product text-danger">₹{{total}}</p></td>
+													
 													{%else%}
 													<td><p><span>Per Kg</span>
 														<del class="strike">
@@ -195,6 +191,16 @@
 											<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
                                             {% endif  %}
 										{% endfor  %}
+									{% elif cart.product_id.category.offer.exists %}
+									{% for i in cart.product_id.category.offer.all  %}
+									{% if i.is_listed  %}
+									<td><p><span>Per Kg</span>
+										<del class="strike">₹{{cart.Variant_id.v_price}}</del></p>
+									<p class="product text-danger">₹{{total}}</p></td>
+									{% else %}
+									<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
+                                    {% endif  %}
+									{% endfor  %}
 									{% else  %}
 									<td class="product-price">₹{{cart.Variant_id.v_price}}</td>
 									{% endif  %}
@@ -202,49 +208,65 @@
 									<td class="product-price">{{cart.Variant_id.unit}}</td>
 
 									<td class="product-quantity">
-										<form method = "post" >
-											{% csrf_token  %}
-										<input type="number" class="quantity-input" value="{{ cart.c_quantity }}" data-item-id="{{ cart.id }}" min = "1" max="6">
-										<button type="submit"class="btn btn-danger" >+/-</button>
+										<form method="post">
+											{% csrf_token %}
+											<button type="submit" class="btn btn-danger decrease-quantity" data-item-id="{{ cart.id }}">-</button>
+
+											<input type="number" class="quantity-input" value="{{ cart.c_quantity }}" data-item-id="{{ cart.id }}" min="1" max="6">
+											<button type="submit" class="btn btn-danger increase-quantity" data-item-id="{{ cart.id }}">+</button>
 										</form>
 										<script>
 										
 
-										$(document).ready(function() {
+											$(document).ready(function() {
+												function getCSRFToken() {
+													return $('input[name="csrfmiddlewaretoken"]').val();
+												}
 											
-											function getCSRFToken() {
-												return $('input[name="csrfmiddlewaretoken"]').val();
-											}
-
-											$('.quantity-input').change(function() {
-												var item_id = $(this).data('item-id');
-												var quantity = $(this).val();
-
-												
-												var csrftoken = getCSRFToken();
-
-												
-												$.ajax({
-													url: '/update_cart_quantity/',
-													type: 'POST',
-													data: {
-														'item_id': item_id,
-														'quantity': quantity,
-														'csrfmiddlewaretoken': csrftoken 
-													},
-													dataType: 'json',
-													success: function(response) {
-														
-														$('#total-price-' + item_id).text(response.total_price.toFixed(2));
-														
-														location.reload();
-													},
-													error: function(xhr, status, error) {
-														console.error(xhr.responseText);
+												$('.increase-quantity').click(function() {
+													var item_id = $(this).data('item-id');
+													var quantityInput = $('input[data-item-id="' + item_id + '"]');
+													var quantity = parseInt(quantityInput.val());
+													if(quantity < 6){
+													quantity++;
+													quantityInput.val(quantity);
+													updateQuantity(item_id, quantity);
 													}
 												});
+											
+												$('.decrease-quantity').click(function() {
+													var item_id = $(this).data('item-id');
+													var quantityInput = $('input[data-item-id="' + item_id + '"]');
+													var quantity = parseInt(quantityInput.val());
+													if (quantity > 1) {
+														quantity--;
+														quantityInput.val(quantity);
+														updateQuantity(item_id, quantity);
+													}
+												});
+											
+												function updateQuantity(item_id, quantity) {
+													var csrftoken = getCSRFToken();
+											
+													$.ajax({
+														url: '/update_cart_quantity/',
+														type: 'POST',
+														data: {
+															'item_id': item_id,
+															'quantity': quantity,
+															'csrfmiddlewaretoken': csrftoken
+														},
+														dataType: 'json',
+														success: function(response) {
+															$('#total-price-' + item_id).text(response.total_price.toFixed(2));
+															location.reload();
+														},
+														error: function(xhr, status, error) {
+															console.error(xhr.responseText);
+														}
+													});
+												}
 											});
-										});
 
 									</script>
 										{% comment %} <div id="ppp" class="quantity-container">

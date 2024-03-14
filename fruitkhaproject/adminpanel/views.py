@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from cart.models import CartItem, Coupon, Orderdetails
-from home. models import Usermodelss
+from home. models import Usermodelss, Walletuser
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from products.models import Variant,Products
@@ -75,7 +75,8 @@ def dashboard(request):
         top_ten = Orderditem.objects.values('product_n').annotate(count_pr = Count("product_n")).order_by("-count_pr")[:5]
         top_products = Products.objects.filter(id__in=[item['product_n'] for item in top_ten])
         top_tenc = Orderditem.objects.values('product_n__category__id').annotate(count_c = Count("product_n__category__id")).order_by("-count_c")[:5]
-        top_cat = Category.objects.filter(id__in=[item['product_n__category__id'] for item in top_tenc])
+        
+        top_cat = Category.objects.filter(id__in=[item['product_n__category__id'] for item in top_tenc])[:5]
         cod_user = Orderdetails.objects.filter(paymt_method = "cod").aggregate(count_user = Count("custom_id__id"))['count_user']
         wallet_user = Orderdetails.objects.filter(paymt_method = "wallet").aggregate(count_user = Count("custom_id__id"))['count_user']
         razor_pay = Orderdetails.objects.filter(paymt_method = "razor_pay").aggregate(count_user = Count("custom_id__id"))['count_user']
@@ -87,7 +88,7 @@ def dashboard(request):
         monthly_revenue_data = []
         for i in data:
            monthly_revenue_data.append(i['total_revenue'])
-        # print(monthly_revenue_data)
+       
         data2 = Orderdetails.objects.annotate(month=TruncMonth('orders_date')).values('month').annotate(total_orders=Count('id')).order_by('month')
         monthly_order_data = []
 
@@ -105,16 +106,7 @@ def dashboard(request):
         print(yearly_revenue)
        
 
-        
 
-
-        # print(cod_user)
-        
-
-        # for i in top_ten:
-        #     print(i)
-        
-        # print(top_tenc)
         context = {
             'total_e':total_earnings,
             'total_user':total_coustomers,
@@ -157,7 +149,7 @@ def viewusers(request):
     if 'username'in request.session:
         return render(request,'veiwusers.html',{'User':usr,'current_date':current_date})
     else:
-         return redirect('admnlogin')
+        return redirect('admnlogin')
 
 def isblock(request,id):
     if 'email' in request.session:
@@ -165,9 +157,9 @@ def isblock(request,id):
     user = Usermodelss.objects.get(id=id)
     user.is_block = not user.is_block
     user.save()
-    # usr = Usermodelss.objects.all()
-    # return render(request,'veiwusers.html',{'User':usr})
     return redirect('vusers')
+
+
 @never_cache
 def adminlogout(request):
     if 'email' in request.session:
@@ -178,8 +170,7 @@ def adminlogout(request):
 
 
 def order_details_admin(request):
-    order = Orderdetails.objects.all()
-    
+    order = Orderdetails.objects.all().order_by("-id")
     return render(request,'orderadmin.html',{'order':order})
 
 
@@ -297,6 +288,16 @@ def editstatus(request,id):
         status = request.POST['status']
         stus.status = status
         stus.save()
+        variant = Variant.objects.get(products = stus.product_n ,unit = stus.unit.unit)
+        # print(variant.products)
+        
+        variant.v_quantity = variant.v_quantity + stus.quantity
+        variant.save()
+        return_amount =  stus.total_amount
+        walle = Walletuser.objects.get(userid=stus.order_id.custom_id)
+
+        walle.amountt=walle.amountt + return_amount
+        walle.save()
         messages.success(request, "your status  is added successfully")
         return redirect("order_details_admin")
 
@@ -355,10 +356,7 @@ def editproductoffer(request,id):
     if request.method == 'POST':
         product1 = request.POST['prodt']
         perc = int(request.POST['perc'])
-        # if Productoffer.objects.filter(product_id = product1).exists():
-
-        #     messages.success(request, "the offer for this product is already exists")
-        #     return redirect("productoffer") 
+       
         if perc <= 100 and perc >= 0:
             produc = Products.objects.get(id=product1)
             offer.product_id = produc

@@ -25,11 +25,10 @@ def addproducts(request):
         imageb = request.FILES.get('imagesb')
         category_name = request.POST.get('categoryname')
         description = request.POST['description']
-        # price = request.POST['price']
-        # instock = request.POST['instock']
-       
-    
         category_instance, created = Category.objects.get_or_create(category_name = category_name)
+        if  product_name.strip() == '' or  description.strip() == '' :
+            messages.error(request,"Enter valid Products")
+            return redirect('productslist')
        
         prdts = Products(
            
@@ -37,24 +36,17 @@ def addproducts(request):
             image = image,
             category = category_instance,
             description = description,
-            # price = price ,
-            # in_stock = instock,
             imagea = imagea,
             imageb = imageb,
             
 
         )
        
-        
-        
-        
-        
         prdts.save()
 
         return redirect('productslist')
-        
-
     return render(request,'veiwproducts.html',{'product':prdts})
+
 
 def is_listed(request,id):
     prdts = Products.objects.get(id=id)
@@ -107,7 +99,7 @@ def add_variant(request,id):
     if 'email' in request.session:
         return redirect('error404')
     prdts = Products.objects.get(id=id)
-    # print(id)
+    
     if request.method == 'POST':
         unit = request.POST['unit']
         price = request.POST['price']

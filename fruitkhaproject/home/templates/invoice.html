@@ -175,7 +175,12 @@
             </tbody>
         </table>
         <div class="invoice-total">
-            <p><strong>Total Amount:</strong> Rs :{{i.total_amounts}}</p>
+            {% if i.paymt_method == "cod" %}
+            <p class="text-danger"><strong>Delivery Charge:</strong>₹ 50</p>
+            {% endif  %}
+
+            <p><strong>Total Amount:</strong> ₹{{i.total_amounts}}</p>
+            
         </div>
         {% endfor  %}
         <div class="invoice-footer invoice-header-line">

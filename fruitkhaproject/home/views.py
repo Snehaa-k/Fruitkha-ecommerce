@@ -109,6 +109,7 @@ def otpver(request,id):
 
 
 def home(request):
+    
     return render(request, 'home.html')
 
 def singleproduct(request,id):
@@ -192,7 +193,7 @@ def cart(request):
     email1 = request.session['email']
     user = Usermodelss.objects.get(email=email1)
     cartitem = CartItem.objects.filter(user_id=user)
-    
+    cat_offer = Categoryoffer.objects.all()
     variant = Variant.objects.all()
     cart_item = (
         CartItem.objects.select_related("product_id").filter(user_id=user).order_by("-id")
@@ -262,6 +263,7 @@ def cart(request):
                 )
                 i.total = w * i.c_quantity
                 total = i.total/i.c_quantity
+                
                 i.save()
             else:
                 i.total = i.Variant_id.v_price * i.c_quantity
@@ -276,7 +278,7 @@ def cart(request):
     final = subtotal
     
     
-    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final,'total':total})
+    return render(request,'cart.html',{'cartitem':cartitem,'variant':variant,'subtotal':subtotal,'final':final,'total':total,'cat_offer':cat_offer})
 
 
 
@@ -336,7 +338,7 @@ def deletewishlist(request,id):
 def add_cart(request,id):
     Product = Products.objects.get(id=id)
     user = request.session['email']
-   
+    
 
     if request.method == 'POST':
         
@@ -430,6 +432,9 @@ def userprofile(request):
     if 'email' in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
+        if user is not None and not user.is_block:
+            messages.error(request, 'you account is blocked')
+            return redirect(userloginp)
         addres = Useraddress.objects.filter(user_id=user)
         wallet = Walletuser.objects.get(userid=user)
         wallet_amount = wallet.amountt
@@ -449,15 +454,15 @@ def userprofile(request):
 
 def edituserprofile(request):
     email1 = request.session["email"]
-    # print(email1)
+   
     user = Usermodelss.objects.get(email=email1)
-    # print(user.email)
+    
     if request.method == 'POST':
 
         username1 = request.POST['username']    
         phoneno = request.POST['phone']
         
-        # print(username1)
+       
         if len(phoneno)!=10:
             messages.error(request, 'Phone number must contains 10 digit')
             return redirect('userprofile')
@@ -489,7 +494,10 @@ def add_address(request):
         address = request.POST["address"]
         pin = request.POST["pin"]
         post = request.POST["post"]
-        # print(name)
+      
+        if  address.strip() == '' or  name.strip() == '' :
+            messages.error(request,"Enter valid address or name")
+            return redirect('userprofile')
 
         if len(phonenumber)==10:
         
@@ -516,7 +524,7 @@ def add_address(request):
                 return redirect('userprofile')
             
         else:
-            # print(len(phonenumber))
+           
             messages.error(request,"invalid phone number")
             return redirect('userprofile')
 
@@ -534,6 +542,9 @@ def checkout(request):
     if 'email' in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
+        if user is not None and not user.is_block:
+            messages.error(request, 'you account is blocked')
+            return redirect(userloginp)
         cartitem = CartItem.objects.filter(user_id = user)
         for cart_item in cartitem:
             variant_quantity = cart_item.Variant_id.v_quantity
@@ -572,12 +583,13 @@ def checkout(request):
                 subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
                 final = subtotal
                
-
+            
                    
 
             else:    
                 subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))['sum']
                 final = subtotal
+            
             contex1={'user':user,'addres':addres,
                      'cartitem':cartitem,
                      'variant':variant,
@@ -611,8 +623,7 @@ def proceedtocheckout(request):
     )
    
    
-    # print(subtotal)
-    # addres = Useraddress.objects.filter(user_id=userid, is_cancelled=False)
+   
 
     if cart_details.exists():
         
@@ -710,6 +721,7 @@ def place_order(request):
                 order.coupen_apply = True
             else:
                 order.coupen_apply=False
+            order.total_amounts = order.total_amounts + 50
             order.save()
             caritem = CartItem.objects.filter(user_id=userid)
             
@@ -938,7 +950,7 @@ def cancelorder1(request,id):
         variant.save()
         return_amount =  orderi.total_amount
         # print(return_amount)
-        orderi.status = "cancelled"
+        orderi.status = "Cancelled"
         orderi.save()
         if orderi.order_id.paymt_method == "razor_pay" or orderi.order_id.paymt_method == "wallet":
             # wallet1 = Walletuser.objects.get(userid = user.id )
