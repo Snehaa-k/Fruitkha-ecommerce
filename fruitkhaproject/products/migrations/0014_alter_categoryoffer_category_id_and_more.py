@@ -7,24 +7,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('category', '0005_category_is_listed'),
-        ('products', '0013_alter_categoryoffer_is_listed_and_more'),
+        ("category", "0005_category_is_listed"),
+        ("products", "0013_alter_categoryoffer_is_listed_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categoryoffer',
-            name='category_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='offers', to='category.category'),
+            model_name="categoryoffer",
+            name="category_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="offers",
+                to="category.category",
+            ),
         ),
         migrations.AlterField(
-            model_name='productoffer',
-            name='product_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='offer', to='products.products'),
+            model_name="productoffer",
+            name="product_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="offer",
+                to="products.products",
+            ),
         ),
         migrations.AlterField(
-            model_name='productoffer',
-            name='variant_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='offers', to='products.variant'),
+            model_name="productoffer",
+            name="variant_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="offers",
+                to="products.variant",
+            ),
         ),
     ]

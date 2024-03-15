@@ -17,7 +17,6 @@ def productslist(request):
 def addproducts(request):
     if 'email' in request.session:
         return redirect('error404')
-
     if request.method == 'POST':
         product_name = request.POST['pname']
         image = request.FILES.get('images')
@@ -66,10 +65,8 @@ def updateproduct(request,id):
     if 'email' in request.session:
         return redirect('error404')
     prdts = Products.objects.select_related("category").get(id=id)
-
     if request.method == 'POST':
         product_name = request.POST['pname']
-        
         image = request.FILES["images"] if "images" in request.FILES else None
         imagea = request.FILES["imagesa"] if "imagesa" in request.FILES else None
         imageb = request.FILES["imagesb"] if "imagesb" in request.FILES else None
@@ -93,8 +90,9 @@ def updateproduct(request,id):
             messages.error(request, f'Error updating product: {e}')
     return render(request,'veiwproducts.html')
 
-# variant section........................
 
+
+# variant section........................
 def add_variant(request,id):
     if 'email' in request.session:
         return redirect('error404')
@@ -128,13 +126,9 @@ def edit_variant_modal(request, id):
         return redirect('error404')
     product = Products.objects.get(id=id)
     variant = Variant.objects.filter(products=product).first()
-    
-    # print("haii")
     if request.method == 'POST':
         quantity = request.POST['quantity']
         price = request.POST['price']
-        # print(quantity)
-        # print(price)
         if quantity is not None and price is not None:
            
             variant.v_quantity = quantity

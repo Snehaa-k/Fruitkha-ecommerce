@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0012_alter_categoryoffer_percentage_and_more'),
+        ("products", "0012_alter_categoryoffer_percentage_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categoryoffer',
-            name='is_listed',
+            model_name="categoryoffer",
+            name="is_listed",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='productoffer',
-            name='is_listed',
+            model_name="productoffer",
+            name="is_listed",
             field=models.BooleanField(default=False),
         ),
     ]

@@ -7,23 +7,55 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0001_initial'),
-        ('home', '0009_useraddress_delete_userprofile'),
-        ('products', '0008_products_quantity_variant'),
+        ("cart", "0001_initial"),
+        ("home", "0009_useraddress_delete_userprofile"),
+        ("products", "0008_products_quantity_variant"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Orderdetails',
+            name="Orderdetails",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('paymt_method', models.CharField(max_length=50)),
-                ('total_amounts', models.BigIntegerField(default=0)),
-                ('orders_date', models.DateField()),
-                ('addr', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.useraddress')),
-                ('custom_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.usermodelss')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.products')),
-                ('variant_units', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.variant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("paymt_method", models.CharField(max_length=50)),
+                ("total_amounts", models.BigIntegerField(default=0)),
+                ("orders_date", models.DateField()),
+                (
+                    "addr",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.useraddress",
+                    ),
+                ),
+                (
+                    "custom_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.usermodelss",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.products",
+                    ),
+                ),
+                (
+                    "variant_units",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.variant",
+                    ),
+                ),
             ],
         ),
     ]

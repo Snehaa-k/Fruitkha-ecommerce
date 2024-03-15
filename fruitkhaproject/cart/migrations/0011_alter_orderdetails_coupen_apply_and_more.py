@@ -7,18 +7,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0010_orderdetails_coupen_apply_orderdetails_coupen_code_and_more'),
+        ("cart", "0010_orderdetails_coupen_apply_orderdetails_coupen_code_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='orderdetails',
-            name='coupen_apply',
+            model_name="orderdetails",
+            name="coupen_apply",
             field=models.BooleanField(default=False, null=True),
         ),
         migrations.AlterField(
-            model_name='orderdetails',
-            name='coupen_code',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='cart.coupon'),
+            model_name="orderdetails",
+            name="coupen_code",
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, to="cart.coupon"
+            ),
         ),
     ]

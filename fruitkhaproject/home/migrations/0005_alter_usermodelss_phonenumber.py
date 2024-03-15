@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0004_usermodelss_is_verified_usermodelss_otp'),
+        ("home", "0004_usermodelss_is_verified_usermodelss_otp"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='usermodelss',
-            name='phonenumber',
+            model_name="usermodelss",
+            name="phonenumber",
             field=models.BigIntegerField(),
         ),
     ]

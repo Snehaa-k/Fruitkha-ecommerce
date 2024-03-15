@@ -7,29 +7,73 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('category', '0005_category_is_listed'),
-        ('products', '0010_alter_products_price'),
+        ("category", "0005_category_is_listed"),
+        ("products", "0010_alter_products_price"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Categoryoffer',
+            name="Categoryoffer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('percentage', models.ImageField(upload_to='')),
-                ('is_listed', models.BooleanField(default=True)),
-                ('category_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='category.category')),
-                ('variant_i', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='products.variant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("percentage", models.ImageField(upload_to="")),
+                ("is_listed", models.BooleanField(default=True)),
+                (
+                    "category_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="category.category",
+                    ),
+                ),
+                (
+                    "variant_i",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.variant",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Productoffer',
+            name="Productoffer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('percentage', models.ImageField(upload_to='')),
-                ('is_listed', models.BooleanField(default=True)),
-                ('product_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='products.products')),
-                ('variant_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='products.variant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("percentage", models.ImageField(upload_to="")),
+                ("is_listed", models.BooleanField(default=True)),
+                (
+                    "product_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.products",
+                    ),
+                ),
+                (
+                    "variant_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.variant",
+                    ),
+                ),
             ],
         ),
     ]

@@ -6,20 +6,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0008_orderdetails_coupen_apply_orderdetails_coupen_code_and_more'),
+        ("cart", "0008_orderdetails_coupen_apply_orderdetails_coupen_code_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='orderdetails',
-            name='coupen_apply',
+            model_name="orderdetails",
+            name="coupen_apply",
         ),
         migrations.RemoveField(
-            model_name='orderdetails',
-            name='coupen_code',
+            model_name="orderdetails",
+            name="coupen_code",
         ),
         migrations.RemoveField(
-            model_name='orderdetails',
-            name='discount_amount',
+            model_name="orderdetails",
+            name="discount_amount",
         ),
     ]

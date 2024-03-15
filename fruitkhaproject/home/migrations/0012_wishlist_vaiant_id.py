@@ -7,15 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0011_remove_wishlist_variant_id'),
-        ('products', '0008_products_quantity_variant'),
+        ("home", "0011_remove_wishlist_variant_id"),
+        ("products", "0008_products_quantity_variant"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='wishlist',
-            name='vaiant_id',
-            field=models.ForeignKey(default=4, on_delete=django.db.models.deletion.CASCADE, to='products.variant'),
+            model_name="wishlist",
+            name="vaiant_id",
+            field=models.ForeignKey(
+                default=4,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="products.variant",
+            ),
             preserve_default=False,
         ),
     ]

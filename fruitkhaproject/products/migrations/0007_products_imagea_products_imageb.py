@@ -6,20 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0006_products_in_stock'),
+        ("products", "0006_products_in_stock"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='products',
-            name='imagea',
-            field=models.ImageField(default=3, upload_to='media'),
+            model_name="products",
+            name="imagea",
+            field=models.ImageField(default=3, upload_to="media"),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='products',
-            name='imageb',
-            field=models.ImageField(default=2, upload_to='media'),
+            model_name="products",
+            name="imageb",
+            field=models.ImageField(default=2, upload_to="media"),
             preserve_default=False,
         ),
     ]

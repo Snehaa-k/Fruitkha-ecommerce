@@ -7,14 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0006_alter_orderditem_user_id'),
-        ('home', '0009_useraddress_delete_userprofile'),
+        ("cart", "0006_alter_orderditem_user_id"),
+        ("home", "0009_useraddress_delete_userprofile"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='orderditem',
-            name='address_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='home.useraddress'),
+            model_name="orderditem",
+            name="address_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.useraddress",
+            ),
         ),
     ]

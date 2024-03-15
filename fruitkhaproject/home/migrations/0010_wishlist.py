@@ -7,18 +7,44 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0009_useraddress_delete_userprofile'),
-        ('products', '0008_products_quantity_variant'),
+        ("home", "0009_useraddress_delete_userprofile"),
+        ("products", "0008_products_quantity_variant"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='wishlist',
+            name="wishlist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('product_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.products')),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.usermodelss')),
-                ('variant_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.variant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "product_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.products",
+                    ),
+                ),
+                (
+                    "user_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.usermodelss",
+                    ),
+                ),
+                (
+                    "variant_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.variant",
+                    ),
+                ),
             ],
         ),
     ]

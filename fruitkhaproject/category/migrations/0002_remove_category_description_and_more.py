@@ -6,22 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('category', '0001_initial'),
+        ("category", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='category',
-            name='description',
+            model_name="category",
+            name="description",
         ),
         migrations.RemoveField(
-            model_name='category',
-            name='is_listed',
+            model_name="category",
+            name="is_listed",
         ),
         migrations.AddField(
-            model_name='category',
-            name='image',
-            field=models.ImageField(default=3, upload_to='photos/products'),
+            model_name="category",
+            name="image",
+            field=models.ImageField(default=3, upload_to="photos/products"),
             preserve_default=False,
         ),
     ]

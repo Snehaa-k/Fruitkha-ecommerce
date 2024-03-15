@@ -7,23 +7,47 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0007_products_imagea_products_imageb'),
+        ("products", "0007_products_imagea_products_imageb"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='products',
-            name='quantity',
+            model_name="products",
+            name="quantity",
             field=models.PositiveIntegerField(default=0),
         ),
         migrations.CreateModel(
-            name='Variant',
+            name="Variant",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('unit', models.CharField(choices=[('500g', '500 grams'), ('1kg', '1 kilogram'), ('2kg', '2 kilogram')], max_length=50)),
-                ('v_quantity', models.PositiveBigIntegerField(default=0)),
-                ('v_price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('products', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.products')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "unit",
+                    models.CharField(
+                        choices=[
+                            ("500g", "500 grams"),
+                            ("1kg", "1 kilogram"),
+                            ("2kg", "2 kilogram"),
+                        ],
+                        max_length=50,
+                    ),
+                ),
+                ("v_quantity", models.PositiveBigIntegerField(default=0)),
+                ("v_price", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "products",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.products",
+                    ),
+                ),
             ],
         ),
     ]

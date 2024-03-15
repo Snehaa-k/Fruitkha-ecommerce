@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0003_initial'),
+        ("home", "0003_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='usermodelss',
-            name='is_verified',
+            model_name="usermodelss",
+            name="is_verified",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='usermodelss',
-            name='otp',
+            model_name="usermodelss",
+            name="otp",
             field=models.CharField(blank=True, max_length=6, null=True),
         ),
     ]
