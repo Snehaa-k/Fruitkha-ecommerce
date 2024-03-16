@@ -132,22 +132,13 @@ def shop(request):
     prodts = Products.objects.filter(
         category__in=categry, is_listed=True, variant__isnull=False
     ).distinct()
-    
-    cate_offer = Categoryoffer.objects.filter(category_id__in=categry, is_listed=True)
-    paginator = Paginator(prodts, 12)  
-    page_number = request.GET.get('page')
 
-    try:
-        products = paginator.page(page_number)
-    except PageNotAnInteger:
-        products = paginator.page(1)
-    except EmptyPage:
-        products = paginator.page(paginator.num_pages)
+    cate_offer = Categoryoffer.objects.filter(category_id__in=categry, is_listed=True)
 
     return render(
         request,
         "shop.html",
-        {"products": prodts, "categorys": categry, "cate_offer": cate_offer,'products':products},
+        {"products": prodts, "categorys": categry, "cate_offer": cate_offer},
     )
 
 
@@ -155,9 +146,6 @@ def userlogout(request):
     if "email" in request.session:
         request.session.flush()
     return redirect("userlog")
-
-
-
 
 
 # def shop_page(request):
@@ -817,16 +805,16 @@ def orderplace(request):
     if "email" in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
-        order = Orderdetails.objects.filter(custom_id = user,orders_date = date.today())
-       
-    return render(request, "orderplaced.html",{'order':order})
+        order = Orderdetails.objects.filter(custom_id=user, orders_date=date.today())
+
+    return render(request, "orderplaced.html", {"order": order})
 
 
 def orderdetails(request):
     if "email" in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
-        userid = user.id     
+        userid = user.id
         order1 = Orderdetails.objects.filter(custom_id=user).order_by("-id")
         wallet = Walletuser.objects.get(userid=user)
         wallet_amount = wallet.amountt

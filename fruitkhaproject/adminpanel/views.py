@@ -227,8 +227,11 @@ def order_moredetails(request, id):
 def coupon_list(request):
     if "email" in request.session:
         return redirect("error404")
-    coup = Coupon.objects.all()
-    return render(request, "coupenlist.html", {"coup": coup})
+    if "username" in request.session:
+        coup = Coupon.objects.all()
+        return render(request, "coupenlist.html", {"coup": coup})
+    else:
+        return redirect(adlogin)
 
 
 # add coupen
@@ -271,31 +274,34 @@ def editcoupen(request, id):
     if "email" in request.session:
         return redirect("error404")
     coup = Coupon.objects.get(id=id)
-    if request.method == "POST":
-        coupenname = request.POST["cname"]
-        coupenprice = request.POST["cprice"]
-        coupencode = request.POST["code"]
-        coupenvalid = request.POST["ctodate"]
-        coupenex = request.POST["cfromdate"]
+    if "username" in request.session:
+        if request.method == "POST":
+            coupenname = request.POST["cname"]
+            coupenprice = request.POST["cprice"]
+            coupencode = request.POST["code"]
+            coupenvalid = request.POST["ctodate"]
+            coupenex = request.POST["cfromdate"]
 
-        if coupenname.strip() == "" or coupencode.strip() == "":
-            messages.error(request, "Enter valid coupen")
-            return redirect("coupon_list")
-        else:
-            if Coupon.objects.exclude(id=id).filter(code=coupencode).exists():
-                messages.success(request, "the coupen code is already exists")
+            if coupenname.strip() == "" or coupencode.strip() == "":
+                messages.error(request, "Enter valid coupen")
                 return redirect("coupon_list")
             else:
-                coup.cop_name = coupenname
-                coup.cop_price = coupenprice
-                coup.code = coupencode
-                coup.from_date = coupenvalid
-                coup.to_date = coupenex
-                coup.save()
+                if Coupon.objects.exclude(id=id).filter(code=coupencode).exists():
+                    messages.success(request, "the coupen code is already exists")
+                    return redirect("coupon_list")
+                else:
+                    coup.cop_name = coupenname
+                    coup.cop_price = coupenprice
+                    coup.code = coupencode
+                    coup.from_date = coupenvalid
+                    coup.to_date = coupenex
+                    coup.save()
 
-                messages.success(request, "your coupen added successfully")
-                return redirect("coupon_list")
-    return render(request, "coupenlist.html", {"coup": coup})
+                    messages.success(request, "your coupen added successfully")
+                    return redirect("coupon_list")
+        return render(request, "coupenlist.html", {"coup": coup})
+    else:
+        return redirect(adlogin)
 
 
 def delete_coupon(request, id):
@@ -354,26 +360,30 @@ def addproductoffer(request):
     if "email" in request.session:
         return redirect("error404")
     products = Products.objects.filter(is_listed=True)
+    if "username" in request.session:
+        if request.method == "POST":
 
-    if request.method == "POST":
+            product1 = request.POST["prodt"]
+            perc = int(request.POST["perc"])
+            # offer = Productoffer.objects.filter(product_id = product)
+            if Productoffer.objects.filter(product_id=product1).exists():
 
-        product1 = request.POST["prodt"]
-        perc = int(request.POST["perc"])
-        # offer = Productoffer.objects.filter(product_id = product)
-        if Productoffer.objects.filter(product_id=product1).exists():
+                messages.success(
+                    request, "the offer for this product is already exists"
+                )
+                return redirect("productoffer")
 
-            messages.success(request, "the offer for this product is already exists")
+            if perc <= 100 and perc >= 0:
+                produc = Products.objects.get(id=product1)
+                Productoffer.objects.create(product_id=produc, percentage=perc)
+                messages.success(request, "product offer added successffully..!")
+                return redirect("productoffer")
+            messages.success(request, "the percentage should between 0 and 100")
             return redirect("productoffer")
 
-        if perc <= 100 and perc >= 0:
-            produc = Products.objects.get(id=product1)
-            Productoffer.objects.create(product_id=produc, percentage=perc)
-            messages.success(request, "product offer added successffully..!")
-            return redirect("productoffer")
-        messages.success(request, "the percentage should between 0 and 100")
-        return redirect("productoffer")
-
-    return render(request, "productoffer.html", {"product": products})
+        return render(request, "productoffer.html", {"product": products})
+    else:
+        return redirect(adlogin)
 
 
 def list_poffer(request, id):
@@ -455,10 +465,6 @@ def editcategoryoffer(request, id):
 
         preselect = cat.category_id
         print(preselect)
-        # # if Categoryoffer.objects.filter(category_id =category ).exists():
-
-        #     messages.success(request, "the offer for this category is already exists")
-        #     return redirect("categoryoffer")
 
         if perct <= 100 and perct >= 0:
             cate = Category.objects.get(id=category)
