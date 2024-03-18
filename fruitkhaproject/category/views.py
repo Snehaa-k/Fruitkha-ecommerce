@@ -3,9 +3,10 @@ from .models import Category
 
 
 # Create your views here.
+
+
 def category(request):
     categry = Category.objects.all()
-
     return render(request, "categorylist.html", {"categorys": categry})
 
 
@@ -19,7 +20,6 @@ def addcategory(request):
         )
         categry.save()
         return redirect("category")
-
     return render(request, "categorylist.html")
 
 

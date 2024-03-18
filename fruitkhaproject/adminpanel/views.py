@@ -15,7 +15,6 @@ from category.models import Category
 from django.db.models import Q, Sum, Count
 from django.db.models.functions import TruncMonth, TruncYear
 
-# from fruitkhaprojct.adminpanel.models import adminmodels
 # Create your views here.
 
 
@@ -146,8 +145,6 @@ def dashboard(request):
         yearly_revenue = []
         for i in data3:
             yearly_revenue.append(i["total_revenue"])
-        print(yearly_revenue)
-
         context = {
             "total_e": total_earnings,
             "total_user": total_coustomers,
@@ -334,8 +331,6 @@ def editstatus(request, id):
         stus.status = status
         stus.save()
         variant = Variant.objects.get(products=stus.product_n, unit=stus.unit.unit)
-        # print(variant.products)
-
         variant.v_quantity = variant.v_quantity + stus.quantity
         variant.save()
         return_amount = stus.total_amount
@@ -365,7 +360,6 @@ def addproductoffer(request):
 
             product1 = request.POST["prodt"]
             perc = int(request.POST["perc"])
-            # offer = Productoffer.objects.filter(product_id = product)
             if Productoffer.objects.filter(product_id=product1).exists():
 
                 messages.success(
@@ -462,16 +456,11 @@ def editcategoryoffer(request, id):
     if request.method == "POST":
         category = request.POST["cat"]
         perct = int(request.POST["perc"])
-
         preselect = cat.category_id
-        print(preselect)
-
         if perct <= 100 and perct >= 0:
             cate = Category.objects.get(id=category)
-
             cat.category_id = cate
             cat.percentage = perct
-
             cat.save()
             messages.success(request, "category offer added successffully..!")
             return redirect("categoryoffer")

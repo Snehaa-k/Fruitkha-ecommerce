@@ -1,0 +1,21 @@
+asgiref==3.7.2
+black==23.12.1
+click==8.1.7
+colorama==0.4.6
+distlib==0.3.7
+Django==4.2.7
+filelock==3.13.1
+mypy-extensions==1.0.0
+numpy==1.26.3
+packaging==23.2
+pathspec==0.12.1
+pillow==10.2.0
+platformdirs==3.11.0
+# psycopg2==2.9.9
+pyotp==2.9.0
+python-decouple==3.8
+python-dotenv==1.0.1
+sqlparse==0.4.4
+tzdata==2023.3
+virtualenv==20.24.6
+virtualenvwrapper-win==1.2.7

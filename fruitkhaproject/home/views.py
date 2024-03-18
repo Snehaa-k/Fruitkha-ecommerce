@@ -12,7 +12,6 @@ from django.core.mail import send_mail
 from .models import Usermodelss, Walletuser, generate_otp, Useraddress, Wishlist
 from django.views.decorators.cache import never_cache
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Products, Variant
 from category.models import Category
 from cart.models import CartItem, Coupon, Orderdetails, Orderditem, Proceedtocheck
@@ -90,7 +89,6 @@ def usersignupa(request):
             wallet.save()
             return redirect("otpver", myuser.id)
     return render(request, "usersignuppage.html")
-    # return render(request,'usersignuppage.html')
 
 
 @never_cache
@@ -118,7 +116,7 @@ def home(request):
 
 def singleproduct(request, id):
     prdts = Products.objects.get(id=id)
-    # print(prdts)
+
     variant = Variant.objects.filter(products_id=id)
 
     return render(
@@ -148,21 +146,6 @@ def userlogout(request):
     return redirect("userlog")
 
 
-# def shop_page(request):
-#     prodts = Products.objects.all()
-#     items_per_page = 6
-#     page = request.GET.get('page', 1)
-
-#     paginator = Paginator(prodts, items_per_page)
-
-#     try:
-#         products = paginator.page(page)
-#     except EmptyPage:
-#         products = paginator.page(paginator.num_pages)
-
-#     return render(request, 'shop.html', {'products': products})
-
-
 def searchh(request):
     if "email" in request.session:
         search_query = request.GET.get("S")
@@ -184,8 +167,6 @@ def about(request):
 
 
 # cart section................
-
-
 def cart(request):
     email1 = request.session["email"]
     user = Usermodelss.objects.get(email=email1)
@@ -293,8 +274,6 @@ def cart(request):
 
 
 # wishlist...............
-
-
 def add_wishlist(request, id):
     if request.method == "POST":
         product = Products.objects.get(id=id)
@@ -319,47 +298,34 @@ def add_wishlist(request, id):
 def wishlist(request):
     email1 = request.session["email"]
     user = Usermodelss.objects.get(email=email1)
-
     wish = Wishlist.objects.filter(user_id=user)
-
     return render(request, "wishlist.html", {"wish": wish})
 
 
 def deletewishlist(request, id):
-
     Wishlist.objects.get(id=id).delete()
-
     return redirect("wishlist")
 
 
 def add_cart(request, id):
     Product = Products.objects.get(id=id)
     user = request.session["email"]
-
     if request.method == "POST":
-
         user_instance = get_object_or_404(Usermodelss, email=user)
-
         var = request.POST["unit"]
-
         obj = Variant.objects.get(products=Product, unit=var)
-
         cartitem = CartItem.objects.filter(
             user_id=user_instance, product_id=Product, Variant_id=obj
         )
-
         if cartitem.exists():
             messages.error(
                 request, "the product is already in the cart just update the quantity"
             )
             return redirect("cart")
-
         quantity1 = int(request.POST.get("quantity", 1))
-
         for item in cartitem:
             item.total = item.c_quantity * item.Variant_id.v_price
             item.save()
-
         if int(quantity1) <= obj.v_quantity:
             if quantity1 < 6:
                 subtotal = int(quantity1) * obj.v_price
@@ -394,7 +360,6 @@ def delete_cart(request, id):
 
 # increase the quantity of cartitem...............
 def update_cart_quantity(request):
-
     if request.method == "POST":
         item_id = request.POST.get("item_id")
         quantity = int(request.POST.get("quantity"))
@@ -410,9 +375,7 @@ def update_cart_quantity(request):
         else:
             messages.error(request, "out of stock")
             return redirect("cart")
-
         return JsonResponse({"total_price": total_price})
-
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
@@ -443,11 +406,9 @@ def edituserprofile(request):
 
         username1 = request.POST["username"]
         phoneno = request.POST["phone"]
-
         if len(phoneno) != 10:
             messages.error(request, "Phone number must contains 10 digit")
             return redirect("userprofile")
-
         user.username = username1
         user.phonenumber = phoneno
         user.save()
@@ -574,7 +535,7 @@ def checkout(request):
 def proceedtocheckout(request):
     email1 = request.session["email"]
     user = Usermodelss.objects.get(email=email1)
-    # userid = user.id
+
     orderdate = timezone.now().date()
     cart_details = (
         CartItem.objects.select_related("product_id")
@@ -585,9 +546,7 @@ def proceedtocheckout(request):
         subtotal = 0
         for item in cart_details:
             if item.c_quantity > item.Variant_id.v_quantity:
-                # item.total = item.c_quantity * item.Variant_id.v_price
-                # subtotal= sum(item.total for item in cart_details)
-                # else:
+
                 messages.error(request, "the product is out od stock..!")
                 return redirect("cart")
         subtotal = CartItem.objects.filter(user_id=user.id).aggregate(sum=Sum("total"))[
@@ -617,18 +576,16 @@ def proceedtocheckout(request):
         return redirect("shop")
 
 
-# #place an order section. with cod..............
+# place an order section. with cod..............
 def place_order(request):
     if request.method == "POST":
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         userid = user.id
         checkout = Proceedtocheck.objects.get(user_id=user)
-
         orderdate = timezone.now().date()
         addres = request.POST["selected_address_id"]
         ad = Useraddress.objects.get(id=addres)
-
         caritem = CartItem.objects.filter(user_id=userid)
         for cart_item in caritem:
             if cart_item.c_quantity > cart_item.Variant_id.v_quantity:
@@ -661,7 +618,6 @@ def place_order(request):
             order.total_amounts = order.total_amounts + 50
             order.save()
             caritem = CartItem.objects.filter(user_id=userid)
-
             for i in caritem:
                 items = Orderditem(
                     order_id=order,
@@ -691,10 +647,8 @@ def pay_razorpay1(request):
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         checkout = Proceedtocheck.objects.get(user_id=user)
-
         orderdate = timezone.now().date()
         address_id = request.POST.get("selected_address_id")
-
         address = Useraddress.objects.get(id=address_id)
         amount = checkout.total_amount
         order = Orderdetails.objects.create(
@@ -706,7 +660,6 @@ def pay_razorpay1(request):
             discount_amount=checkout.discount_amount,
             coupen_code=checkout.applyed_coupen,
         )
-        print(order.total_amounts)
         if checkout.is_coupenapplyed:
             order.coupen_apply = True
             order.save()
@@ -827,37 +780,32 @@ def moredetails(request, id):
     if "email" in request.session:
         email1 = request.session["email"]
         Usermodelss.objects.get(email=email1)
-
         orderi = Orderditem.objects.filter(order_id=id)
-
     return render(request, "moredetails.html", {"order": orderi})
 
 
 # cancelling the order......
 def cancelorder1(request, id):
-    print(id)
     if "email" in request.session:
         email1 = request.session["email"]
         user = Usermodelss.objects.get(email=email1)
         usr = user.id
-        # print(usr)
+
         orderi = Orderditem.objects.get(id=id)
 
         variant = Variant.objects.get(products=orderi.product_n, unit=orderi.unit.unit)
-        # print(variant.products)
 
         variant.v_quantity = variant.v_quantity + orderi.quantity
         variant.save()
         return_amount = orderi.total_amount
-        # print(return_amount)
+
         orderi.status = "Cancelled"
         orderi.save()
         if (
             orderi.order_id.paymt_method == "razor_pay"
             or orderi.order_id.paymt_method == "wallet"
         ):
-            # wallet1 = Walletuser.objects.get(userid = user.id )
-            # print(type(wallet1.amountt))
+
             if orderi.order_id.coupen_apply == "True":
                 walle = Walletuser.objects.get(userid=user)
                 my_dict = Orderditem.objects.filter(
@@ -951,11 +899,10 @@ def changepassword(request):
 def old_pass_confirm(request):
     email1 = request.session["email"]
     user = Usermodelss.objects.get(email=email1)
-    # print(oldpass)
+
     if request.method == "POST":
         oldpass = user.password1
         entered_p = request.POST["confirmPassword"]
-        # print("hai",entered_p)
         if entered_p != str(oldpass):
             messages.error(request, " Invalid Password ")
             return redirect("old_pass_confirm")
@@ -965,8 +912,6 @@ def old_pass_confirm(request):
 
 
 # cancel the order..............
-
-
 def add_addr_checkout(request):
     if request.method == "POST":
         email1 = request.session["email"]
@@ -980,7 +925,6 @@ def add_addr_checkout(request):
         address = request.POST["address"]
         pin = request.POST["pin"]
         post = request.POST["post"]
-        # print(name)
 
         if len(phonenumber) == 10:
 
@@ -1003,19 +947,15 @@ def add_addr_checkout(request):
             else:
                 messages.error(request, "invalid pin number")
                 return redirect("checkout")
-
         else:
-            # print(len(phonenumber))
             messages.error(request, "invalid phone number")
             return redirect("checkout")
-
     return render(request, "checkout.html", {"last_addr": add})
 
 
 def removecoupen(request):
     email1 = request.session["email"]
     user = Usermodelss.objects.get(email=email1)
-
     coup = Proceedtocheck.objects.get(user_id=user)
     if coup.is_coupenapplyed == True:
         coup.is_coupenapplyed = False
@@ -1023,25 +963,15 @@ def removecoupen(request):
         coup.save()
         messages.success(request, "coupen removed ssuccessfully")
         return redirect("checkout")
-
     return redirect("checkout")
 
 
 def invoice(request, id):
-
     email1 = request.session["email"]
     user = Usermodelss.objects.get(email=email1)
-
     order = Orderditem.objects.filter(order_id=id)
     orders = Orderdetails.objects.filter(id=id)
-
     today = timezone.now().date()
-    # discount_amout_each = Proceedtocheck.objects.get(user_id = user)
-    # if discount_amout_each.is_coupenapplyed:
-    #     discount_amt = discount_amout_each.total_amount-discount_amout_each.discount_amount
-    # else:
-    #     discount_amt = None
-
     return render(
         request, "invoice.html", {"order": order, "today": today, "orders": orders}
     )

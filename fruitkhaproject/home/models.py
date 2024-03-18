@@ -4,10 +4,7 @@ from django.dispatch import receiver
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.core.validators import MaxValueValidator, MinValueValidator
-
 from products.models import Products, Variant
-
-# from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -54,11 +51,6 @@ def generate_otp(instance):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         generate_otp(instance)
-
-
-# @receiver(post_save, sender=Usermodelss)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.userprofile.save()
 
 
 class Useraddress(models.Model):

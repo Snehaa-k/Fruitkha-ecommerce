@@ -6,7 +6,6 @@ from category.models import Category
 class Products(models.Model):
     pname = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-
     description = models.TextField(max_length=500, unique=True)
     image = models.ImageField(upload_to="media")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
