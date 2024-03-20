@@ -32,8 +32,8 @@ ALLOWED_HOSTS = ['13.50.238.44','0.0.0.0','0.0.0.0:9090']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 CORS_ALLOWED_ORIGINS = [
-"http:// 13.50.238.44",
-"https:// 13.50.238.44",
+"http://13.50.238.44",
+"https://13.50.238.44",
 "http://0.0.0.0",
 "https://0.0.0.0",
 "http://0.0.0.0:9090"]
