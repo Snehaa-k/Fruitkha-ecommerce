@@ -27,7 +27,31 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [' 13.50.238.44','0.0.0.0']
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
+
+CORS_ALLOWED_ORIGINS = [
+"http:// 13.50.238.44",
+"https:// 13.50.238.44",
+"http://0.0.0.0",
+"https://0.0.0.0",
+"http://0.0.0.0:9090"]
+
+CORS_ALLOW_HEADERS = [
+                 'access-control-allow-headers',
+                   'access-control-allow-methods',
+                  'access-control-allow-origin',
+                    'content-type',
+                     'x-csrftoken']
+
+CORS_ALLOW_METHODS = [
+               'DELETE',
+               'GET',
+               'OPTIONS',
+               'PATCH',
+               'POST',
+               'PUT']
 
 
 # Application definition
