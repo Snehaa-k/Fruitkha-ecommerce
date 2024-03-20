@@ -112,7 +112,7 @@ DATABASES = {
         "NAME": "fruitkhadatabase",
         "USER": "postgres",
         "PASSWORD": "12345678",
-        "HOST": "database-1.clcqyye2gxfj.eu-north-1.rds.amazonaws.com",
+        "HOST": "localhost",
         "PORT": "5432",
     }
 }
