@@ -36,7 +36,7 @@ CORS_ALLOWED_ORIGINS = [
 "https:// 13.50.238.44",
 "http://0.0.0.0",
 "https://0.0.0.0",
-"http://0.0.0.0:9090"]
+]
 
 CORS_ALLOW_HEADERS = [
                  'access-control-allow-headers',
