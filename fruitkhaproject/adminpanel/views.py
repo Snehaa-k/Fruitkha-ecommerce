@@ -82,6 +82,7 @@ def dashboard(request):
         )
         top_products = Products.objects.filter(
             id__in=[item["product_n"] for item in top_ten]
+
         )
         top_tenc = (
             Orderditem.objects.values("product_n__category__id")
