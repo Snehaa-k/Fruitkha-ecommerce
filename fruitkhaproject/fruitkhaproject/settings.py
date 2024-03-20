@@ -53,6 +53,13 @@ CORS_ALLOW_METHODS = [
                'POST',
                'PUT']
 
+CSRF_TRUSTED_ORIGINS=['http://13.50.238.44',
+'https://13.50.238.44',
+'http://0.0.0.0',
+'https://0.0.0.0',
+'http://0.0.0.0:9090'
+'https://0.0.0.0:9090'
+]
 
 # Application definition
 
