@@ -27,16 +27,16 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = ['13.50.238.44']  # Only include specific IP addresses or domain names for production
+ALLOWED_HOSTS = ['13.50.238.44','0.0.0.0']
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 CORS_ALLOWED_ORIGINS = [
-    "http://13.50.238.44",  # Remove spaces before IP addresses
-    "https://13.50.238.44",  # Remove spaces before IP addresses
-    "http://localhost:9090",  # Adjust for your actual frontend URLs
-    "https://localhost:9090",  # Adjust for your actual frontend URLs
-]
+"http:// 13.50.238.44",
+"https:// 13.50.238.44",
+"http://0.0.0.0",
+"https://0.0.0.0",
+"http://0.0.0.0:9090"]
 
 CORS_ALLOW_HEADERS = [
                  'access-control-allow-headers',
