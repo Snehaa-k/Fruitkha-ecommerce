@@ -47,7 +47,7 @@ var options = {
     // },
 
     xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','aug','sep','oct','Nov','dec'],
+        categories: ['Mar', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','aug','sep','oct','Nov','dec'],
         labels: {
             show: false,
         }
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Assuming YearlyRevenueData is an array of yearly revenue values
     for (var i = 0; i < YearlyRevenueData.length; i++) {
-        var year = 2023 + i; // Adjust the year based on the index
+        var year = 2024 + i; // Adjust the year based on the index
         var yearlyValue = YearlyRevenueData[i]; // Use the yearly revenue value
 
         data.push({
