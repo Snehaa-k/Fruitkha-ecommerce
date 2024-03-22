@@ -114,9 +114,6 @@
         <div class="container text-center">
             <h2 class="text-center">Order Placed Successfully! 🎉🎈</h2>
             <p class="text-white">Your order has been placed successfully. Thank you for shopping with us! 🛍️</p><br>
-            {% for i in order  %}
-            <p class="text-white">Order Number:#{{i.id}} </p>
-            {% endfor  %}
             <a href="{% url 'shop' %}" class="btn btn-dark btn-lg px-5">Continue shopping</a>
         </div>
 	</div>
