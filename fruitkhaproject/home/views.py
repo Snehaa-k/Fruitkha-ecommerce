@@ -627,7 +627,7 @@ def place_order(request):
                     status="pending",
                     order_number=order.custom_id.id,
                     address_id=ad,
-                    ex_deliverey=orderdate + timedelta(days=7),
+                    ex_deliverey=orderdate + timedelta(days=2),
                     unit=i.Variant_id,
                 )
                 items.save()
@@ -676,7 +676,7 @@ def pay_razorpay1(request):
                 status="pending",
                 order_number=order.custom_id.id,
                 address_id=address,
-                ex_deliverey=orderdate + timedelta(days=7),
+                ex_deliverey=orderdate + timedelta(days=3),
                 unit=cart_item.Variant_id,
             ).save()
             cart_item.Variant_id.v_quantity -= cart_item.c_quantity
@@ -731,7 +731,7 @@ def pay_wallet(request):
                         status="pending",
                         order_number=order.custom_id.id,
                         address_id=address,
-                        ex_deliverey=orderdate + timedelta(days=7),
+                        ex_deliverey=orderdate + timedelta(days=3),
                         unit=cart_item.Variant_id,
                     )
                     cart_item.Variant_id.v_quantity -= cart_item.c_quantity
