@@ -36,7 +36,7 @@ def __str__(self):
 
 def generate_otp(instance):
     otp = get_random_string(length=6, allowed_chars="1234567890")
-    print(otp)
+  
     instance.otp = otp
     instance.save()
 
