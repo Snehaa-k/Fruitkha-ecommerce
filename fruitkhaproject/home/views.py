@@ -83,10 +83,11 @@ def usersignupa(request):
                 password1=Pass1,
                 password2=pass2,
             )
-
-            myuser.save()
             wallet = Walletuser(userid=myuser, amountt=0)
             wallet.save()
+            myuser.save()
+            
+           
             return redirect("otpver", myuser.id)
     return render(request, "usersignuppage.html")
 
